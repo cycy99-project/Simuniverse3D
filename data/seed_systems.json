@@ -10,7 +10,8 @@
         "st_rad": 1.0,
         "sy_dist": 0.0,
         "ra": null,
-        "dec": null
+        "dec": null,
+        "texture": "/textures/2k_sun.jpg"
       },
       "planets": [
         {
@@ -130,7 +131,7 @@
           "source": "known",
           "molecules": [],
           "color": "#8b8378",
-          "texture": null,
+          "texture": "/textures/2k_ceres.jpg",
           "rotation_hours": 9.07417,
           "dwarf": true,
           "orbit_inclination_deg": 10.59,
@@ -166,6 +167,7 @@
               "orbit_km": 421800,
               "period_days": 1.77,
               "color": "#d9c36a",
+              "texture": "/textures/2k_io.jpg",
               "inclination_deg": 0.05
             },
             {
@@ -174,6 +176,7 @@
               "orbit_km": 671100,
               "period_days": 3.55,
               "color": "#d8cdb8",
+              "texture": "/textures/2k_europa.jpg",
               "inclination_deg": 0.47
             },
             {
@@ -182,6 +185,7 @@
               "orbit_km": 1070400,
               "period_days": 7.16,
               "color": "#9c8f7a",
+              "texture": "/textures/2k_ganymede.jpg",
               "inclination_deg": 0.2
             },
             {
@@ -190,6 +194,7 @@
               "orbit_km": 1882700,
               "period_days": 16.69,
               "color": "#6e6258",
+              "texture": "/textures/2k_callisto.jpg",
               "inclination_deg": 0.192
             }
           ],
@@ -399,7 +404,7 @@
             "CO"
           ],
           "color": "#c9b29b",
-          "texture": null,
+          "texture": "/textures/2k_pluto.jpg",
           "rotation_hours": -153.293,
           "dwarf": true,
           "orbit_inclination_deg": 17.16,
@@ -413,6 +418,7 @@
               "orbit_km": 19591,
               "period_days": 6.3872,
               "color": "#ab9c8f",
+              "texture": "/textures/2k_charon.jpg",
               "inclination_deg": 0.08
             }
           ],

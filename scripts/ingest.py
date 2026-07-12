@@ -110,13 +110,13 @@ MOONS = {
     ],
     "Jupiter": [
         {"name": "Io", "radius_km": 1821.6, "orbit_km": 421_800, "period_days": 1.77, "color": "#d9c36a",
-         "inclination_deg": 0.05},
+         "texture": "/textures/2k_io.jpg", "inclination_deg": 0.05},
         {"name": "Europe", "radius_km": 1560.8, "orbit_km": 671_100, "period_days": 3.55, "color": "#d8cdb8",
-         "inclination_deg": 0.47},
+         "texture": "/textures/2k_europa.jpg", "inclination_deg": 0.47},
         {"name": "Ganymède", "radius_km": 2634.1, "orbit_km": 1_070_400, "period_days": 7.16, "color": "#9c8f7a",
-         "inclination_deg": 0.2},
+         "texture": "/textures/2k_ganymede.jpg", "inclination_deg": 0.2},
         {"name": "Callisto", "radius_km": 2410.3, "orbit_km": 1_882_700, "period_days": 16.69, "color": "#6e6258",
-         "inclination_deg": 0.192},
+         "texture": "/textures/2k_callisto.jpg", "inclination_deg": 0.192},
     ],
     "Saturne": [
         {"name": "Mimas", "radius_km": 198, "orbit_km": 185_539, "period_days": 0.9, "color": "#9a958c",
@@ -154,7 +154,7 @@ MOONS = {
     ],
     "Pluton": [
         {"name": "Charon", "radius_km": 606, "orbit_km": 19_591, "period_days": 6.3872, "color": "#ab9c8f",
-         "inclination_deg": 0.08},
+         "texture": "/textures/2k_charon.jpg", "inclination_deg": 0.08},
     ],
 }
 
@@ -169,6 +169,7 @@ SOLAR_SYSTEM = {
         "sy_dist": 0.0,
         "ra": None,
         "dec": None,
+        "texture": "/textures/2k_sun.jpg",
     },
     "planets": [
         {"name": "Mercure", "pl_orbsmax": 0.39, "pl_rade": 0.383, "pl_bmasse": 0.055, "pl_eqt": 440,
@@ -192,7 +193,7 @@ SOLAR_SYSTEM = {
          "note": "Atmosphère de CO2 très fine, peu de nuages.",
          "note_en": "Very thin CO2 atmosphere, few clouds."},
         {"name": "Cérès", "pl_orbsmax": 2.77, "pl_rade": 0.0737, "pl_bmasse": 0.00016, "pl_eqt": 172,
-         "source": "known", "molecules": [], "color": "#8b8378", "texture": None,
+         "source": "known", "molecules": [], "color": "#8b8378", "texture": "/textures/2k_ceres.jpg",
          "rotation_hours": 9.074170, "dwarf": True, "orbit_inclination_deg": 10.59, "moons_count_known": 0,
          "note": "Planète naine, plus gros corps de la ceinture d'astéroïdes, pas d'atmosphère notable.",
          "note_en": "Dwarf planet, largest body in the asteroid belt, no notable atmosphere."},
@@ -220,7 +221,7 @@ SOLAR_SYSTEM = {
          "note": "Géante de glaces, bleu plus soutenu qu'Uranus.",
          "note_en": "Ice giant, deeper blue than Uranus."},
         {"name": "Pluton", "pl_orbsmax": 39.482, "pl_rade": 0.1866, "pl_bmasse": 0.00218, "pl_eqt": 44,
-         "source": "known", "molecules": ["N2", "CH4", "CO"], "color": "#c9b29b", "texture": None,
+         "source": "known", "molecules": ["N2", "CH4", "CO"], "color": "#c9b29b", "texture": "/textures/2k_pluto.jpg",
          "rotation_hours": -153.293, "dwarf": True, "orbit_inclination_deg": 17.16, "moons_count_known": 5,
          "note": "Planète naine, rotation rétrograde (inclinaison axiale 120°), fine atmosphère saisonnière d'azote.",
          "note_en": "Dwarf planet, retrograde rotation (120° axial tilt), thin seasonal nitrogen atmosphere."},

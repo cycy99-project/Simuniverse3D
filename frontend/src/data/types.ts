@@ -8,6 +8,7 @@ export interface StarData {
   sy_dist: number | null; // parsecs, 0 pour le Soleil
   ra: number | null; // degrés
   dec: number | null; // degrés
+  texture?: string | null; // chemin de la texture réelle (Soleil uniquement) ; absent/null pour les autres étoiles
 }
 
 export interface MoonData {

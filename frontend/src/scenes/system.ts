@@ -161,10 +161,10 @@ export function buildSystemScene(system: SystemData, realOrbitalPlanes = false):
   group.add(makeStarfield(2000, 800));
 
   const isSun = system.id === "sol";
-  const starMesh = new THREE.Mesh(
-    new THREE.SphereGeometry(isSun ? 2.5 : 2, 24, 24),
-    new THREE.MeshBasicMaterial({ color: isSun ? 0xffd97a : 0xfff2c9 }),
-  );
+  const starMaterial = system.star.texture
+    ? new THREE.MeshBasicMaterial({ map: loadTexture(system.star.texture) })
+    : new THREE.MeshBasicMaterial({ color: isSun ? 0xffd97a : 0xfff2c9 });
+  const starMesh = new THREE.Mesh(new THREE.SphereGeometry(isSun ? 2.5 : 2, 24, 24), starMaterial);
   group.add(starMesh);
   clickable.set(starMesh, STAR_CLICK_ID);
   group.add(makeLabelSprite(localizeName(system.star.name)).translateY(4));

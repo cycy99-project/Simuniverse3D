@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import type { StarData } from "../data/types";
 import { deriveStarColor } from "../starColor";
+import { loadTexture } from "../textureCache";
 import type { Spinnable } from "../spin";
 
 export type StarCompareTarget = "sun" | "earth" | null;
@@ -16,8 +17,11 @@ function starColorFor(star: StarData, isSun: boolean): string {
   return isSun ? "#ffd97a" : deriveStarColor(star.spectype);
 }
 
-function starMesh(radius: number, color: string): THREE.Mesh {
-  return new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), new THREE.MeshBasicMaterial({ color }));
+function starMesh(radius: number, color: string, texture?: string | null): THREE.Mesh {
+  const material = texture
+    ? new THREE.MeshBasicMaterial({ map: loadTexture(texture) })
+    : new THREE.MeshBasicMaterial({ color });
+  return new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), material);
 }
 
 export interface StarSceneResult {
@@ -37,7 +41,7 @@ export function buildStarScene(
 
   if (compareWith === null) {
     const radius = 6;
-    const mesh = starMesh(radius, color);
+    const mesh = starMesh(radius, color, isSun ? star.texture : null);
     group.add(mesh);
     return {
       group,
@@ -55,10 +59,10 @@ export function buildStarScene(
   const r2 = Math.max(SUN_UNIT_RADIUS * otherRadiusSolar, MIN_VISIBLE_RADIUS);
   const gap = Math.max(r1, r2) * 0.6;
 
-  const mesh1 = starMesh(r1, color);
+  const mesh1 = starMesh(r1, color, isSun ? star.texture : null);
   mesh1.position.x = -(r1 + gap / 2);
 
-  const mesh2 = starMesh(r2, otherColor);
+  const mesh2 = starMesh(r2, otherColor, compareWith === "sun" ? sun.texture : null);
   mesh2.position.x = r2 + gap / 2;
 
   group.add(mesh1, mesh2);

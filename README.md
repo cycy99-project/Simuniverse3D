@@ -99,6 +99,15 @@ tooltip explicatif).
   (nombre réel total connu, ex. 101 pour Jupiter au 2026-07) — évite de
   laisser croire que le rendu visuel liste l'intégralité des lunes connues.
 
+### Textures réelles complétées (session du 2026-07-12)
+- **Soleil** : texture réelle (Solar System Scope) appliquée dans la vue
+  Système Solaire et dans la vue étoile dédiée (seule/comparaison).
+- **Lunes galiléennes de Jupiter** (Io, Europe, Ganymède, Callisto),
+  **Charon** (lune de Pluton) : mosaïques globales réelles Voyager/Galileo et
+  New Horizons (USGS Astrogeology / NASA, domaine public).
+- **Cérès** et **Pluton** : mosaïques globales réelles Dawn (FC) et New
+  Horizons (LORRI/MVIC), remplaçant l'absence de texture précédente.
+
 ## Prochaines étapes
 
 Voir la section "Backlog" et "Prochaines étapes" de [SPECS.md](SPECS.md).
