@@ -108,6 +108,32 @@ tooltip explicatif).
 - **Cérès** et **Pluton** : mosaïques globales réelles Dawn (FC) et New
   Horizons (LORRI/MVIC), remplaçant l'absence de texture précédente.
 
+### Lunes restantes texturées (session du 2026-07-12, suite)
+- **Phobos, Deimos** (Mars), **Mimas, Encelade, Téthys, Dioné, Rhéa, Titan,
+  Japet** (Saturne), **Miranda, Ariel, Umbriel, Titania, Obéron** (Uranus),
+  **Triton** (Neptune) : textures réelles reconstruites à partir d'images
+  Voyager/Cassini/New Horizons (via le pack de textures libres du projet
+  Celestia — crédits ci-dessous, CC-BY/CC-BY-SA, auteurs P. Stooke, P. Schenk,
+  Askaniy Anpilogov, ItzImcool — sources NASA/JPL/USGS).
+- **Néréide** (Neptune) reste sans texture : aucune image rapprochée de sa
+  surface n'a jamais été prise (survolée de trop loin par Voyager 2), donc
+  aucune texture réelle n'existe nulle part pour cette lune.
+
+## Crédits textures
+
+- Soleil, Mercure, Vénus, Terre, Lune, Mars, Jupiter, Saturne (+anneaux),
+  Uranus : [Solar System Scope](https://www.solarsystemscope.com/textures/)
+  (CC BY 4.0).
+- Io, Europe, Ganymède, Callisto, Cérès, Pluton, Charon : mosaïques globales
+  USGS Astrogeology / NASA (domaine public), missions Voyager/Galileo/Dawn/New
+  Horizons.
+- Phobos, Deimos, Mimas, Encelade, Téthys, Dioné, Rhéa, Titan, Japet, Miranda,
+  Ariel, Umbriel, Titania, Obéron, Triton : pack de textures du
+  [projet Celestia](https://github.com/CelestiaProject/CelestiaContent)
+  (CC BY 3.0 / CC BY-SA 4.0 selon fichier), basé sur des données
+  NASA/JPL/USGS — cartographies P. Stooke (Stooke Small Bodies Maps V3.0,
+  NASA PDS) et P. Schenk, texturage Askaniy Anpilogov et ItzImcool.
+
 ## Prochaines étapes
 
 Voir la section "Backlog" et "Prochaines étapes" de [SPECS.md](SPECS.md).

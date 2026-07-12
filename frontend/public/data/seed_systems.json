@@ -109,6 +109,7 @@
               "orbit_km": 9380,
               "period_days": 0.32,
               "color": "#7a6f60",
+              "texture": "/textures/2k_phobos.jpg",
               "inclination_deg": 1.093
             },
             {
@@ -117,6 +118,7 @@
               "orbit_km": 23460,
               "period_days": 1.26,
               "color": "#8a8075",
+              "texture": "/textures/2k_deimos.jpg",
               "inclination_deg": 0.93
             }
           ],
@@ -232,6 +234,7 @@
               "orbit_km": 185539,
               "period_days": 0.9,
               "color": "#9a958c",
+              "texture": "/textures/2k_mimas.jpg",
               "inclination_deg": 1.53
             },
             {
@@ -240,6 +243,7 @@
               "orbit_km": 237948,
               "period_days": 1.4,
               "color": "#eef2f5",
+              "texture": "/textures/2k_enceladus.jpg",
               "inclination_deg": 0.02
             },
             {
@@ -248,6 +252,7 @@
               "orbit_km": 294619,
               "period_days": 1.9,
               "color": "#d8dbe0",
+              "texture": "/textures/2k_tethys.jpg",
               "inclination_deg": 1.12
             },
             {
@@ -256,6 +261,7 @@
               "orbit_km": 377396,
               "period_days": 2.7,
               "color": "#c9ccd1",
+              "texture": "/textures/2k_dione.jpg",
               "inclination_deg": 0.02
             },
             {
@@ -264,6 +270,7 @@
               "orbit_km": 527108,
               "period_days": 4.5,
               "color": "#cfd2d6",
+              "texture": "/textures/2k_rhea.jpg",
               "inclination_deg": 0.33
             },
             {
@@ -272,6 +279,7 @@
               "orbit_km": 1221870,
               "period_days": 16,
               "color": "#d9a066",
+              "texture": "/textures/2k_titan.jpg",
               "inclination_deg": 0.31
             },
             {
@@ -280,6 +288,7 @@
               "orbit_km": 3560820,
               "period_days": 79,
               "color": "#8a7d6e",
+              "texture": "/textures/2k_iapetus.jpg",
               "inclination_deg": 7.57
             }
           ]
@@ -316,6 +325,7 @@
               "orbit_km": 129846,
               "period_days": 1.4135,
               "color": "#a8a29c",
+              "texture": "/textures/2k_miranda.jpg",
               "inclination_deg": 4.42
             },
             {
@@ -324,6 +334,7 @@
               "orbit_km": 190929,
               "period_days": 2.5204,
               "color": "#b8b6b0",
+              "texture": "/textures/2k_ariel.jpg",
               "inclination_deg": 0.026
             },
             {
@@ -332,6 +343,7 @@
               "orbit_km": 265986,
               "period_days": 4.1442,
               "color": "#6b6862",
+              "texture": "/textures/2k_umbriel.jpg",
               "inclination_deg": 0.083
             },
             {
@@ -340,6 +352,7 @@
               "orbit_km": 436298,
               "period_days": 8.7059,
               "color": "#948d84",
+              "texture": "/textures/2k_titania.jpg",
               "inclination_deg": 0.114
             },
             {
@@ -348,6 +361,7 @@
               "orbit_km": 583511,
               "period_days": 13.463,
               "color": "#8f887e",
+              "texture": "/textures/2k_oberon.jpg",
               "inclination_deg": 0.125
             }
           ]
@@ -378,6 +392,7 @@
               "orbit_km": 354759,
               "period_days": -5.876854,
               "color": "#e8d6d0",
+              "texture": "/textures/2k_triton.jpg",
               "inclination_deg": 23.115
             },
             {
