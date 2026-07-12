@@ -1,0 +1,738 @@
+{
+  "systems": [
+    {
+      "id": "sol",
+      "name": "Système Solaire",
+      "star": {
+        "name": "Soleil",
+        "spectype": "G2V",
+        "st_teff": 5778,
+        "st_rad": 1.0,
+        "sy_dist": 0.0,
+        "ra": null,
+        "dec": null
+      },
+      "planets": [
+        {
+          "name": "Mercure",
+          "pl_orbsmax": 0.39,
+          "pl_rade": 0.383,
+          "pl_bmasse": 0.055,
+          "pl_eqt": 440,
+          "source": "known",
+          "molecules": [],
+          "color": "#9c9691",
+          "texture": "/textures/2k_mercury.jpg",
+          "rotation_hours": 1407.6,
+          "orbit_inclination_deg": 7.005,
+          "moons_count_known": 0,
+          "note": "Exosphère quasi inexistante, pas d'atmosphère significative.",
+          "note_en": "Virtually no exosphere, no significant atmosphere.",
+          "moons": [],
+          "ring": null
+        },
+        {
+          "name": "Vénus",
+          "pl_orbsmax": 0.72,
+          "pl_rade": 0.949,
+          "pl_bmasse": 0.815,
+          "pl_eqt": 737,
+          "source": "known",
+          "molecules": [
+            "CO2",
+            "SO2"
+          ],
+          "color": "#e8d9a0",
+          "texture": "/textures/2k_venus_surface.jpg",
+          "rotation_hours": -5832.5,
+          "orbit_inclination_deg": 3.395,
+          "moons_count_known": 0,
+          "note": "Atmosphère dense de CO2, nuages d'acide sulfurique, effet de serre extrême.",
+          "note_en": "Dense CO2 atmosphere, sulfuric acid clouds, extreme greenhouse effect.",
+          "moons": [],
+          "ring": null
+        },
+        {
+          "name": "Terre",
+          "pl_orbsmax": 1.0,
+          "pl_rade": 1.0,
+          "pl_bmasse": 1.0,
+          "pl_eqt": 288,
+          "source": "known",
+          "molecules": [
+            "N2",
+            "O2",
+            "H2O"
+          ],
+          "color": "#4f83cc",
+          "texture": "/textures/2k_earth_daymap.jpg",
+          "rotation_hours": 23.93,
+          "orbit_inclination_deg": 0.0,
+          "moons_count_known": 1,
+          "note": "Référence : azote/oxygène, vapeur d'eau, nuages variables.",
+          "note_en": "Reference case: nitrogen/oxygen, water vapor, variable cloud cover.",
+          "moons": [
+            {
+              "name": "Lune",
+              "radius_km": 1738,
+              "orbit_km": 384399,
+              "period_days": 27.32,
+              "color": "#a8a8a2",
+              "texture": "/textures/2k_moon.jpg",
+              "inclination_deg": 5.145
+            }
+          ],
+          "ring": null
+        },
+        {
+          "name": "Mars",
+          "pl_orbsmax": 1.52,
+          "pl_rade": 0.532,
+          "pl_bmasse": 0.107,
+          "pl_eqt": 210,
+          "source": "known",
+          "molecules": [
+            "CO2"
+          ],
+          "color": "#b1440e",
+          "texture": "/textures/2k_mars.jpg",
+          "rotation_hours": 24.62,
+          "orbit_inclination_deg": 1.85,
+          "moons_count_known": 2,
+          "note": "Atmosphère de CO2 très fine, peu de nuages.",
+          "note_en": "Very thin CO2 atmosphere, few clouds.",
+          "moons": [
+            {
+              "name": "Phobos",
+              "radius_km": 11.3,
+              "orbit_km": 9380,
+              "period_days": 0.32,
+              "color": "#7a6f60",
+              "inclination_deg": 1.093
+            },
+            {
+              "name": "Deimos",
+              "radius_km": 6.2,
+              "orbit_km": 23460,
+              "period_days": 1.26,
+              "color": "#8a8075",
+              "inclination_deg": 0.93
+            }
+          ],
+          "ring": null
+        },
+        {
+          "name": "Cérès",
+          "pl_orbsmax": 2.77,
+          "pl_rade": 0.0737,
+          "pl_bmasse": 0.00016,
+          "pl_eqt": 172,
+          "source": "known",
+          "molecules": [],
+          "color": "#8b8378",
+          "texture": null,
+          "rotation_hours": 9.07417,
+          "dwarf": true,
+          "orbit_inclination_deg": 10.59,
+          "moons_count_known": 0,
+          "note": "Planète naine, plus gros corps de la ceinture d'astéroïdes, pas d'atmosphère notable.",
+          "note_en": "Dwarf planet, largest body in the asteroid belt, no notable atmosphere.",
+          "moons": [],
+          "ring": null
+        },
+        {
+          "name": "Jupiter",
+          "pl_orbsmax": 5.2,
+          "pl_rade": 11.21,
+          "pl_bmasse": 317.8,
+          "pl_eqt": 165,
+          "source": "known",
+          "molecules": [
+            "H2",
+            "He",
+            "CH4"
+          ],
+          "color": "#c8a165",
+          "texture": "/textures/2k_jupiter.jpg",
+          "rotation_hours": 9.93,
+          "orbit_inclination_deg": 1.303,
+          "moons_count_known": 101,
+          "note": "Géante gazeuse, bandes de nuages d'ammoniac.",
+          "note_en": "Gas giant, banded ammonia cloud structure.",
+          "moons": [
+            {
+              "name": "Io",
+              "radius_km": 1821.6,
+              "orbit_km": 421800,
+              "period_days": 1.77,
+              "color": "#d9c36a",
+              "inclination_deg": 0.05
+            },
+            {
+              "name": "Europe",
+              "radius_km": 1560.8,
+              "orbit_km": 671100,
+              "period_days": 3.55,
+              "color": "#d8cdb8",
+              "inclination_deg": 0.47
+            },
+            {
+              "name": "Ganymède",
+              "radius_km": 2634.1,
+              "orbit_km": 1070400,
+              "period_days": 7.16,
+              "color": "#9c8f7a",
+              "inclination_deg": 0.2
+            },
+            {
+              "name": "Callisto",
+              "radius_km": 2410.3,
+              "orbit_km": 1882700,
+              "period_days": 16.69,
+              "color": "#6e6258",
+              "inclination_deg": 0.192
+            }
+          ],
+          "ring": null
+        },
+        {
+          "name": "Saturne",
+          "pl_orbsmax": 9.58,
+          "pl_rade": 9.45,
+          "pl_bmasse": 95.2,
+          "pl_eqt": 134,
+          "source": "known",
+          "molecules": [
+            "H2",
+            "He",
+            "CH4"
+          ],
+          "color": "#e3c98f",
+          "texture": "/textures/2k_saturn.jpg",
+          "rotation_hours": 10.66,
+          "orbit_inclination_deg": 2.485,
+          "moons_count_known": 292,
+          "ring": {
+            "inner_radius_ratio": 1.2,
+            "outer_radius_ratio": 2.3,
+            "color": "#c9b280",
+            "texture": "/textures/2k_saturn_ring_alpha.png"
+          },
+          "note": "Géante gazeuse, atmosphère similaire à Jupiter, plus pâle. Anneaux de glace/roche très étendus.",
+          "note_en": "Gas giant, Jupiter-like atmosphere, paler tones. Extensive ice/rock ring system.",
+          "moons": [
+            {
+              "name": "Mimas",
+              "radius_km": 198,
+              "orbit_km": 185539,
+              "period_days": 0.9,
+              "color": "#9a958c",
+              "inclination_deg": 1.53
+            },
+            {
+              "name": "Encelade",
+              "radius_km": 252,
+              "orbit_km": 237948,
+              "period_days": 1.4,
+              "color": "#eef2f5",
+              "inclination_deg": 0.02
+            },
+            {
+              "name": "Téthys",
+              "radius_km": 531,
+              "orbit_km": 294619,
+              "period_days": 1.9,
+              "color": "#d8dbe0",
+              "inclination_deg": 1.12
+            },
+            {
+              "name": "Dioné",
+              "radius_km": 561.5,
+              "orbit_km": 377396,
+              "period_days": 2.7,
+              "color": "#c9ccd1",
+              "inclination_deg": 0.02
+            },
+            {
+              "name": "Rhéa",
+              "radius_km": 763.5,
+              "orbit_km": 527108,
+              "period_days": 4.5,
+              "color": "#cfd2d6",
+              "inclination_deg": 0.33
+            },
+            {
+              "name": "Titan",
+              "radius_km": 2574.5,
+              "orbit_km": 1221870,
+              "period_days": 16,
+              "color": "#d9a066",
+              "inclination_deg": 0.31
+            },
+            {
+              "name": "Japet",
+              "radius_km": 735,
+              "orbit_km": 3560820,
+              "period_days": 79,
+              "color": "#8a7d6e",
+              "inclination_deg": 7.57
+            }
+          ]
+        },
+        {
+          "name": "Uranus",
+          "pl_orbsmax": 19.2,
+          "pl_rade": 4.01,
+          "pl_bmasse": 14.5,
+          "pl_eqt": 76,
+          "source": "known",
+          "molecules": [
+            "H2",
+            "He",
+            "CH4"
+          ],
+          "color": "#a6e1e0",
+          "texture": "/textures/2k_uranus.jpg",
+          "rotation_hours": -17.24,
+          "orbit_inclination_deg": 0.773,
+          "moons_count_known": 29,
+          "ring": {
+            "inner_radius_ratio": 1.6,
+            "outer_radius_ratio": 2.0,
+            "color": "#5c5850",
+            "texture": null
+          },
+          "note": "Géante de glaces, CH4 donne la teinte bleu-vert. Anneaux fins et sombres (découverts en 1977).",
+          "note_en": "Ice giant, CH4 gives it a pale cyan tint. Thin, dark rings (discovered in 1977).",
+          "moons": [
+            {
+              "name": "Miranda",
+              "radius_km": 235.8,
+              "orbit_km": 129846,
+              "period_days": 1.4135,
+              "color": "#a8a29c",
+              "inclination_deg": 4.42
+            },
+            {
+              "name": "Ariel",
+              "radius_km": 578.9,
+              "orbit_km": 190929,
+              "period_days": 2.5204,
+              "color": "#b8b6b0",
+              "inclination_deg": 0.026
+            },
+            {
+              "name": "Umbriel",
+              "radius_km": 584.7,
+              "orbit_km": 265986,
+              "period_days": 4.1442,
+              "color": "#6b6862",
+              "inclination_deg": 0.083
+            },
+            {
+              "name": "Titania",
+              "radius_km": 788.4,
+              "orbit_km": 436298,
+              "period_days": 8.7059,
+              "color": "#948d84",
+              "inclination_deg": 0.114
+            },
+            {
+              "name": "Obéron",
+              "radius_km": 761.4,
+              "orbit_km": 583511,
+              "period_days": 13.463,
+              "color": "#8f887e",
+              "inclination_deg": 0.125
+            }
+          ]
+        },
+        {
+          "name": "Neptune",
+          "pl_orbsmax": 30.1,
+          "pl_rade": 3.88,
+          "pl_bmasse": 17.1,
+          "pl_eqt": 72,
+          "source": "known",
+          "molecules": [
+            "H2",
+            "He",
+            "CH4"
+          ],
+          "color": "#3457d5",
+          "texture": "/textures/2k_neptune.jpg",
+          "rotation_hours": 16.11,
+          "orbit_inclination_deg": 1.77,
+          "moons_count_known": 18,
+          "note": "Géante de glaces, bleu plus soutenu qu'Uranus.",
+          "note_en": "Ice giant, deeper blue than Uranus.",
+          "moons": [
+            {
+              "name": "Triton",
+              "radius_km": 1352.5,
+              "orbit_km": 354759,
+              "period_days": -5.876854,
+              "color": "#e8d6d0",
+              "inclination_deg": 23.115
+            },
+            {
+              "name": "Néréide",
+              "radius_km": 178.5,
+              "orbit_km": 5513900,
+              "period_days": 360.14,
+              "color": "#9a978f",
+              "inclination_deg": 7.09
+            }
+          ],
+          "ring": null
+        },
+        {
+          "name": "Pluton",
+          "pl_orbsmax": 39.482,
+          "pl_rade": 0.1866,
+          "pl_bmasse": 0.00218,
+          "pl_eqt": 44,
+          "source": "known",
+          "molecules": [
+            "N2",
+            "CH4",
+            "CO"
+          ],
+          "color": "#c9b29b",
+          "texture": null,
+          "rotation_hours": -153.293,
+          "dwarf": true,
+          "orbit_inclination_deg": 17.16,
+          "moons_count_known": 5,
+          "note": "Planète naine, rotation rétrograde (inclinaison axiale 120°), fine atmosphère saisonnière d'azote.",
+          "note_en": "Dwarf planet, retrograde rotation (120° axial tilt), thin seasonal nitrogen atmosphere.",
+          "moons": [
+            {
+              "name": "Charon",
+              "radius_km": 606,
+              "orbit_km": 19591,
+              "period_days": 6.3872,
+              "color": "#ab9c8f",
+              "inclination_deg": 0.08
+            }
+          ],
+          "ring": null
+        },
+        {
+          "name": "Éris",
+          "pl_orbsmax": 67.69,
+          "pl_rade": 0.1826,
+          "pl_bmasse": 0.00274,
+          "pl_eqt": 42,
+          "source": "known",
+          "molecules": [
+            "N2",
+            "CH4"
+          ],
+          "color": "#e8e4dc",
+          "texture": null,
+          "rotation_hours": 378.864,
+          "dwarf": true,
+          "orbit_inclination_deg": 44.04,
+          "moons_count_known": 1,
+          "note": "Planète naine la plus massive connue, ceinture de Kuiper diffuse, albédo très élevé (surface quasi blanche).",
+          "note_en": "Most massive known dwarf planet, scattered Kuiper belt object, very high albedo (near-white surface).",
+          "moons": [],
+          "ring": null
+        }
+      ]
+    },
+    {
+      "id": "wasp-39",
+      "name": "WASP-39",
+      "star": {
+        "name": "WASP-39",
+        "spectype": null,
+        "st_teff": 5485.0,
+        "st_rad": 0.939,
+        "sy_dist": 213.982,
+        "ra": 217.3266477,
+        "dec": -3.4444994
+      },
+      "planets": [
+        {
+          "name": "WASP-39 b",
+          "pl_orbsmax": 0.04828,
+          "pl_rade": 14.336311,
+          "pl_bmasse": 89.31023,
+          "pl_eqt": 1166.0,
+          "discoverymethod": "Transit",
+          "disc_year": 2011,
+          "source": "jwst_spectroscopy",
+          "molecules": [
+            "CO2",
+            "H2O",
+            "SO2",
+            "CO"
+          ],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Première détection nette de CO2 par JWST (2022) ; SO2 = signature de photochimie.",
+          "note_en": "First clear CO2 detection by JWST (2022); SO2 is a signature of active photochemistry.",
+          "spectrum_ref": "Ahrer et al. 2023, Nature — JWST NIRSpec/NIRISS"
+        }
+      ]
+    },
+    {
+      "id": "k2-18",
+      "name": "K2-18",
+      "star": {
+        "name": "K2-18",
+        "spectype": null,
+        "st_teff": 3457.0,
+        "st_rad": 0.411,
+        "sy_dist": 38.0266,
+        "ra": 172.560141,
+        "dec": 7.5878315
+      },
+      "planets": [
+        {
+          "name": "K2-18 c",
+          "pl_orbsmax": 0.06,
+          "pl_rade": null,
+          "pl_bmasse": 7.51,
+          "pl_eqt": 363.0,
+          "discoverymethod": "Radial Velocity",
+          "disc_year": 2017,
+          "source": "no_data",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
+          "note_en": "No public atmospheric spectroscopy data known for this MVP.",
+          "spectrum_ref": null
+        },
+        {
+          "name": "K2-18 b",
+          "pl_orbsmax": 0.1429,
+          "pl_rade": 2.37,
+          "pl_bmasse": 8.92,
+          "pl_eqt": 284.0,
+          "discoverymethod": "Transit",
+          "disc_year": 2015,
+          "source": "jwst_spectroscopy",
+          "molecules": [
+            "CH4",
+            "CO2"
+          ],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Candidate 'hycéenne' (océan sous atmosphère riche en H2). Détection DMS annoncée mais controversée/non confirmée.",
+          "note_en": "'Hycean' candidate (ocean under a H2-rich atmosphere). A DMS detection was announced but remains controversial/unconfirmed.",
+          "spectrum_ref": "Madhusudhan et al. 2023, ApJL — JWST NIRISS/NIRSpec"
+        }
+      ]
+    },
+    {
+      "id": "hd-189733",
+      "name": "HD 189733",
+      "star": {
+        "name": "HD 189733",
+        "spectype": null,
+        "st_teff": 5052.0,
+        "st_rad": 0.75,
+        "sy_dist": 19.7638,
+        "ra": 300.1821223,
+        "dec": 22.7097759
+      },
+      "planets": [
+        {
+          "name": "HD 189733 b",
+          "pl_orbsmax": 0.031,
+          "pl_rade": 12.66617,
+          "pl_bmasse": 359.1479,
+          "pl_eqt": 1200,
+          "discoverymethod": "Radial Velocity",
+          "disc_year": 2005,
+          "source": "jwst_spectroscopy",
+          "molecules": [
+            "H2O",
+            "CO2",
+            "SO2"
+          ],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Jupiter chaud bleu (diffusion de Rayleigh, observée en lumière visible par Hubble).",
+          "note_en": "Blue hot Jupiter (Rayleigh scattering, observed in visible light by Hubble).",
+          "spectrum_ref": "Grillmair et al. / Fu et al. 2024 — Hubble + JWST MIRI"
+        }
+      ]
+    },
+    {
+      "id": "trappist-1",
+      "name": "TRAPPIST-1",
+      "star": {
+        "name": "TRAPPIST-1",
+        "spectype": null,
+        "st_teff": 2566.0,
+        "st_rad": 0.1192,
+        "sy_dist": 12.43,
+        "ra": 346.6263919,
+        "dec": -5.0434618
+      },
+      "planets": [
+        {
+          "name": "TRAPPIST-1 b",
+          "pl_orbsmax": 0.01154,
+          "pl_rade": 1.116,
+          "pl_bmasse": 1.374,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2016,
+          "source": "no_detection",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Pas d'atmosphère significative détectée (JWST MIRI, 2023) : probablement un rocher nu.",
+          "note_en": "No significant atmosphere detected (JWST MIRI, 2023): likely a bare rock.",
+          "spectrum_ref": "Greene et al. 2023, Nature"
+        },
+        {
+          "name": "TRAPPIST-1 c",
+          "pl_orbsmax": 0.0158,
+          "pl_rade": 1.097,
+          "pl_bmasse": 1.308,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2016,
+          "source": "no_detection",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Pas d'atmosphère épaisse type CO2 détectée (JWST MIRI, 2023).",
+          "note_en": "No thick CO2-type atmosphere detected (JWST MIRI, 2023).",
+          "spectrum_ref": "Zieba et al. 2023, Nature"
+        },
+        {
+          "name": "TRAPPIST-1 d",
+          "pl_orbsmax": 0.02227,
+          "pl_rade": 0.788,
+          "pl_bmasse": 0.388,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2016,
+          "source": "no_data",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
+          "note_en": "No public atmospheric spectroscopy data known for this MVP.",
+          "spectrum_ref": null
+        },
+        {
+          "name": "TRAPPIST-1 e",
+          "pl_orbsmax": 0.02925,
+          "pl_rade": 0.92,
+          "pl_bmasse": 0.692,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2017,
+          "source": "no_data",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
+          "note_en": "No public atmospheric spectroscopy data known for this MVP.",
+          "spectrum_ref": null
+        },
+        {
+          "name": "TRAPPIST-1 f",
+          "pl_orbsmax": 0.03849,
+          "pl_rade": 1.045,
+          "pl_bmasse": 1.039,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2017,
+          "source": "no_data",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
+          "note_en": "No public atmospheric spectroscopy data known for this MVP.",
+          "spectrum_ref": null
+        },
+        {
+          "name": "TRAPPIST-1 g",
+          "pl_orbsmax": 0.04683,
+          "pl_rade": 1.129,
+          "pl_bmasse": 1.321,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2017,
+          "source": "no_data",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
+          "note_en": "No public atmospheric spectroscopy data known for this MVP.",
+          "spectrum_ref": null
+        },
+        {
+          "name": "TRAPPIST-1 h",
+          "pl_orbsmax": 0.06189,
+          "pl_rade": 0.755,
+          "pl_bmasse": 0.326,
+          "pl_eqt": null,
+          "discoverymethod": "Transit",
+          "disc_year": 2017,
+          "source": "no_data",
+          "molecules": [],
+          "color": null,
+          "texture": null,
+          "rotation_hours": null,
+          "orbit_inclination_deg": null,
+          "moons": [],
+          "ring": null,
+          "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
+          "note_en": "No public atmospheric spectroscopy data known for this MVP.",
+          "spectrum_ref": null
+        }
+      ]
+    }
+  ]
+}
