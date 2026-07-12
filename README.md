@@ -102,3 +102,7 @@ tooltip explicatif).
 ## Prochaines étapes
 
 Voir la section "Backlog" et "Prochaines étapes" de [SPECS.md](SPECS.md).
+
+## Liens
+
+- Repository : https://github.com/cycy99-project/Simuniverse3D
