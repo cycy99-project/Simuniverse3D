@@ -49,19 +49,35 @@ const MOON_SCALE = {
   gapMultiplier: 1.15,
 };
 
-function materialFor(planet: PlanetData, visual: AtmosphereVisual): THREE.MeshBasicMaterial {
+// Couleur neutre utilisée quand l'interprétation scientifique est désactivée
+// (cf. showScientificInterpretation) : signale "donnée insuffisante" plutôt
+// que de proposer une teinte déduite, cohérent avec system.ts.
+const NEUTRAL_UNKNOWN_COLOR = "#6b6b6b";
+
+function materialFor(
+  planet: PlanetData,
+  visual: AtmosphereVisual,
+  showScientificInterpretation: boolean,
+): THREE.MeshBasicMaterial {
   if (planet.texture) {
     return new THREE.MeshBasicMaterial({ map: loadTexture(planet.texture) });
   }
-  return new THREE.MeshBasicMaterial({ color: planet.color ?? visual.skyColor });
+  if (planet.color) {
+    return new THREE.MeshBasicMaterial({ color: planet.color });
+  }
+  return new THREE.MeshBasicMaterial({ color: showScientificInterpretation ? visual.skyColor : NEUTRAL_UNKNOWN_COLOR });
 }
 
-function buildPlanetGroup(planet: PlanetData, radius: number): { group: THREE.Group; visual: AtmosphereVisual } {
+function buildPlanetGroup(
+  planet: PlanetData,
+  radius: number,
+  showScientificInterpretation: boolean,
+): { group: THREE.Group; visual: AtmosphereVisual } {
   const visual = deriveAtmosphere(planet.molecules, planet.pl_eqt);
   const group = new THREE.Group();
-  group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), materialFor(planet, visual)));
+  group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), materialFor(planet, visual, showScientificInterpretation)));
 
-  if (visual.cloudDensity > 0) {
+  if (visual.cloudDensity > 0 && showScientificInterpretation) {
     group.add(
       new THREE.Mesh(
         new THREE.SphereGeometry(radius * 1.03, 48, 48),
@@ -84,12 +100,16 @@ function buildPlanetGroup(planet: PlanetData, radius: number): { group: THREE.Gr
   return { group, visual };
 }
 
-export function buildAtmosphereScene(planet: PlanetData, compareWithEarth: PlanetData | null): AtmosphereSceneResult {
+export function buildAtmosphereScene(
+  planet: PlanetData,
+  compareWithEarth: PlanetData | null,
+  showScientificInterpretation = true,
+): AtmosphereSceneResult {
   const group = new THREE.Group();
 
   if (!compareWithEarth) {
     const radius = 6;
-    const { group: planetGroup, visual } = buildPlanetGroup(planet, radius);
+    const { group: planetGroup, visual } = buildPlanetGroup(planet, radius, showScientificInterpretation);
     group.add(planetGroup);
 
     const moons = buildMoons(planet, new THREE.Vector3(0, 0, 0), { ...MOON_SCALE, planetVisualRadius: radius });
@@ -116,10 +136,10 @@ export function buildAtmosphereScene(planet: PlanetData, compareWithEarth: Plane
   const earthRadius = EARTH_UNIT_RADIUS;
   const gap = Math.max(planetRadius, earthRadius) * 0.7;
 
-  const { group: planetGroup, visual } = buildPlanetGroup(planet, planetRadius);
+  const { group: planetGroup, visual } = buildPlanetGroup(planet, planetRadius, showScientificInterpretation);
   planetGroup.position.x = -(planetRadius + gap / 2);
 
-  const { group: earthGroup } = buildPlanetGroup(compareWithEarth, earthRadius);
+  const { group: earthGroup } = buildPlanetGroup(compareWithEarth, earthRadius, showScientificInterpretation);
   earthGroup.position.x = earthRadius + gap / 2;
 
   group.add(planetGroup, earthGroup);

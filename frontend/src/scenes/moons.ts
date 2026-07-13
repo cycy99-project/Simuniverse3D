@@ -43,8 +43,9 @@ function makeOrbitRing(radius: number): THREE.Line {
 }
 
 function moonMaterial(moon: MoonData): THREE.Material {
+  const boost = moon.render_brightness_boost ?? 1;
   if (moon.texture) {
-    return new THREE.MeshBasicMaterial({ map: loadTexture(moon.texture) });
+    return new THREE.MeshBasicMaterial({ map: loadTexture(moon.texture), color: new THREE.Color(boost, boost, boost) });
   }
   return new THREE.MeshBasicMaterial({ color: moon.color });
 }
@@ -141,6 +142,13 @@ export function buildMoons(planet: PlanetData, position: THREE.Vector3, opts: Mo
     tiltGroup.add(spinGroup);
 
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(moonRadius, 16, 16), moonMaterial(moon));
+    if (moon.shape_ratio) {
+      // Corps triaxial irrégulier (pas à l'équilibre hydrostatique) : on
+      // déforme la sphère de base par les vrais ratios de demi-axes plutôt
+      // que d'afficher une sphère parfaite, factuellement fausse pour ces
+      // lunes (cf. commentaires de shape_ratio dans types.ts/ingest.py).
+      mesh.scale.set(...moon.shape_ratio);
+    }
     mesh.position.x = orbitRadius;
     spinGroup.add(mesh);
     clickable.set(mesh, moon.name);

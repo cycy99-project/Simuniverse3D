@@ -20,13 +20,40 @@ export function deriveAtmosphere(
   const temp = eqTempK ?? 288;
 
   if (molecules.length === 0) {
+    // Corps sans atmosphère détectée : couleur dérivée de la température
+    // d'équilibre (proxy du type de surface probable), pas un gris quasi
+    // noir uniforme — l'albédo réel des corps rocheux airless connus (Lune
+    // ~0,14, Mercure ~0,09) reste gris moyen, jamais proche du noir, et un
+    // rendu trop sombre rendait la planète quasi invisible en vue système.
+    if (temp >= 500) {
+      return {
+        skyColor: "#4a4038",
+        hazeColor: "#5a4f45",
+        cloudDensity: 0,
+        description: {
+          fr: "Aucune molécule détectée, température extrême : rocher nu probablement assombri par l'irradiation (analogie Mercure côté jour).",
+          en: "No molecules detected, extreme temperature: bare rock likely darkened by irradiation (Mercury dayside analogy).",
+        },
+      };
+    }
+    if (temp <= 220) {
+      return {
+        skyColor: "#9aa5ad",
+        hazeColor: "#aab4bb",
+        cloudDensity: 0,
+        description: {
+          fr: "Aucune molécule détectée, température basse : rocher nu, surface possiblement givrée (analogie corps glacés airless).",
+          en: "No molecules detected, low temperature: bare rock, surface possibly frosted (icy airless body analogy).",
+        },
+      };
+    }
     return {
-      skyColor: "#1a1a1a",
-      hazeColor: "#2a2a2a",
+      skyColor: "#7d7568",
+      hazeColor: "#8d8577",
       cloudDensity: 0,
       description: {
-        fr: "Aucune molécule détectée : surface nue sans atmosphère significative.",
-        en: "No molecules detected: bare surface with no significant atmosphere.",
+        fr: "Aucune molécule détectée, température tempérée : rocher nu (analogie Lune/Mercure).",
+        en: "No molecules detected, temperate: bare rock (Moon/Mercury analogy).",
       },
     };
   }

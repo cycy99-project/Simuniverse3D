@@ -106,6 +106,34 @@ const dict = {
   satellitesKnown: { fr: "Satellites existants", en: "Known moons" },
   pauseOrbits: { fr: "⏸ Mettre en pause", en: "⏸ Pause" },
   resumeOrbits: { fr: "▶ Reprendre", en: "▶ Resume" },
+  habitableZoneShow: { fr: "🌱 Zone habitable", en: "🌱 Habitable zone" },
+  habitableZoneHide: { fr: "🌱 Masquer la zone habitable", en: "🌱 Hide habitable zone" },
+  habitableZoneUnavailable: {
+    fr: "Zone habitable non calculable pour ce système (température/rayon stellaire manquants)",
+    en: "Habitable zone not computable for this system (missing stellar temperature/radius)",
+  },
+  habitableZoneLabel: { fr: "Zone habitable (théorique)", en: "Habitable zone (theoretical)" },
+  sciInterpOn: { fr: "🔬 Interprétation scientifique : ON", en: "🔬 Scientific interpretation: ON" },
+  sciInterpOff: { fr: "🔬 Interprétation scientifique : OFF", en: "🔬 Scientific interpretation: OFF" },
+  sciInterpNote: {
+    fr: "Couleur/rendu déduit d'une interprétation scientifique plausible (molécules détectées, température), pas une photo réelle.",
+    en: "Color/rendering derived from a plausible scientific interpretation (detected molecules, temperature), not a real photo.",
+  },
+  photosNasa: { fr: "🖼️ Photos officielles (NASA)", en: "🖼️ Official photos (NASA)" },
+  photosWikipedia: { fr: "📖 Rechercher sur Wikipedia", en: "📖 Search on Wikipedia" },
+  gravity: { fr: "Gravité de surface", en: "Surface gravity" },
+  gravityOfEarth: { fr: "de la gravité terrestre", en: "of Earth's gravity" },
+  gravityWeightPrefix: { fr: "tu pèserais", en: "you would weigh" },
+  gravityWeightSuffix: { fr: "kg au lieu de 100 kg sur Terre", en: "kg instead of 100 kg on Earth" },
+  gravityUnknown: { fr: "Gravité de surface inconnue (masse non mesurée)", en: "Surface gravity unknown (mass not measured)" },
+  gravityFunFactPrefix: { fr: "🎈 Ici, tu pèserais environ", en: "🎈 Here, you'd weigh about" },
+  gravityFunFactSuffix: { fr: "kg au lieu de 100 kg sur Terre !", en: "kg instead of 100 kg on Earth!" },
+  studentModeOn: { fr: "🎓 Mode Élève : ON", en: "🎓 Pupil mode: ON" },
+  studentModeOff: { fr: "🎓 Mode Élève : OFF", en: "🎓 Pupil mode: OFF" },
+  studentModeNote: {
+    fr: "Cartouches simplifiées et anecdotes ludiques, pensées pour les plus jeunes.",
+    en: "Simplified panels and fun facts, designed for younger explorers.",
+  },
 } satisfies Record<string, { fr: string; en: string }>;
 
 export type DictKey = keyof typeof dict;

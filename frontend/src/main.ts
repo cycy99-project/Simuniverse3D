@@ -5,6 +5,7 @@ import type { SeedData, SystemData, PlanetData, MoonData, AtmosphereSource } fro
 import { buildGalaxyScene } from "./scenes/galaxy";
 import { buildSystemScene, STAR_CLICK_ID } from "./scenes/system";
 import { buildAtmosphereScene } from "./scenes/atmosphere";
+import { buildMoonFocusScene } from "./scenes/moonFocus";
 import { buildStarScene, type StarCompareTarget } from "./scenes/star";
 import { VOYAGER_1, VOYAGER_2, currentDistanceAU, currentDistanceKm, type VoyagerInfo } from "./voyager";
 import type { Spinnable } from "./spin";
@@ -12,6 +13,8 @@ import { computeEarthDistance } from "./distance";
 import { t, getLang, setLang, onLangChange, type Lang } from "./i18n";
 import { formatTemp, getTempUnit, setTempUnit, onTempUnitChange, type TempUnit } from "./units";
 import { localizeName } from "./nameTranslations";
+import { photoLinksFor } from "./photoLinks";
+import { gravityAnecdote } from "./gravityAnecdotes";
 
 type AppState =
   | { view: "galaxy" }
@@ -34,6 +37,9 @@ const langToggleEl = document.getElementById("lang-toggle")!;
 const unitToggleEl = document.getElementById("unit-toggle")!;
 const compareToggleEl = document.getElementById("compare-toggle")!;
 const orbitPlaneToggleEl = document.getElementById("orbit-plane-toggle") as HTMLButtonElement;
+const habitableZoneToggleEl = document.getElementById("habitable-zone-toggle") as HTMLButtonElement;
+const sciInterpToggleEl = document.getElementById("sci-interp-toggle") as HTMLButtonElement;
+const studentModeToggleEl = document.getElementById("student-mode-toggle") as HTMLButtonElement;
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
 const pauseToggleEl = document.getElementById("pause-toggle") as HTMLButtonElement;
 const bgMusicEl = document.getElementById("bg-music") as HTMLAudioElement;
@@ -83,6 +89,8 @@ function renderLangToggle() {
 renderLangToggle();
 onLangChange(() => {
   renderLangToggle();
+  renderSciInterpToggle();
+  renderStudentModeToggle();
   render();
 });
 
@@ -128,12 +136,90 @@ let animationPaused = false;
 // langue/l'unité) : n'a d'effet visible que pour le Système Solaire, seul
 // système où l'on dispose de vraies inclinaisons orbitales (cf. types.ts).
 let showRealOrbitalPlanes = false;
+let showHabitableZone = false;
+
+// Universel (toutes vues/systèmes/planètes), persisté comme musicMuted : par
+// défaut ON pour préserver le comportement historique (couleur heuristique
+// déjà affichée par défaut faute de photo réelle) ; désactivable pour un
+// rendu neutre "donnée insuffisante" quand on veut distinguer strictement le
+// connu de l'interprété.
+const SCI_INTERP_KEY = "universe3d.showScientificInterpretation";
+let showScientificInterpretation = localStorage.getItem(SCI_INTERP_KEY) !== "false";
+
+function renderSciInterpToggle() {
+  sciInterpToggleEl.classList.toggle("active", showScientificInterpretation);
+  sciInterpToggleEl.textContent = showScientificInterpretation ? t("sciInterpOn") : t("sciInterpOff");
+  sciInterpToggleEl.title = t("sciInterpNote");
+}
+renderSciInterpToggle();
+
+sciInterpToggleEl.onclick = () => {
+  showScientificInterpretation = !showScientificInterpretation;
+  localStorage.setItem(SCI_INTERP_KEY, String(showScientificInterpretation));
+  renderSciInterpToggle();
+  render();
+};
+
+// Universel (toutes vues), persisté comme showScientificInterpretation :
+// simplifie les cartouches et ajoute des anecdotes ludiques pour un public
+// plus jeune, sans dupliquer les données (mêmes valeurs, présentation
+// différente).
+const STUDENT_MODE_KEY = "universe3d.studentMode";
+let studentMode = localStorage.getItem(STUDENT_MODE_KEY) === "true";
+
+function renderStudentModeToggle() {
+  studentModeToggleEl.classList.toggle("active", studentMode);
+  studentModeToggleEl.textContent = studentMode ? t("studentModeOn") : t("studentModeOff");
+  studentModeToggleEl.title = t("studentModeNote");
+}
+renderStudentModeToggle();
+
+studentModeToggleEl.onclick = () => {
+  studentMode = !studentMode;
+  localStorage.setItem(STUDENT_MODE_KEY, String(studentMode));
+  renderStudentModeToggle();
+  render();
+};
 
 function formatRotationPeriod(rotationHours: number | null): string | null {
   if (rotationHours === null) return null;
   const hours = Math.abs(rotationHours);
   const value = hours >= 48 ? `${(hours / 24).toFixed(1)} j` : `${hours.toFixed(1)} h`;
   return rotationHours < 0 ? `${value} (${t("retrograde")})` : value;
+}
+
+const EARTH_SURFACE_GRAVITY = 9.80665; // m/s², valeur standard = référence de comparaison
+
+// g = G*M/R² s'écrit, en unités relatives à la Terre (M et R en masses/rayons
+// terrestres), g = g_terre * masse / rayon² — pas de constante G ni de
+// conversion d'unités nécessaire puisque pl_bmasse/pl_rade sont déjà
+// exprimés en unités terrestres.
+function planetGravityMs2(planet: PlanetData): number | null {
+  if (planet.pl_bmasse == null || planet.pl_rade == null || planet.pl_rade === 0) return null;
+  return EARTH_SURFACE_GRAVITY * (planet.pl_bmasse / (planet.pl_rade * planet.pl_rade));
+}
+
+function gravityLineHtml(gravityMs2: number | null): string {
+  if (gravityMs2 == null) return `<p><em style="font-size: 11px; opacity: 0.7;">${t("gravityUnknown")}</em></p>`;
+  const ratioPercent = (gravityMs2 / EARTH_SURFACE_GRAVITY) * 100;
+  const weightFor100kg = Math.round(ratioPercent);
+  return `<p><strong>${t("gravity")} :</strong> ${gravityMs2.toFixed(2)} m/s² — ${ratioPercent.toFixed(0)} % ${t("gravityOfEarth")} (${t("gravityWeightPrefix")} ${weightFor100kg} ${t("gravityWeightSuffix")})</p>`;
+}
+
+function gravityAnecdoteHtml(name: string, gravityMs2: number | null): string {
+  const anecdote = gravityAnecdote(name);
+  if (anecdote) return `<p class="anecdote">🎈 ${anecdote[getLang()]}</p>`;
+  if (gravityMs2 == null) return "";
+  const weightFor100kg = Math.round((gravityMs2 / EARTH_SURFACE_GRAVITY) * 100);
+  return `<p class="anecdote">${t("gravityFunFactPrefix")} ${weightFor100kg} ${t("gravityFunFactSuffix")}</p>`;
+}
+
+function photoLinksHtml(name: string): string {
+  const links = photoLinksFor(name);
+  return `<p class="photo-links">
+    <a href="${links.nasaImages}" target="_blank" rel="noopener noreferrer">${t("photosNasa")}</a><br>
+    <a href="${links.wikipedia}" target="_blank" rel="noopener noreferrer">${t("photosWikipedia")}</a>
+  </p>`;
 }
 
 function findEarthPlanet(data: SeedData): PlanetData {
@@ -179,7 +265,9 @@ function setState(next: AppState) {
   starCompareMode = null;
   selectedMoon = null;
   selectedVoyager = null;
-  animationPaused = false;
+  // animationPaused n'est PAS réinitialisé ici : c'est une préférence globale
+  // qui doit survivre à la navigation (ex. mettre en pause le Système
+  // Solaire, cliquer une planète, puis revenir doit rester en pause).
   render();
 }
 
@@ -200,12 +288,18 @@ function render() {
     renderInfoPanel(null);
     renderCompareToggle(null, false);
     orbitPlaneToggleEl.style.display = "none";
+    habitableZoneToggleEl.style.display = "none";
     renderPauseToggle(false);
     hintEl.textContent = t("hintGalaxy");
   } else if (state.view === "system") {
     const system = findSystem(state.systemId);
     const hasRealInclinations = system.planets.some((p) => p.orbit_inclination_deg != null);
-    const result = buildSystemScene(system, showRealOrbitalPlanes && hasRealInclinations);
+    const result = buildSystemScene(
+      system,
+      showRealOrbitalPlanes && hasRealInclinations,
+      showHabitableZone,
+      showScientificInterpretation,
+    );
     scene.add(result.group);
     clickable = result.clickable;
     spinGroups = result.spinnables;
@@ -219,7 +313,8 @@ function render() {
     }
     renderCompareToggle(null, false);
     renderOrbitPlaneToggle(hasRealInclinations);
-    renderPauseToggle(false);
+    renderHabitableZoneToggle(result.habitableZoneAvailable);
+    renderPauseToggle(true);
     hintEl.textContent = t("hintSystem");
   } else if (state.view === "star") {
     const system = findSystem(state.systemId);
@@ -234,29 +329,54 @@ function render() {
     renderStarInfoPanel(system, isSun);
     renderStarCompareToggle(isSun);
     orbitPlaneToggleEl.style.display = "none";
+    habitableZoneToggleEl.style.display = "none";
     renderPauseToggle(false);
     hintEl.textContent = t("hintStar");
   } else {
     const system = findSystem(state.systemId);
     const planet = findPlanet(system, state.planetName);
     const isEarth = system.id === "sol" && planet.name === "Terre";
-    const result = buildAtmosphereScene(planet, compareWithEarth && !isEarth ? findEarthPlanet(seed) : null);
-    scene.add(result.group);
-    clickable = result.clickable;
-    spinGroups = result.spinnables;
-    camera.position.copy(result.cameraPos);
-    controls.target.set(0, 0, 0);
     const moon = selectedMoon ? planet.moons.find((m) => m.name === selectedMoon) ?? null : null;
-    renderBreadcrumb(system, planet, undefined, moon ?? undefined);
+
     if (moon) {
+      // Vue satellite dédiée : caméra recentrée sur la lune seule (et non
+      // sur la planète avec la lune juste sélectionnée), pour un vrai
+      // sentiment de "descendre" d'un niveau, cohérent avec le chemin de fil
+      // d'Ariane (Voie Lactée › Système › Planète › Lune).
+      const moonResult = buildMoonFocusScene(moon, compareWithEarth ? findEarthPlanet(seed) : null);
+      scene.add(moonResult.group);
+      clickable = new Map();
+      spinGroups = moonResult.spinnables;
+      camera.position.copy(moonResult.cameraPos);
+      controls.target.set(0, 0, 0);
+      renderBreadcrumb(system, planet, undefined, moon);
       renderMoonInfoPanel(moon);
+      compareToggleEl.style.display = "block";
+      compareToggleEl.textContent = compareWithEarth ? t("compareHide") : t("compareShow");
+      compareToggleEl.onclick = () => toggleCompare();
+      orbitPlaneToggleEl.style.display = "none";
+      habitableZoneToggleEl.style.display = "none";
+      renderPauseToggle(false);
+      hintEl.textContent = t("hintMoon");
     } else {
-      renderInfoPanel(system, planet, result.visual.description[getLang()]);
+      const result = buildAtmosphereScene(
+        planet,
+        compareWithEarth && !isEarth ? findEarthPlanet(seed) : null,
+        showScientificInterpretation,
+      );
+      scene.add(result.group);
+      clickable = result.clickable;
+      spinGroups = result.spinnables;
+      camera.position.copy(result.cameraPos);
+      controls.target.set(0, 0, 0);
+      renderBreadcrumb(system, planet);
+      renderInfoPanel(system, planet, showScientificInterpretation ? result.visual.description[getLang()] : undefined);
+      renderCompareToggle(planet, isEarth);
+      orbitPlaneToggleEl.style.display = "none";
+      habitableZoneToggleEl.style.display = "none";
+      renderPauseToggle(planet.moons.length > 0);
+      hintEl.textContent = t("hintAtmosphere");
     }
-    renderCompareToggle(planet, isEarth);
-    orbitPlaneToggleEl.style.display = "none";
-    renderPauseToggle(planet.moons.length > 0);
-    hintEl.textContent = moon ? t("hintMoon") : t("hintAtmosphere");
   }
   controls.update();
 }
@@ -286,6 +406,20 @@ function renderOrbitPlaneToggle(hasRealInclinations: boolean) {
   orbitPlaneToggleEl.onclick = hasRealInclinations
     ? () => {
         showRealOrbitalPlanes = !showRealOrbitalPlanes;
+        render();
+      }
+    : null;
+}
+
+function renderHabitableZoneToggle(available: boolean) {
+  habitableZoneToggleEl.style.display = "block";
+  habitableZoneToggleEl.disabled = !available;
+  habitableZoneToggleEl.title = available ? "" : t("habitableZoneUnavailable");
+  habitableZoneToggleEl.classList.toggle("active", showHabitableZone && available);
+  habitableZoneToggleEl.textContent = showHabitableZone && available ? t("habitableZoneHide") : t("habitableZoneShow");
+  habitableZoneToggleEl.onclick = available
+    ? () => {
+        showHabitableZone = !showHabitableZone;
         render();
       }
     : null;
@@ -347,6 +481,7 @@ function renderStarInfoPanel(system: SystemData, isSun: boolean) {
     <p>${t("distance")} : ${star.sy_dist ?? 0} pc</p>
     <p><strong>${t("starComposition")} :</strong> ${t("starCompositionText")}</p>
     <p><em style="font-size: 11px; opacity: 0.7;">${note}</em></p>
+    ${photoLinksHtml(star.name)}
   `;
 }
 
@@ -388,11 +523,21 @@ function renderBreadcrumb(system?: SystemData, planet?: PlanetData, isStar?: boo
     systemBtn.onclick = () => setState({ view: "system", systemId: system.id });
     breadcrumbEl.appendChild(systemBtn);
   }
-  if (planet) {
+  if (planet && system) {
     breadcrumbEl.append(" › ");
-    const span = document.createElement("span");
-    span.textContent = localizeName(planet.name);
-    breadcrumbEl.appendChild(span);
+    if (moon) {
+      // Depuis une lune, le nom de la planète doit permettre d'y revenir
+      // directement (sans repasser par la vue système) — sinon le seul
+      // chemin de retour visible est "Système Solaire".
+      const planetBtn = document.createElement("button");
+      planetBtn.textContent = localizeName(planet.name);
+      planetBtn.onclick = () => setState({ view: "atmosphere", systemId: system.id, planetName: planet.name });
+      breadcrumbEl.appendChild(planetBtn);
+    } else {
+      const span = document.createElement("span");
+      span.textContent = localizeName(planet.name);
+      breadcrumbEl.appendChild(span);
+    }
   }
   if (isStar && system) {
     breadcrumbEl.append(" › ");
@@ -441,21 +586,26 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
     ? `${planet.moons.map((m) => localizeName(m.name)).join(", ")}`
     : t("noSatellite");
 
+  const gravityMs2 = planetGravityMs2(planet);
+
   infoPanelEl.innerHTML = `
     <h2>${localizeName(planet.name)}</h2>
-    <span class="badge ${badgeClass}">${t(SOURCE_LABEL_KEYS[planet.source])}</span>
+    ${studentMode ? "" : `<span class="badge ${badgeClass}">${t(SOURCE_LABEL_KEYS[planet.source])}</span>`}
     ${planet.dwarf ? `<span class="badge dwarf">${t("dwarfPlanetBadge")}</span>` : ""}
     <p>${t("orbitRadiusMass")} : ${planet.pl_orbsmax ?? "?"} UA — ${t("radius")} : ${planet.pl_rade ?? "?"} R⊕ — ${t("mass")} : ${planet.pl_bmasse ?? "?"} M⊕</p>
     <p>${t("equilibriumTemp")} : ${formatTemp(planet.pl_eqt)}</p>
+    ${gravityLineHtml(gravityMs2)}
+    ${studentMode ? gravityAnecdoteHtml(planet.name, gravityMs2) : ""}
     <p><strong>${t("molecules")} :</strong> ${molecules}</p>
     <p>${note}</p>
-    ${planet.spectrum_ref ? `<p><em>${t("reference")} : ${planet.spectrum_ref}</em></p>` : ""}
-    ${heuristicDescription ? `<p><strong>${t("visualRendering")} :</strong> ${heuristicDescription}</p>` : ""}
+    ${!studentMode && planet.spectrum_ref ? `<p><em>${t("reference")} : ${planet.spectrum_ref}</em></p>` : ""}
+    ${!studentMode && heuristicDescription ? `<p><strong>${t("visualRendering")} :</strong> ${heuristicDescription}</p>` : ""}
     ${rotationLine ? `<p>${t("rotationPeriod")} : ${rotationLine}</p>` : ""}
     <p><strong>${t("satellitesShown")} :</strong> ${shownMoons}${shownMoons ? ` (${moonsLine})` : ""}</p>
-    <p><strong>${t("satellitesKnown")} :</strong> ${knownMoons}</p>
+    ${studentMode ? "" : `<p><strong>${t("satellitesKnown")} :</strong> ${knownMoons}</p>`}
     <p><strong>${t("distanceFromEarth")} :</strong> ${earthInfo.distance[lang]}</p>
-    <p><strong>${t("travelTime")} :</strong> ${earthInfo.travelTime[lang]}<br><em style="font-size: 11px; opacity: 0.7;">${t("travelTimeCaption")}</em></p>
+    <p><strong>${t("travelTime")} :</strong> ${earthInfo.travelTime[lang]}${studentMode ? "" : `<br><em style="font-size: 11px; opacity: 0.7;">${t("travelTimeCaption")}</em>`}</p>
+    ${photoLinksHtml(planet.name)}
   `;
 }
 
@@ -471,7 +621,10 @@ function renderMoonInfoPanel(moon: MoonData) {
     <p>${t("moonRadius")} : ${moon.radius_km.toLocaleString(getLang())} km</p>
     <p>${t("moonOrbit")} : ${moon.orbit_km.toLocaleString(getLang())} km</p>
     <p>${t("moonPeriod")} : ${periodLine}</p>
+    ${gravityLineHtml(moon.gravity_ms2 ?? null)}
+    ${studentMode ? gravityAnecdoteHtml(moon.name, moon.gravity_ms2 ?? null) : ""}
     <p><em style="font-size: 11px; opacity: 0.7;">${sourceNote}</em></p>
+    ${photoLinksHtml(moon.name)}
   `;
 }
 

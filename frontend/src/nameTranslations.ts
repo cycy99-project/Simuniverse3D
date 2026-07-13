@@ -22,7 +22,19 @@ const FR_TO_EN: Record<string, string> = {
   "Japet": "Iapetus",
   "Obéron": "Oberon",
   "Néréide": "Nereid",
+  "Saturne": "Saturn",
+  "Cérès": "Ceres",
+  "Pluton": "Pluto",
+  "Éris": "Eris",
 };
+
+// Nom anglais "de recherche" toujours renvoyé (indépendamment de la langue UI
+// courante), utilisé pour construire des requêtes vers des banques d'images
+// externes (NASA Images, Wikipedia EN) où le nom anglais donne de bien
+// meilleurs résultats que l'accentué français (ex. "Ganymede" vs "Ganymède").
+export function englishName(name: string): string {
+  return FR_TO_EN[name] ?? name;
+}
 
 export function localizeName(name: string): string {
   if (getLang() !== "en") return name;

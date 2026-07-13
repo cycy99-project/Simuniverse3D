@@ -35,9 +35,23 @@
       #breadcrumb { position: absolute; top: var(--space-4); left: var(--space-4); font-size: 14px; opacity: 0.8; }
       #breadcrumb button { background: none; border: none; min-height: 0; color: #8fd0ff; cursor: pointer; font-size: 14px; padding: 4px 0; }
       #breadcrumb button:hover { text-decoration: underline; border-color: transparent; color: #8fd0ff; }
-      #lang-toggle { position: absolute; top: var(--space-4); right: var(--space-4); display: flex; gap: var(--space-2); z-index: 10; }
+      /* Colonne flex plutôt que des `top` en dur : un bouton dont le texte
+         passe sur 2 lignes (ex. interprétation scientifique) pousse
+         naturellement les suivants au lieu de les chevaucher. */
+      #right-toggles {
+        position: absolute; top: var(--space-4); right: var(--space-4); z-index: 10;
+        display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-3);
+        max-width: 240px;
+      }
+      /* Le panneau d'info occupe les 320px de droite : quand il est visible,
+         la colonne de boutons doit se décaler à sa gauche, sinon elle flotte
+         (z-index oblige) par-dessus le texte du cartouche. */
+      #ui-overlay:has(#info-panel.visible) #right-toggles {
+        right: calc(320px + var(--space-4));
+      }
+      #lang-toggle { display: flex; gap: var(--space-2); }
       #lang-toggle button { padding: 4px 8px; }
-      #unit-toggle { position: absolute; top: 44px; right: var(--space-4); display: flex; gap: var(--space-2); z-index: 10; }
+      #unit-toggle { display: flex; gap: var(--space-2); }
       #unit-toggle button { padding: 4px 8px; }
       #compare-toggle {
         position: absolute; top: 40px; left: var(--space-4); z-index: 10; display: none;
@@ -47,15 +61,21 @@
         position: absolute; top: 76px; left: var(--space-4); z-index: 10; display: none;
         padding: 6px 10px;
       }
+      #bottom-left {
+        position: absolute; bottom: var(--space-4); left: var(--space-4); z-index: 10;
+        display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+        max-width: calc(100vw - 340px);
+      }
+      #hint { position: static; font-size: 12px; opacity: 0.6; }
       #music-toggle {
-        position: absolute; bottom: var(--space-4); left: 140px; z-index: 10;
+        position: static; flex-shrink: 0;
         padding: 6px 10px;
       }
       #music-toggle.muted { opacity: 0.5; }
-      #orbit-plane-toggle {
-        position: absolute; top: 76px; right: var(--space-4); z-index: 10; display: none;
-        padding: 6px 10px; max-width: 220px; text-align: right;
-      }
+      #sci-interp-toggle { padding: 6px 10px; max-width: 220px; text-align: right; }
+      #student-mode-toggle { padding: 6px 10px; max-width: 220px; text-align: right; }
+      #orbit-plane-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
+      #habitable-zone-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #info-panel {
         position: absolute; top: 0; right: 0; height: 100%; width: 320px;
         background: var(--color-card-solid); border-left: 1px solid var(--color-border);
@@ -69,7 +89,7 @@
       .badge.no_detection, .badge.no_data { background: #4d3a1f; color: #e8c89b; }
       .badge.dwarf { background: #3a2f4d; color: #cbb0e8; margin-left: 6px; }
       .molecule-tag { display: inline-block; background: var(--color-border); padding: 2px 6px; border-radius: 4px; margin: 2px; font-size: 12px; }
-      #hint { position: absolute; bottom: var(--space-4); left: var(--space-4); font-size: 12px; opacity: 0.6; }
+      .anecdote { background: var(--color-accent-bg); border-radius: 6px; padding: 8px 10px; }
       #credits { position: absolute; bottom: var(--space-4); right: var(--space-4); font-size: 11px; opacity: 0.45; }
       #credits a { color: inherit; }
       @media (prefers-reduced-motion: reduce) {
@@ -82,14 +102,21 @@
       <canvas id="scene-canvas"></canvas>
       <div id="ui-overlay">
         <div id="breadcrumb"></div>
-        <div id="lang-toggle"></div>
-        <div id="unit-toggle"></div>
+        <div id="right-toggles">
+          <div id="lang-toggle"></div>
+          <div id="unit-toggle"></div>
+          <button id="sci-interp-toggle"></button>
+          <button id="student-mode-toggle"></button>
+          <button id="orbit-plane-toggle"></button>
+          <button id="habitable-zone-toggle"></button>
+        </div>
         <button id="compare-toggle"></button>
-        <button id="orbit-plane-toggle"></button>
         <button id="pause-toggle"></button>
         <div id="info-panel"></div>
-        <div id="hint"></div>
-        <button id="music-toggle"></button>
+        <div id="bottom-left">
+          <div id="hint"></div>
+          <button id="music-toggle"></button>
+        </div>
         <div id="credits">Textures : <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0) — Musique : Orbites Dérivantes</div>
       </div>
       <audio id="bg-music" src="/sounds/orbites-derivantes.mp3" loop preload="auto"></audio>

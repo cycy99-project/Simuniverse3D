@@ -39,8 +39,24 @@ FALLBACK_SY_DIST_PC = {
 # HD 189733 b : la ligne default_flag=1 de l'archive a pl_orbsmax et pl_eqt
 # à NULL (solution de référence différente selon les publications RV).
 # Valeurs de repli issues de la littérature (Bouchy et al. 2005 ; Charbonneau et al. 2008).
+# TRAPPIST-1 b-h : pl_eqt NULL sur la ligne default_flag=1 de l'archive.
+# Températures d'équilibre (albédo de Bond nul) de Grimm et al. 2018, A&A.
 FALLBACK_PLANET_FIELDS = {
     "HD 189733 b": {"pl_orbsmax": 0.031, "pl_eqt": 1200},
+    "TRAPPIST-1 b": {"pl_eqt": 400.1},
+    "TRAPPIST-1 c": {"pl_eqt": 341.9},
+    "TRAPPIST-1 d": {"pl_eqt": 288.0},
+    "TRAPPIST-1 e": {"pl_eqt": 251.3},
+    "TRAPPIST-1 f": {"pl_eqt": 219.0},
+    "TRAPPIST-1 g": {"pl_eqt": 198.6},
+    "TRAPPIST-1 h": {"pl_eqt": 168.2},
+}
+
+# st_spectype NULL sur la ligne default_flag=1 de l'archive pour TRAPPIST-1
+# (bien que st_teff=2566K y soit renseigné). Type spectral de la littérature
+# (Gillon et al. 2017, Nature ; Van Grootel et al. 2018, ApJ).
+FALLBACK_SPECTYPE = {
+    "TRAPPIST-1": "M8V",
 }
 
 # Molécules atmosphériques connues (littérature publiée), par planète.
@@ -81,6 +97,20 @@ KNOWN_ATMOSPHERES = {
         "note_en": "No thick CO2-type atmosphere detected (JWST MIRI, 2023).",
         "spectrum_ref": "Zieba et al. 2023, Nature",
     },
+    "TRAPPIST-1 d": {
+        "source": "no_detection",
+        "molecules": [],
+        "note": "Spectre de transmission plat (JWST NIRSpec, 2025) : atmosphères épaisses (riches en H2, ou type Vénus/Mars/Terre) exclues. Si une atmosphère existe, elle est très ténue ou masquée par des aérosols d'altitude.",
+        "note_en": "Flat transmission spectrum (JWST NIRSpec, 2025): thick atmospheres (H2-rich, or Venus/Mars/Earth-like) ruled out. If an atmosphere exists, it is extremely thin or hidden by high-altitude aerosols.",
+        "spectrum_ref": "Piaulet-Ghorayeb et al. 2025, ApJ (in press) — JWST NIRSpec",
+    },
+    "TRAPPIST-1 e": {
+        "source": "no_detection",
+        "molecules": [],
+        "note": "Spectre de transmission (JWST NIRSpec/PRISM, 4 transits, 2025) : atmosphères primaires épaisses riches en H2 exclues, mais résultat non tranché — une atmosphère fine dominée par N2 (traces de CO2/CH4) ou une surface rocheuse nue restent toutes deux compatibles avec les données.",
+        "note_en": "Transmission spectrum (JWST NIRSpec/PRISM, 4 transits, 2025): thick H2-rich primary atmospheres ruled out, but the result is inconclusive — a thin N2-dominated atmosphere (CO2/CH4 traces) or a bare rocky surface are both consistent with the data.",
+        "spectrum_ref": "Espinoza et al. 2025, ApJL; Glidden et al. 2025, ApJL — JWST NIRSpec/PRISM",
+    },
 }
 
 # Lunes principales du Système Solaire (données réelles, source Wikipedia/JPL) :
@@ -97,64 +127,85 @@ KNOWN_ATMOSPHERES = {
 # sont à moins de 1-2° (accrétion depuis un disque équatorial), à l'exception
 # notable de Japet (7.57°), Miranda (4.42°) et Triton (lune capturée, ~23°
 # d'écart en plus d'être rétrograde).
+# gravity_ms2 : gravité de surface réelle (m/s²), valeurs standard des fiches
+# NASA/Wikipedia — PAS dérivée de radius_km ici car la masse des lunes n'est
+# pas un champ de ce jeu de données. Absente pour Néréide : sa masse n'a
+# jamais été mesurée directement (jamais survolée de près), donc aucune
+# valeur fiable n'existe à citer, contrairement aux autres lunes majeures.
 MOONS = {
     "Terre": [
         {"name": "Lune", "radius_km": 1738, "orbit_km": 384_399, "period_days": 27.32,
-         "color": "#a8a8a2", "texture": "/textures/2k_moon.jpg", "inclination_deg": 5.145},
+         "color": "#a8a8a2", "texture": "/textures/2k_moon.jpg", "inclination_deg": 5.145, "gravity_ms2": 1.62},
     ],
+    # Phobos/Deimos : corps triaxiaux irréguliers (pas à l'équilibre
+    # hydrostatique, trop petits) — shape_ratio = demi-axes réels / rayon
+    # moyen géométrique (Willner et al. 2014 pour Phobos ; modèles de forme
+    # stéréophotoclinométriques, Earth Planets Space 2023, pour Deimos).
+    # render_brightness_boost : leur albédo réel (~0,07, quasi charbon) rend
+    # la texture authentique presque invisible sur fond noir en rendu non
+    # éclairé — boost purement visuel, ne change pas la donnée physique.
     "Mars": [
         {"name": "Phobos", "radius_km": 11.3, "orbit_km": 9_380, "period_days": 0.32, "color": "#7a6f60",
-         "texture": "/textures/2k_phobos.jpg", "inclination_deg": 1.093},
+         "texture": "/textures/2k_phobos.jpg", "inclination_deg": 1.093,
+         "shape_ratio": [1.176, 1.032, 0.823], "gravity_ms2": 0.0057, "render_brightness_boost": 4.0},
         {"name": "Deimos", "radius_km": 6.2, "orbit_km": 23_460, "period_days": 1.26, "color": "#8a8075",
-         "texture": "/textures/2k_deimos.jpg", "inclination_deg": 0.93},
+         "texture": "/textures/2k_deimos.jpg", "inclination_deg": 0.93,
+         "shape_ratio": [1.291, 0.945, 0.820], "gravity_ms2": 0.003, "render_brightness_boost": 4.0},
     ],
     "Jupiter": [
         {"name": "Io", "radius_km": 1821.6, "orbit_km": 421_800, "period_days": 1.77, "color": "#d9c36a",
-         "texture": "/textures/2k_io.jpg", "inclination_deg": 0.05},
+         "texture": "/textures/2k_io.jpg", "inclination_deg": 0.05, "gravity_ms2": 1.796},
         {"name": "Europe", "radius_km": 1560.8, "orbit_km": 671_100, "period_days": 3.55, "color": "#d8cdb8",
-         "texture": "/textures/2k_europa.jpg", "inclination_deg": 0.47},
+         "texture": "/textures/2k_europa.jpg", "inclination_deg": 0.47, "gravity_ms2": 1.315},
         {"name": "Ganymède", "radius_km": 2634.1, "orbit_km": 1_070_400, "period_days": 7.16, "color": "#9c8f7a",
-         "texture": "/textures/2k_ganymede.jpg", "inclination_deg": 0.2},
+         "texture": "/textures/2k_ganymede.jpg", "inclination_deg": 0.2, "gravity_ms2": 1.428},
         {"name": "Callisto", "radius_km": 2410.3, "orbit_km": 1_882_700, "period_days": 16.69, "color": "#6e6258",
-         "texture": "/textures/2k_callisto.jpg", "inclination_deg": 0.192},
+         "texture": "/textures/2k_callisto.jpg", "inclination_deg": 0.192, "gravity_ms2": 1.235},
     ],
     "Saturne": [
         {"name": "Mimas", "radius_km": 198, "orbit_km": 185_539, "period_days": 0.9, "color": "#9a958c",
-         "texture": "/textures/2k_mimas.jpg", "inclination_deg": 1.53},
+         "texture": "/textures/2k_mimas.jpg", "inclination_deg": 1.53, "gravity_ms2": 0.064},
         {"name": "Encelade", "radius_km": 252, "orbit_km": 237_948, "period_days": 1.4, "color": "#eef2f5",
-         "texture": "/textures/2k_enceladus.jpg", "inclination_deg": 0.02},
+         "texture": "/textures/2k_enceladus.jpg", "inclination_deg": 0.02, "gravity_ms2": 0.113},
         {"name": "Téthys", "radius_km": 531, "orbit_km": 294_619, "period_days": 1.9, "color": "#d8dbe0",
-         "texture": "/textures/2k_tethys.jpg", "inclination_deg": 1.12},
+         "texture": "/textures/2k_tethys.jpg", "inclination_deg": 1.12, "gravity_ms2": 0.145},
         {"name": "Dioné", "radius_km": 561.5, "orbit_km": 377_396, "period_days": 2.7, "color": "#c9ccd1",
-         "texture": "/textures/2k_dione.jpg", "inclination_deg": 0.02},
+         "texture": "/textures/2k_dione.jpg", "inclination_deg": 0.02, "gravity_ms2": 0.232},
         {"name": "Rhéa", "radius_km": 763.5, "orbit_km": 527_108, "period_days": 4.5, "color": "#cfd2d6",
-         "texture": "/textures/2k_rhea.jpg", "inclination_deg": 0.33},
+         "texture": "/textures/2k_rhea.jpg", "inclination_deg": 0.33, "gravity_ms2": 0.264},
         {"name": "Titan", "radius_km": 2574.5, "orbit_km": 1_221_870, "period_days": 16, "color": "#d9a066",
-         "texture": "/textures/2k_titan.jpg", "inclination_deg": 0.31},
+         "texture": "/textures/2k_titan.jpg", "inclination_deg": 0.31, "gravity_ms2": 1.352},
         {"name": "Japet", "radius_km": 735, "orbit_km": 3_560_820, "period_days": 79, "color": "#8a7d6e",
-         "texture": "/textures/2k_iapetus.jpg", "inclination_deg": 7.57},
+         "texture": "/textures/2k_iapetus.jpg", "inclination_deg": 7.57, "gravity_ms2": 0.223},
     ],
     "Uranus": [
         {"name": "Miranda", "radius_km": 235.8, "orbit_km": 129_846, "period_days": 1.4135, "color": "#a8a29c",
-         "texture": "/textures/2k_miranda.jpg", "inclination_deg": 4.42},
+         "texture": "/textures/2k_miranda.jpg", "inclination_deg": 4.42, "gravity_ms2": 0.079},
         {"name": "Ariel", "radius_km": 578.9, "orbit_km": 190_929, "period_days": 2.5204, "color": "#b8b6b0",
-         "texture": "/textures/2k_ariel.jpg", "inclination_deg": 0.026},
+         "texture": "/textures/2k_ariel.jpg", "inclination_deg": 0.026, "gravity_ms2": 0.269},
         {"name": "Umbriel", "radius_km": 584.7, "orbit_km": 265_986, "period_days": 4.1442, "color": "#6b6862",
-         "texture": "/textures/2k_umbriel.jpg", "inclination_deg": 0.083},
+         "texture": "/textures/2k_umbriel.jpg", "inclination_deg": 0.083, "gravity_ms2": 0.253},
         {"name": "Titania", "radius_km": 788.4, "orbit_km": 436_298, "period_days": 8.7059, "color": "#948d84",
-         "texture": "/textures/2k_titania.jpg", "inclination_deg": 0.114},
+         "texture": "/textures/2k_titania.jpg", "inclination_deg": 0.114, "gravity_ms2": 0.379},
         {"name": "Obéron", "radius_km": 761.4, "orbit_km": 583_511, "period_days": 13.463, "color": "#8f887e",
-         "texture": "/textures/2k_oberon.jpg", "inclination_deg": 0.125},
+         "texture": "/textures/2k_oberon.jpg", "inclination_deg": 0.125, "gravity_ms2": 0.347},
     ],
     "Neptune": [
         {"name": "Triton", "radius_km": 1352.5, "orbit_km": 354_759, "period_days": -5.876854, "color": "#e8d6d0",
-         "texture": "/textures/2k_triton.jpg", "inclination_deg": 23.115},
+         "texture": "/textures/2k_triton.jpg", "inclination_deg": 23.115, "gravity_ms2": 0.779},
+        # Forme triaxiale de Néréide : AUCUNE image rapprochée n'existe (Voyager
+        # 2 est passé à 4,7 millions de km) — l'estimation ci-dessous vient
+        # d'un modèle photométrique de courbe de rotation (Thomas, Veverka &
+        # Helfenstein 1991), une solution dégénérée de basse confiance, pas une
+        # forme mesurée par imagerie. Conservée à titre illustratif (le corps
+        # est réellement connu pour être non sphérique) plutôt qu'une sphère
+        # parfaite qui serait, elle, certainement fausse.
         {"name": "Néréide", "radius_km": 178.5, "orbit_km": 5_513_900, "period_days": 360.14, "color": "#9a978f",
-         "inclination_deg": 7.09},
+         "inclination_deg": 7.09, "shape_ratio": [1.494, 0.897, 0.747]},
     ],
     "Pluton": [
         {"name": "Charon", "radius_km": 606, "orbit_km": 19_591, "period_days": 6.3872, "color": "#ab9c8f",
-         "texture": "/textures/2k_charon.jpg", "inclination_deg": 0.08},
+         "texture": "/textures/2k_charon.jpg", "inclination_deg": 0.08, "gravity_ms2": 0.288},
     ],
 }
 
@@ -255,7 +306,7 @@ def fetch_exoplanet_systems() -> list[dict]:
             "name": host,
             "star": {
                 "name": host,
-                "spectype": row.get("st_spectype"),
+                "spectype": row.get("st_spectype") or FALLBACK_SPECTYPE.get(host),
                 "st_teff": row.get("st_teff"),
                 "st_rad": row.get("st_rad"),
                 "sy_dist": row.get("sy_dist") or FALLBACK_SY_DIST_PC.get(host),

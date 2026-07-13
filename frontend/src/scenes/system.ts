@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import type { PlanetData, SystemData } from "../data/types";
 import { deriveAtmosphere } from "../atmosphere/heuristic";
+import { deriveStarColor } from "../starColor";
+import { computeHabitableZone } from "../habitableZone";
 import { loadTexture } from "../textureCache";
 import type { Spinnable } from "../spin";
 import { buildMoons } from "./moons";
@@ -11,11 +13,22 @@ import { t } from "../i18n";
 
 export const STAR_CLICK_ID = "__star__";
 
-function planetMaterial(planet: PlanetData): THREE.Material {
+// Couleur neutre utilisée quand l'interprétation scientifique est désactivée
+// (cf. showScientificInterpretation) : signale visuellement "donnée
+// insuffisante" plutôt que de proposer une teinte déduite (heuristique), pour
+// les corps sans photo réelle ni couleur mesurée.
+const NEUTRAL_UNKNOWN_COLOR = "#6b6b6b";
+
+function planetMaterial(planet: PlanetData, showScientificInterpretation: boolean): THREE.Material {
   if (planet.texture) {
     return new THREE.MeshBasicMaterial({ map: loadTexture(planet.texture) });
   }
-  const color = planet.color ?? deriveAtmosphere(planet.molecules, planet.pl_eqt).skyColor;
+  if (planet.color) {
+    return new THREE.MeshBasicMaterial({ color: planet.color });
+  }
+  const color = showScientificInterpretation
+    ? deriveAtmosphere(planet.molecules, planet.pl_eqt).skyColor
+    : NEUTRAL_UNKNOWN_COLOR;
   return new THREE.MeshBasicMaterial({ color });
 }
 
@@ -85,8 +98,11 @@ function makeVoyagerMarker(color: number): THREE.Mesh {
 // Ligne radiale (pas un anneau d'orbite) : les sondes Voyager sont sur une
 // trajectoire d'échappement hyperbolique en ligne quasi droite, pas en orbite
 // fermée autour du Soleil — un anneau circulaire serait factuellement faux.
-function makeRadialLine(target: THREE.Vector3): THREE.Line {
-  const points = [new THREE.Vector3(0, 0, 0), target];
+// Part de la Terre (lancement réel des deux sondes en 1977), pas du Soleil —
+// point schématique fixe sur l'orbite terrestre (comme l'azimut des sondes,
+// cf. voyager.ts), la Terre elle-même continuant d'orbiter en continu.
+function makeRadialLine(start: THREE.Vector3, target: THREE.Vector3): THREE.Line {
+  const points = [start, target];
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
   const material = new THREE.LineDashedMaterial({ color: 0x556074, dashSize: 2, gapSize: 1.2 });
   const line = new THREE.Line(geometry, material);
@@ -151,9 +167,15 @@ export interface SystemSceneResult {
   clickable: Map<THREE.Object3D, string>;
   cameraPos: THREE.Vector3;
   spinnables: Spinnable[];
+  habitableZoneAvailable: boolean;
 }
 
-export function buildSystemScene(system: SystemData, realOrbitalPlanes = false): SystemSceneResult {
+export function buildSystemScene(
+  system: SystemData,
+  realOrbitalPlanes = false,
+  showHabitableZone = false,
+  showScientificInterpretation = true,
+): SystemSceneResult {
   const group = new THREE.Group();
   const clickable = new Map<THREE.Object3D, string>();
   const spinnables: Spinnable[] = [];
@@ -161,19 +183,50 @@ export function buildSystemScene(system: SystemData, realOrbitalPlanes = false):
   group.add(makeStarfield(2000, 800));
 
   const isSun = system.id === "sol";
+  // Rayon réel (rayons solaires, st_rad) plutôt qu'une taille générique fixe :
+  // une naine rouge comme TRAPPIST-1 (0,119 R☉) doit paraître nettement plus
+  // petite qu'une étoile de type solaire (K2-18, HD 189733), sans quoi son
+  // disque schématique (avant : taille fixe 2) pouvait dépasser le rayon
+  // orbital de ses propres planètes les plus proches.
+  const starRadius = isSun ? 2.5 : Math.min(2.5, Math.max(0.8, 2.5 * (system.star.st_rad ?? 1)));
+  const starColor = isSun ? "#ffd97a" : deriveStarColor(system.star.spectype);
   const starMaterial = system.star.texture
     ? new THREE.MeshBasicMaterial({ map: loadTexture(system.star.texture) })
-    : new THREE.MeshBasicMaterial({ color: isSun ? 0xffd97a : 0xfff2c9 });
-  const starMesh = new THREE.Mesh(new THREE.SphereGeometry(isSun ? 2.5 : 2, 24, 24), starMaterial);
+    : new THREE.MeshBasicMaterial({ color: starColor });
+  const starMesh = new THREE.Mesh(new THREE.SphereGeometry(starRadius, 24, 24), starMaterial);
   group.add(starMesh);
   clickable.set(starMesh, STAR_CLICK_ID);
-  group.add(makeLabelSprite(localizeName(system.star.name)).translateY(4));
+  group.add(makeLabelSprite(localizeName(system.star.name)).translateY(starRadius + 2));
+
+  // Échelle absolue (sqrt(AU) * ORBIT_SCALE) calibrée sur le Système Solaire
+  // (0,39 à 39,5 UA) : appliquée telle quelle à un système ultra-compact comme
+  // TRAPPIST-1 (0,011 à 0,062 UA), elle produit des orbites plus petites que
+  // le rayon même de l'étoile. Pour les systèmes exoplanétaires, on étire donc
+  // linéairement sqrt(AU) sur une bande visuelle fixe — un transform affine
+  // qui préserve l'ordre et les proportions RELATIVES des écarts entre
+  // planètes du même système (ex. la chaîne quasi-résonnante de TRAPPIST-1
+  // reste visible), sans prétendre à une échelle absolue comparable entre
+  // systèmes différents (jamais montrés côte à côte de toute façon).
+  const orbitAUs = system.planets.map((p) => p.pl_orbsmax ?? 1);
+  const minOrbitAU = Math.min(...orbitAUs);
+  const maxOrbitAU = Math.max(...orbitAUs);
+  const NORMALIZED_MIN_RADIUS = starRadius + 3;
+  const NORMALIZED_SPAN = 6 + system.planets.length * 3;
+
+  function computeOrbitRadius(orbitAU: number): number {
+    if (isSun) return Math.sqrt(orbitAU) * ORBIT_SCALE;
+    if (maxOrbitAU === minOrbitAU) return NORMALIZED_MIN_RADIUS + NORMALIZED_SPAN / 2;
+    const t = (Math.sqrt(orbitAU) - Math.sqrt(minOrbitAU)) / (Math.sqrt(maxOrbitAU) - Math.sqrt(minOrbitAU));
+    return NORMALIZED_MIN_RADIUS + t * NORMALIZED_SPAN;
+  }
 
   let maxOrbit = 5;
+  let earthOrbitRadius = computeOrbitRadius(1);
   system.planets.forEach((planet, index) => {
     const orbitAU = planet.pl_orbsmax ?? 1;
-    const orbitRadius = Math.sqrt(orbitAU) * ORBIT_SCALE;
+    const orbitRadius = computeOrbitRadius(orbitAU);
     maxOrbit = Math.max(maxOrbit, orbitRadius);
+    if (planet.name === "Terre") earthOrbitRadius = orbitRadius;
 
     // Deux groupes imbriqués (même principe que les lunes, cf. moons.ts) :
     // le groupe extérieur porte le VRAI tilt orbital (magnitude réelle,
@@ -206,7 +259,7 @@ export function buildSystemScene(system: SystemData, realOrbitalPlanes = false):
     const size = planetSize(planet.pl_rade);
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(size, 32, 32),
-      planetMaterial(planet),
+      planetMaterial(planet, showScientificInterpretation),
     );
     mesh.position.copy(localPos);
     pivot.add(mesh);
@@ -226,6 +279,40 @@ export function buildSystemScene(system: SystemData, realOrbitalPlanes = false):
       pivot.add(ringMesh);
     }
   });
+
+  // Zone habitable (Kopparapu et al. 2013/2014, cf. habitableZone.ts) : anneau
+  // translucide converti dans le même repère visuel que les orbites via
+  // computeOrbitRadius, pour que sa position relative aux planètes affichées
+  // reste directement comparable (ex. TRAPPIST-1 e/f dans la zone). null si
+  // st_teff/st_rad manquent (pas d'approximation fabriquée dans ce cas).
+  const habitableZone = computeHabitableZone(system.star.st_teff, system.star.st_rad);
+  if (showHabitableZone && habitableZone) {
+    const rawInner = computeOrbitRadius(habitableZone.innerAU);
+    const rawOuter = computeOrbitRadius(habitableZone.outerAU);
+    // Repli visuel : computeOrbitRadius extrapole linéairement hors de la
+    // plage des planètes connues (t hors [0,1]) quand la zone habitable
+    // tombe en dehors de leurs orbites — la borne interne peut alors
+    // ressortir plus petite que le rayon de l'étoile elle-même. On la
+    // recale juste hors de la surface stellaire plutôt que de laisser
+    // l'anneau traverser l'étoile, sans changer la position de la borne
+    // externe (qui reste l'information scientifique utile ici).
+    const hzInnerRadius = Math.max(starRadius + 0.3, Math.min(rawInner, rawOuter));
+    const hzOuterRadius = Math.max(hzInnerRadius + 0.2, Math.max(rawInner, rawOuter));
+    const hzGeometry = new THREE.RingGeometry(hzInnerRadius, hzOuterRadius, 64);
+    hzGeometry.rotateX(-Math.PI / 2);
+    const hzMaterial = new THREE.MeshBasicMaterial({
+      color: 0x4caf7a,
+      transparent: true,
+      opacity: 0.16,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    });
+    group.add(new THREE.Mesh(hzGeometry, hzMaterial));
+    const hzLabel = makeLabelSprite(t("habitableZoneLabel"));
+    hzLabel.position.set(0, 1.5, hzOuterRadius);
+    group.add(hzLabel);
+    maxOrbit = Math.max(maxOrbit, hzOuterRadius);
+  }
 
   // Bornes réelles approximatives (UA) des deux ceintures du Système Solaire ;
   // voir le commentaire de makeBeltPoints pour la limite de ce qui est réel
@@ -262,7 +349,7 @@ export function buildSystemScene(system: SystemData, realOrbitalPlanes = false):
       // les laisse hors champ et une seule semblait visible.
       maxOrbit = Math.max(maxOrbit, radius);
 
-      group.add(makeRadialLine(pos));
+      group.add(makeRadialLine(new THREE.Vector3(earthOrbitRadius, 0, 0), pos));
 
       const marker = makeVoyagerMarker(v.color);
       marker.position.copy(pos);
@@ -275,5 +362,11 @@ export function buildSystemScene(system: SystemData, realOrbitalPlanes = false):
     }
   }
 
-  return { group, clickable, cameraPos: new THREE.Vector3(0, maxOrbit * 0.8, maxOrbit * 1.4), spinnables };
+  return {
+    group,
+    clickable,
+    cameraPos: new THREE.Vector3(0, maxOrbit * 0.8, maxOrbit * 1.4),
+    spinnables,
+    habitableZoneAvailable: habitableZone !== null,
+  };
 }

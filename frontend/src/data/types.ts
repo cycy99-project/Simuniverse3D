@@ -24,6 +24,24 @@ export interface MoonData {
   // direction). Ex. Japet ≈7,57°, Triton ≈23° (écart à 156,9° réels), la
   // plupart des lunes majeures <1-2°.
   inclination_deg?: number;
+  // Rapport d'échelle [x,y,z] pour un corps triaxial irrégulier connu (ex.
+  // Phobos, Deimos, Néréide) : ces lunes ne sont PAS sphériques (formes
+  // réelles mesurées par imagerie ou, pour Néréide, estimation photométrique
+  // de basse confiance faute d'imagerie rapprochée — voir commentaire dans
+  // ingest.py). absent/undefined = sphère (cas par défaut, correct pour la
+  // grande majorité des lunes majeures qui sont bien à l'équilibre hydrostatique).
+  shape_ratio?: [number, number, number];
+  // Gravité de surface réelle (m/s²) — valeur publiée connue, PAS dérivée
+  // (la masse des lunes n'est pas un champ de ce jeu de données). Absente
+  // pour Néréide : sa masse n'a jamais été mesurée directement (jamais
+  // survolée de près), donc aucune valeur fiable à citer.
+  gravity_ms2?: number | null;
+  // Multiplicateur de luminosité PUREMENT visuel (pas une donnée physique) :
+  // certaines lunes ont un albédo réel très faible (Phobos/Deimos ≈0,07,
+  // presque noir charbon) et leur texture authentique devient quasi
+  // invisible sur le fond noir du vide spatial en rendu non éclairé
+  // (MeshBasicMaterial). absent/undefined = 1 (aucun changement).
+  render_brightness_boost?: number;
 }
 
 export interface RingData {
