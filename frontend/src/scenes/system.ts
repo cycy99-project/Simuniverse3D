@@ -9,6 +9,8 @@ import { buildMoons } from "./moons";
 import { buildRing } from "./rings";
 import { VOYAGER_1, VOYAGER_2, currentDistanceAU, voyagerPosition, type VoyagerInfo } from "../voyager";
 import { localizeName } from "../nameTranslations";
+import { makeLabelSprite } from "../labelSprite";
+import { makeAsteroidBelt, makeKuiperCloud } from "./asteroids";
 import { t } from "../i18n";
 
 export const STAR_CLICK_ID = "__star__";
@@ -75,22 +77,6 @@ const MOON_SCALE = {
   gapMultiplier: 1.15,
 };
 
-function makeLabelSprite(text: string): THREE.Sprite {
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 64;
-  const ctx = canvas.getContext("2d")!;
-  ctx.font = "24px system-ui, sans-serif";
-  ctx.fillStyle = "#e6e6e6";
-  ctx.textAlign = "center";
-  ctx.fillText(text, 128, 40);
-  const texture = new THREE.CanvasTexture(canvas);
-  const material = new THREE.SpriteMaterial({ map: texture, depthWrite: false, transparent: true });
-  const sprite = new THREE.Sprite(material);
-  sprite.scale.set(8, 2, 1);
-  return sprite;
-}
-
 function makeVoyagerMarker(color: number): THREE.Mesh {
   return new THREE.Mesh(new THREE.OctahedronGeometry(0.45, 0), new THREE.MeshBasicMaterial({ color }));
 }
@@ -108,27 +94,6 @@ function makeRadialLine(start: THREE.Vector3, target: THREE.Vector3): THREE.Line
   const line = new THREE.Line(geometry, material);
   line.computeLineDistances();
   return line;
-}
-
-// Nuage de points schématique : la RÉGION (bornes réelles en UA) est exacte,
-// mais chaque point individuel est une position aléatoire, pas un astéroïde
-// numéroté réel — il serait faux de prétendre représenter les positions
-// réelles de millions d'objets non catalogués individuellement ici.
-function makeBeltPoints(innerAU: number, outerAU: number, count: number, color: number, thickness: number): THREE.Points {
-  const innerRadius = Math.sqrt(innerAU) * ORBIT_SCALE;
-  const outerRadius = Math.sqrt(outerAU) * ORBIT_SCALE;
-  const positions = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const radius = innerRadius + Math.random() * (outerRadius - innerRadius);
-    positions[i * 3] = Math.cos(angle) * radius;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * thickness;
-    positions[i * 3 + 2] = Math.sin(angle) * radius;
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  const material = new THREE.PointsMaterial({ color, size: 0.12, sizeAttenuation: true, transparent: true, opacity: 0.7 });
-  return new THREE.Points(geometry, material);
 }
 
 // Fond étoilé purement décoratif : positions aléatoires sur une coquille
@@ -315,20 +280,27 @@ export function buildSystemScene(
   }
 
   // Bornes réelles approximatives (UA) des deux ceintures du Système Solaire ;
-  // voir le commentaire de makeBeltPoints pour la limite de ce qui est réel
-  // (la région) vs schématique (les points individuels).
+  // voir les commentaires dans asteroids.ts pour la limite de ce qui est réel
+  // (la région) vs schématique (les cailloux/points individuels).
   const ASTEROID_BELT_AU: [number, number] = [2.1, 3.3];
   const KUIPER_BELT_AU: [number, number] = [30, 50];
 
   if (isSun) {
+    // Éclaire les astéroïdes (MeshStandardMaterial) sans affecter le reste de
+    // la scène : tous les autres objets utilisent MeshBasicMaterial, qui
+    // ignore les lumières.
+    const beltLight = new THREE.PointLight(0xfff4e0, 4000, 0, 2);
+    group.add(beltLight);
+    group.add(new THREE.AmbientLight(0x333333, 1));
+
     const beltMidRadius = Math.sqrt((ASTEROID_BELT_AU[0] + ASTEROID_BELT_AU[1]) / 2) * ORBIT_SCALE;
-    group.add(makeBeltPoints(ASTEROID_BELT_AU[0], ASTEROID_BELT_AU[1], 1500, 0x8a8375, 1.5));
+    group.add(makeAsteroidBelt(ASTEROID_BELT_AU[0], ASTEROID_BELT_AU[1], ORBIT_SCALE, 1500));
     const beltLabel = makeLabelSprite(t("asteroidBelt"));
     beltLabel.position.set(0, 2, beltMidRadius);
     group.add(beltLabel);
 
     const kuiperMidRadius = Math.sqrt((KUIPER_BELT_AU[0] + KUIPER_BELT_AU[1]) / 2) * ORBIT_SCALE;
-    group.add(makeBeltPoints(KUIPER_BELT_AU[0], KUIPER_BELT_AU[1], 2000, 0x7a8fa0, 2.5));
+    group.add(makeKuiperCloud(KUIPER_BELT_AU[0], KUIPER_BELT_AU[1], ORBIT_SCALE, 3500));
     const kuiperLabel = makeLabelSprite(t("kuiperBelt"));
     kuiperLabel.position.set(0, 2, kuiperMidRadius);
     group.add(kuiperLabel);
