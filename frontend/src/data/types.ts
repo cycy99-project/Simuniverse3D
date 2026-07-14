@@ -9,6 +9,10 @@ export interface StarData {
   ra: number | null; // degrés
   dec: number | null; // degrés
   texture?: string | null; // chemin de la texture réelle (Soleil uniquement) ; absent/null pour les autres étoiles
+  // Texte long optionnel affiché repliable sous "En savoir plus" (Soleil
+  // uniquement pour l'instant). Même convention que PlanetData.learn_more.
+  learn_more?: string;
+  learn_more_en?: string;
 }
 
 export interface MoonData {
@@ -42,6 +46,10 @@ export interface MoonData {
   // invisible sur le fond noir du vide spatial en rendu non éclairé
   // (MeshBasicMaterial). absent/undefined = 1 (aucun changement).
   render_brightness_boost?: number;
+  // Texte long optionnel affiché repliable sous "En savoir plus". Même
+  // convention que PlanetData.learn_more.
+  learn_more?: string;
+  learn_more_en?: string;
 }
 
 export interface RingData {
@@ -83,6 +91,17 @@ export interface PlanetData {
   // total. null/absent pour les exoplanètes (aucune exolune confirmée dans
   // ce jeu de données).
   moons_count_known?: number | null;
+  // Références externes ponctuelles (ex. vidéo/reel) ajoutées manuellement au
+  // cas par cas pour un corps donné — distinct des liens de recherche
+  // génériques NASA/Wikipedia (photoLinksFor) et de spectrum_ref (citation
+  // scientifique). absent = aucune référence ponctuelle pour ce corps.
+  extra_refs?: { label: string; url: string }[];
+  // Texte long optionnel (contexte historique/scientifique détaillé), affiché
+  // repliable sous un lien "En savoir plus" — distinct de note/note_en qui
+  // reste une courte phrase toujours visible. absent = pas de section
+  // dépliable pour ce corps.
+  learn_more?: string;
+  learn_more_en?: string;
 }
 
 export interface SystemData {
