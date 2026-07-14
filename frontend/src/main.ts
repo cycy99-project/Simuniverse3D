@@ -14,6 +14,7 @@ import { t, getLang, setLang, onLangChange, type Lang } from "./i18n";
 import { formatTemp, getTempUnit, setTempUnit, onTempUnitChange, type TempUnit } from "./units";
 import { localizeName } from "./nameTranslations";
 import { photoLinksFor } from "./photoLinks";
+import { loadPhotoManifest, photosFor, type PhotoEntry } from "./photoGallery";
 import { gravityAnecdote } from "./gravityAnecdotes";
 
 type AppState =
@@ -43,6 +44,14 @@ const studentModeToggleEl = document.getElementById("student-mode-toggle") as HT
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
 const pauseToggleEl = document.getElementById("pause-toggle") as HTMLButtonElement;
 const bgMusicEl = document.getElementById("bg-music") as HTMLAudioElement;
+const searchInputEl = document.getElementById("search-input") as HTMLInputElement;
+const searchDatalistEl = document.getElementById("search-datalist") as HTMLDataListElement;
+const lightboxEl = document.getElementById("lightbox")!;
+const lightboxImgEl = document.getElementById("lightbox-img") as HTMLImageElement;
+const lightboxCaptionEl = document.getElementById("lightbox-caption")!;
+const lightboxCloseEl = document.getElementById("lightbox-close")!;
+const lightboxPrevEl = document.getElementById("lightbox-prev")!;
+const lightboxNextEl = document.getElementById("lightbox-next")!;
 
 const MUSIC_MUTED_KEY = "universe3d.musicMuted";
 let musicMuted = localStorage.getItem(MUSIC_MUTED_KEY) === "true";
@@ -128,6 +137,11 @@ let compareWithEarth = false;
 let starCompareMode: StarCompareTarget = null;
 let selectedMoon: string | null = null;
 let selectedVoyager: VoyagerInfo | null = null;
+// Photos actuellement affichées dans le panneau d'info (mis à jour à chaque
+// rendu de galerie) : permet à la lightbox de naviguer précédent/suivant sans
+// devoir re-résoudre le corps céleste concerné.
+let currentGalleryPhotos: PhotoEntry[] = [];
+let lightboxIndex = 0;
 let spinGroups: Spinnable[] = [];
 // Permet de figer les orbites (planète + satellites) pour cliquer précisément
 // sur un satellite en mouvement ; ne réinitialise pas la sélection en cours.
@@ -214,9 +228,84 @@ function gravityAnecdoteHtml(name: string, gravityMs2: number | null): string {
   return `<p class="anecdote">${t("gravityFunFactPrefix")} ${weightFor100kg} ${t("gravityFunFactSuffix")}</p>`;
 }
 
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+}
+
+function learnMoreHtml(text: string | null | undefined): string {
+  if (!text) return "";
+  return `<details class="learn-more"><summary>${t("learnMore")}</summary><p>${text}</p></details>`;
+}
+
+// Diaporama plein écran par-dessus la vue 3D en cours (le state/scène ne
+// changent pas : on reste sur le corps affiché) — ouvert au clic sur une
+// vignette, navigable au clavier ou aux flèches, refermable sans perdre la
+// sélection courante.
+function renderLightbox() {
+  const photo = currentGalleryPhotos[lightboxIndex];
+  if (!photo) return;
+  lightboxImgEl.src = photo.file;
+  lightboxImgEl.alt = photo.title;
+  const sourceLink = photo.sourceUrl
+    ? ` — <a href="${photo.sourceUrl}" target="_blank" rel="noopener noreferrer">${t("viewSource")}</a>`
+    : "";
+  lightboxCaptionEl.innerHTML = `${escapeHtml(photo.title)} — ${escapeHtml(photo.credit)} (${escapeHtml(photo.license)})${sourceLink}`;
+  lightboxPrevEl.style.visibility = currentGalleryPhotos.length > 1 ? "visible" : "hidden";
+  lightboxNextEl.style.visibility = currentGalleryPhotos.length > 1 ? "visible" : "hidden";
+}
+
+function openLightbox(index: number) {
+  lightboxIndex = index;
+  renderLightbox();
+  lightboxEl.classList.add("visible");
+}
+
+function closeLightbox() {
+  lightboxEl.classList.remove("visible");
+}
+
+function isLightboxOpen(): boolean {
+  return lightboxEl.classList.contains("visible");
+}
+
+function shiftLightbox(delta: number) {
+  const count = currentGalleryPhotos.length;
+  if (count === 0) return;
+  lightboxIndex = (lightboxIndex + delta + count) % count;
+  renderLightbox();
+}
+
+infoPanelEl.addEventListener("click", (event) => {
+  const btn = (event.target as HTMLElement).closest<HTMLElement>(".photo-thumb");
+  if (!btn) return;
+  openLightbox(Number(btn.dataset.index));
+});
+
+lightboxCloseEl.addEventListener("click", closeLightbox);
+lightboxPrevEl.addEventListener("click", () => shiftLightbox(-1));
+lightboxNextEl.addEventListener("click", () => shiftLightbox(1));
+// Clic sur le fond (en dehors de l'image/légende/boutons) : ferme aussi,
+// comportement standard de lightbox.
+lightboxEl.addEventListener("click", (event) => {
+  if (event.target === lightboxEl) closeLightbox();
+});
+
 function photoLinksHtml(name: string): string {
   const links = photoLinksFor(name);
+  const photos = photosFor(name);
+  currentGalleryPhotos = photos;
+  const gallery = photos.length
+    ? `<div class="photo-gallery">${photos
+        .map((p, i) => {
+          const titleAttr = `${escapeHtml(p.title)} — ${escapeHtml(p.credit)}`;
+          return `<button type="button" class="photo-thumb" data-index="${i}" title="${titleAttr}">
+            <img src="${p.file}" alt="${escapeHtml(p.title)}" loading="lazy">
+          </button>`;
+        })
+        .join("")}</div>`
+    : "";
   return `<p class="photo-links">
+    ${gallery}
     <a href="${links.nasaImages}" target="_blank" rel="noopener noreferrer">${t("photosNasa")}</a><br>
     <a href="${links.wikipedia}" target="_blank" rel="noopener noreferrer">${t("photosWikipedia")}</a>
   </p>`;
@@ -285,7 +374,11 @@ function render() {
     camera.position.copy(result.cameraPos);
     controls.target.set(0, 0, 0);
     renderBreadcrumb();
-    renderInfoPanel(null);
+    if (selectedVoyager) {
+      renderVoyagerInfoPanel(selectedVoyager);
+    } else {
+      renderInfoPanel(null);
+    }
     renderCompareToggle(null, false);
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
@@ -297,7 +390,7 @@ function render() {
     const result = buildSystemScene(
       system,
       showRealOrbitalPlanes && hasRealInclinations,
-      showHabitableZone,
+      showHabitableZone && system.id !== "sol",
       showScientificInterpretation,
     );
     scene.add(result.group);
@@ -313,7 +406,11 @@ function render() {
     }
     renderCompareToggle(null, false);
     renderOrbitPlaneToggle(hasRealInclinations);
-    renderHabitableZoneToggle(result.habitableZoneAvailable);
+    if (system.id === "sol") {
+      habitableZoneToggleEl.style.display = "none";
+    } else {
+      renderHabitableZoneToggle(result.habitableZoneAvailable);
+    }
     renderPauseToggle(true);
     hintEl.textContent = t("hintSystem");
   } else if (state.view === "star") {
@@ -470,6 +567,7 @@ function renderStarCompareToggle(isSun: boolean) {
 function renderStarInfoPanel(system: SystemData, isSun: boolean) {
   infoPanelEl.classList.add("visible");
   const star = system.star;
+  const lang = getLang();
   const radiusKm = star.st_rad != null ? Math.round(star.st_rad * 695_700).toLocaleString(getLang()) : "?";
   const note = isSun ? t("starKnownNote") : t("starArchiveNote");
 
@@ -481,6 +579,7 @@ function renderStarInfoPanel(system: SystemData, isSun: boolean) {
     <p>${t("distance")} : ${star.sy_dist ?? 0} pc</p>
     <p><strong>${t("starComposition")} :</strong> ${t("starCompositionText")}</p>
     <p><em style="font-size: 11px; opacity: 0.7;">${note}</em></p>
+    ${learnMoreHtml(lang === "fr" ? star.learn_more : star.learn_more_en)}
     ${photoLinksHtml(star.name)}
   `;
 }
@@ -491,10 +590,14 @@ function renderVoyagerInfoPanel(v: VoyagerInfo) {
   const distanceAU = currentDistanceAU(v);
   const distanceKm = Math.round(currentDistanceKm(v));
 
+  const history = lang === "en" ? v.history_en : v.history;
+
   infoPanelEl.innerHTML = `
     <h2>${v.name}</h2>
+    <img class="voyager-photo" src="${v.iconTexture}" alt="${escapeHtml(v.name)}">
     <p>${t("voyagerDistance")} : ${distanceAU.toFixed(2)} UA (${distanceKm.toLocaleString(lang)} km)</p>
     <p>${t("voyagerSpeed")} : ${v.speedKmS} km/s (${v.speedAUPerYear} UA/an)</p>
+    <p>${history}</p>
     <p><em style="font-size: 11px; opacity: 0.7;">${t("voyagerNote")}</em></p>
   `;
 }
@@ -506,6 +609,12 @@ function goBack() {
 }
 
 window.addEventListener("keydown", (event) => {
+  if (isLightboxOpen()) {
+    if (event.key === "Escape") closeLightbox();
+    else if (event.key === "ArrowLeft") shiftLightbox(-1);
+    else if (event.key === "ArrowRight") shiftLightbox(1);
+    return;
+  }
   if (event.key === "Escape") goBack();
 });
 
@@ -599,18 +708,27 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
     <p><strong>${t("molecules")} :</strong> ${molecules}</p>
     <p>${note}</p>
     ${!studentMode && planet.spectrum_ref ? `<p><em>${t("reference")} : ${planet.spectrum_ref}</em></p>` : ""}
+    ${
+      planet.extra_refs?.length
+        ? `<p>${planet.extra_refs
+            .map((r) => `<a href="${r.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.label)}</a>`)
+            .join(" · ")}</p>`
+        : ""
+    }
     ${!studentMode && heuristicDescription ? `<p><strong>${t("visualRendering")} :</strong> ${heuristicDescription}</p>` : ""}
     ${rotationLine ? `<p>${t("rotationPeriod")} : ${rotationLine}</p>` : ""}
     <p><strong>${t("satellitesShown")} :</strong> ${shownMoons}${shownMoons ? ` (${moonsLine})` : ""}</p>
     ${studentMode ? "" : `<p><strong>${t("satellitesKnown")} :</strong> ${knownMoons}</p>`}
     <p><strong>${t("distanceFromEarth")} :</strong> ${earthInfo.distance[lang]}</p>
     <p><strong>${t("travelTime")} :</strong> ${earthInfo.travelTime[lang]}${studentMode ? "" : `<br><em style="font-size: 11px; opacity: 0.7;">${t("travelTimeCaption")}</em>`}</p>
+    ${learnMoreHtml(lang === "fr" ? planet.learn_more : planet.learn_more_en)}
     ${photoLinksHtml(planet.name)}
   `;
 }
 
 function renderMoonInfoPanel(moon: MoonData) {
   infoPanelEl.classList.add("visible");
+  const lang = getLang();
   const absPeriod = Math.abs(moon.period_days);
   const periodValue = absPeriod >= 2 ? `${absPeriod.toFixed(1)} j` : `${(absPeriod * 24).toFixed(1)} h`;
   const periodLine = moon.period_days < 0 ? `${periodValue} (${t("retrograde")})` : periodValue;
@@ -624,6 +742,7 @@ function renderMoonInfoPanel(moon: MoonData) {
     ${gravityLineHtml(moon.gravity_ms2 ?? null)}
     ${studentMode ? gravityAnecdoteHtml(moon.name, moon.gravity_ms2 ?? null) : ""}
     <p><em style="font-size: 11px; opacity: 0.7;">${sourceNote}</em></p>
+    ${learnMoreHtml(lang === "fr" ? moon.learn_more : moon.learn_more_en)}
     ${photoLinksHtml(moon.name)}
   `;
 }
@@ -683,8 +802,8 @@ canvas.addEventListener("click", (event) => {
   }
 
   if (intersects.length === 0) {
-    // Clic dans le vide depuis la vue système : d'abord désélectionner une
-    // sonde Voyager affichée, sinon revenir à la galaxie.
+    // Clic dans le vide depuis la vue système ou galaxie : d'abord
+    // désélectionner une sonde Voyager affichée, sinon revenir en arrière.
     if (state.view === "system") {
       if (selectedVoyager) {
         selectedVoyager = null;
@@ -692,6 +811,9 @@ canvas.addEventListener("click", (event) => {
         return;
       }
       goBack();
+    } else if (state.view === "galaxy" && selectedVoyager) {
+      selectedVoyager = null;
+      render();
     }
     return;
   }
@@ -701,7 +823,12 @@ canvas.addEventListener("click", (event) => {
   if (!id) return;
 
   if (state.view === "galaxy") {
-    setState({ view: "system", systemId: id });
+    if (id === VOYAGER_1.id || id === VOYAGER_2.id) {
+      selectedVoyager = id === VOYAGER_1.id ? VOYAGER_1 : VOYAGER_2;
+      render();
+    } else {
+      setState({ view: "system", systemId: id });
+    }
   } else if (state.view === "system") {
     if (id === STAR_CLICK_ID) {
       setState({ view: "star", systemId: state.systemId });
@@ -725,8 +852,84 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+interface SearchEntry {
+  label: string;
+  systemId: string;
+  kind: "star" | "planet" | "moon";
+  planetName?: string;
+  moonName?: string;
+}
+
+let searchIndex: SearchEntry[] = [];
+
+// Index à plat de tous les astres cherchables (étoiles, planètes, satellites)
+// tous systèmes confondus — reconstruit à chaque changement de langue car les
+// libellés affichés (localizeName) changent, mais la navigation elle-même
+// utilise toujours les noms canoniques FR stockés dans les données.
+function refreshSearchIndex() {
+  if (!seed) return;
+  searchIndex = [];
+  for (const system of seed.systems) {
+    searchIndex.push({ label: localizeName(system.star.name), systemId: system.id, kind: "star" });
+    for (const planet of system.planets) {
+      searchIndex.push({
+        label: localizeName(planet.name),
+        systemId: system.id,
+        kind: "planet",
+        planetName: planet.name,
+      });
+      for (const moon of planet.moons) {
+        searchIndex.push({
+          label: localizeName(moon.name),
+          systemId: system.id,
+          kind: "moon",
+          planetName: planet.name,
+          moonName: moon.name,
+        });
+      }
+    }
+  }
+  searchDatalistEl.innerHTML = searchIndex.map((e) => `<option value="${escapeHtml(e.label)}"></option>`).join("");
+}
+
+function jumpToSearchResult(query: string) {
+  const q = query.trim().toLowerCase();
+  if (!q) return;
+  const match =
+    searchIndex.find((e) => e.label.toLowerCase() === q) ??
+    searchIndex.find((e) => e.label.toLowerCase().startsWith(q));
+  if (!match) {
+    searchInputEl.classList.add("not-found");
+    setTimeout(() => searchInputEl.classList.remove("not-found"), 500);
+    return;
+  }
+  if (match.kind === "star") {
+    setState({ view: "star", systemId: match.systemId });
+  } else if (match.kind === "planet") {
+    setState({ view: "atmosphere", systemId: match.systemId, planetName: match.planetName! });
+  } else {
+    setState({ view: "atmosphere", systemId: match.systemId, planetName: match.planetName! });
+    selectedMoon = match.moonName!;
+    render();
+  }
+  searchInputEl.value = "";
+  searchInputEl.blur();
+}
+
+searchInputEl.placeholder = t("searchPlaceholder");
+onLangChange(() => {
+  searchInputEl.placeholder = t("searchPlaceholder");
+  refreshSearchIndex();
+});
+searchInputEl.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") jumpToSearchResult(searchInputEl.value);
+});
+searchInputEl.addEventListener("change", () => jumpToSearchResult(searchInputEl.value));
+
+loadPhotoManifest();
 loadSeedData().then((data) => {
   seed = data;
+  refreshSearchIndex();
   render();
   animate();
 });

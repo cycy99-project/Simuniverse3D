@@ -2,6 +2,7 @@ import * as THREE from "three";
 import type { SeedData, SystemData } from "../data/types";
 import { VOYAGER_1, VOYAGER_2, voyagerPosition, type VoyagerInfo } from "../voyager";
 import { localizeName } from "../nameTranslations";
+import { loadTexture } from "../textureCache";
 
 // Longueur fixe, arbitraire et volontairement courte : à cette échelle (pc),
 // la distance réelle des sondes (quelques centaines d'UA) serait totalement
@@ -49,19 +50,22 @@ function makeStarfield(count: number, radius: number): THREE.Points {
   return new THREE.Points(geometry, material);
 }
 
-function makeLabelSprite(text: string): THREE.Sprite {
+// fontSize/scale ajustables : les labels des sondes Voyager doivent rester
+// visuellement subordonnés au nom du système (hiérarchie de lecture), pas
+// juste plus loin sur l'écran.
+function makeLabelSprite(text: string, fontSize = 28, scale: [number, number] = [12, 3]): THREE.Sprite {
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 64;
   const ctx = canvas.getContext("2d")!;
-  ctx.font = "28px system-ui, sans-serif";
+  ctx.font = `${fontSize}px system-ui, sans-serif`;
   ctx.fillStyle = "#e6e6e6";
   ctx.textAlign = "center";
   ctx.fillText(text, 128, 40);
   const texture = new THREE.CanvasTexture(canvas);
   const material = new THREE.SpriteMaterial({ map: texture, depthWrite: false, transparent: true });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(12, 3, 1);
+  sprite.scale.set(scale[0], scale[1], 1);
   return sprite;
 }
 
@@ -83,10 +87,14 @@ export function buildGalaxyScene(seed: SeedData): GalaxySceneResult {
     const color = isSun ? 0xffd97a : 0x8fd0ff;
     const size = isSun ? 1.2 : 0.8;
 
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(size, 16, 16),
-      new THREE.MeshBasicMaterial({ color }),
-    );
+    // Notre Soleil a une texture réelle connue (cf. system.ts) : on l'utilise
+    // aussi dans la vue galaxie plutôt qu'un point de couleur générique,
+    // seul cas où cette donnée existe parmi les étoiles du jeu de données.
+    const material =
+      isSun && system.star.texture
+        ? new THREE.MeshBasicMaterial({ map: loadTexture(system.star.texture) })
+        : new THREE.MeshBasicMaterial({ color });
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(size, 16, 16), material);
     mesh.position.copy(pos);
     group.add(mesh);
     clickable.set(mesh, system.id);
@@ -101,9 +109,20 @@ export function buildGalaxyScene(seed: SeedData): GalaxySceneResult {
         const arrow = new THREE.ArrowHelper(dir, pos, VOYAGER_ARROW_LENGTH, v.color, 1, 0.6);
         group.add(arrow);
 
-        const label2 = makeLabelSprite(v.name);
+        const label2 = makeLabelSprite(v.name, 18, [7, 1.8]);
         label2.position.copy(pos).addScaledVector(dir, VOYAGER_ARROW_LENGTH + 1.5);
         group.add(label2);
+        clickable.set(label2, v.id);
+
+        // Petite icône (illustration officielle NASA, cf. voyager.ts) sous
+        // le nom de la sonde.
+        const icon = new THREE.Sprite(
+          new THREE.SpriteMaterial({ map: loadTexture(v.iconTexture), depthWrite: false, transparent: true }),
+        );
+        icon.scale.set(3.4, 2.5, 1);
+        icon.position.copy(label2.position).add(new THREE.Vector3(0, -2, 0));
+        group.add(icon);
+        clickable.set(icon, v.id);
       }
     }
   }

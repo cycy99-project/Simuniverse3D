@@ -33,6 +33,13 @@
       #ui-overlay button.active { background: var(--color-accent-bg); color: #ffffff; border-color: var(--color-accent); }
       #ui-overlay button:disabled { opacity: 0.4; cursor: default; }
       #breadcrumb { position: absolute; top: var(--space-4); left: var(--space-4); font-size: 14px; opacity: 0.8; }
+      #search-box { position: absolute; top: var(--space-4); left: 50%; transform: translateX(-50%); z-index: 10; }
+      #search-input {
+        font-family: inherit; font-size: 13px; background: var(--color-card); border: 1px solid var(--color-border);
+        color: var(--color-fg); border-radius: 6px; padding: 6px 10px; width: 200px;
+      }
+      #search-input:focus { outline: 2px solid #8fd0ff; }
+      #search-input.not-found { border-color: #e05c5c; }
       #breadcrumb button { background: none; border: none; min-height: 0; color: #8fd0ff; cursor: pointer; font-size: 14px; padding: 4px 0; }
       #breadcrumb button:hover { text-decoration: underline; border-color: transparent; color: #8fd0ff; }
       /* Colonne flex plutôt que des `top` en dur : un bouton dont le texte
@@ -90,8 +97,33 @@
       .badge.dwarf { background: #3a2f4d; color: #cbb0e8; margin-left: 6px; }
       .molecule-tag { display: inline-block; background: var(--color-border); padding: 2px 6px; border-radius: 4px; margin: 2px; font-size: 12px; }
       .anecdote { background: var(--color-accent-bg); border-radius: 6px; padding: 8px 10px; }
+      .photo-gallery { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+      .photo-gallery img { width: 84px; height: 84px; object-fit: cover; border-radius: 6px; border: 1px solid var(--color-border); }
+      .voyager-photo { width: 100%; max-height: 220px; object-fit: contain; border-radius: 6px; margin-bottom: 8px; background: #05070d; }
+      .learn-more { margin: 8px 0; }
+      .learn-more summary { cursor: pointer; color: var(--color-accent, #8fd0ff); font-size: 13px; }
+      .learn-more p { margin-top: 6px; font-size: 13px; line-height: 1.5; }
       #credits { position: absolute; bottom: var(--space-4); right: var(--space-4); font-size: 11px; opacity: 0.45; }
       #credits a { color: inherit; }
+      .photo-thumb { display: block; padding: 0; border: none; background: none; cursor: pointer; min-height: 0; }
+      #lightbox {
+        display: none; position: fixed; inset: 0; z-index: 1000;
+        background: rgba(5, 7, 13, 0.92); align-items: center; justify-content: center; flex-direction: column;
+      }
+      #lightbox.visible { display: flex; }
+      #lightbox-img { max-width: 88vw; max-height: 78vh; object-fit: contain; border-radius: 6px; }
+      #lightbox-caption { color: var(--color-fg); font-size: 13px; margin-top: 12px; max-width: 70vw; text-align: center; }
+      #lightbox-caption a { color: #8fd0ff; }
+      #lightbox-close, .lightbox-nav {
+        position: absolute; background: none; border: none; color: var(--color-fg);
+        cursor: pointer; min-height: 0; opacity: 0.7;
+      }
+      #lightbox-close:hover, .lightbox-nav:hover { opacity: 1; }
+      #lightbox-close { top: 16px; right: 20px; font-size: 26px; }
+      .lightbox-nav { top: 50%; transform: translateY(-50%); font-size: 44px; padding: 0 16px; }
+      #lightbox-prev { left: 8px; }
+      #lightbox-next { right: 8px; }
+      #lightbox-close:focus-visible, .lightbox-nav:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
       @media (prefers-reduced-motion: reduce) {
         #ui-overlay button { transition: none; }
       }
@@ -102,6 +134,10 @@
       <canvas id="scene-canvas"></canvas>
       <div id="ui-overlay">
         <div id="breadcrumb"></div>
+        <div id="search-box">
+          <input id="search-input" type="text" autocomplete="off" list="search-datalist">
+          <datalist id="search-datalist"></datalist>
+        </div>
         <div id="right-toggles">
           <div id="lang-toggle"></div>
           <div id="unit-toggle"></div>
@@ -120,6 +156,13 @@
         <div id="credits">Textures : <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0) — Musique : Orbites Dérivantes</div>
       </div>
       <audio id="bg-music" src="/sounds/orbites-derivantes.mp3" loop preload="auto"></audio>
+      <div id="lightbox">
+        <button id="lightbox-close" aria-label="Fermer">✕</button>
+        <button id="lightbox-prev" class="lightbox-nav" aria-label="Précédent">‹</button>
+        <img id="lightbox-img" alt="">
+        <button id="lightbox-next" class="lightbox-nav" aria-label="Suivant">›</button>
+        <div id="lightbox-caption"></div>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

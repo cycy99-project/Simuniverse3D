@@ -2,6 +2,8 @@ import * as THREE from "three";
 import type { MoonData, PlanetData } from "../data/types";
 import { loadTexture } from "../textureCache";
 import type { Spinnable } from "../spin";
+import { makeLabelSprite } from "../labelSprite";
+import { localizeName } from "../nameTranslations";
 
 // Période de référence pour calibrer la vitesse de révolution affichée : une
 // lune à la période réelle de notre Lune (27,32 j) boucle en ~30 s à 60 im/s.
@@ -28,6 +30,11 @@ export interface MoonScaleOptions {
   minMoonSize: number;
   maxMoonSize: number;
   gapMultiplier?: number; // marge visuelle depuis la surface de la planète
+  // Étiquette de nom au-dessus de la lune (comme pour les planètes en vue
+  // système) : activée uniquement en vue atmosphère, où les lunes sont assez
+  // grandes/espacées pour rester lisibles — désactivée dans la vue système
+  // (échelle trop petite, labels qui se chevaucheraient entre les lunes).
+  showLabels?: boolean;
 }
 
 function makeOrbitRing(radius: number): THREE.Line {
@@ -152,6 +159,18 @@ export function buildMoons(planet: PlanetData, position: THREE.Vector3, opts: Mo
     mesh.position.x = orbitRadius;
     spinGroup.add(mesh);
     clickable.set(mesh, moon.name);
+
+    if (opts.showLabels) {
+      const label = makeLabelSprite(localizeName(moon.name));
+      // Taille/décalage proportionnels au rayon de CETTE lune (pas une valeur
+      // fixe comme pour les planètes) : l'écart de taille entre lunes d'un
+      // même système est important (ex. Titan vs Mimas), un label à taille
+      // unique serait soit illisible sur les petites, soit énorme sur les grandes.
+      const labelScale = Math.max(moonRadius * 2.2, 1.1);
+      label.scale.set(labelScale, labelScale * 0.25, 1);
+      label.position.set(orbitRadius, moonRadius + labelScale * 0.35, 0);
+      spinGroup.add(label);
+    }
 
     objects.push(tiltGroup);
     spinnables.push({ group: spinGroup, speed: orbitSpeed(moon.period_days) });

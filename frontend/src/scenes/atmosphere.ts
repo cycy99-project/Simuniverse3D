@@ -47,6 +47,7 @@ const MOON_SCALE = {
   minMoonSize: 0.15,
   maxMoonSize: 1.3,
   gapMultiplier: 1.15,
+  showLabels: true,
 };
 
 // Couleur neutre utilisée quand l'interprétation scientifique est désactivée

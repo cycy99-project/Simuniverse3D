@@ -5,3 +5,8 @@ __pycache__/
 *.pyc
 *.tsbuildinfo
 .DS_Store
+
+# Dossier de staging de scripts/fetch_nasa_photos.py (téléchargements bruts,
+# dupliqués et resservis depuis frontend/public/photos/ une fois traités —
+# jamais lu par le code, pas la peine de le versionner).
+/img/
