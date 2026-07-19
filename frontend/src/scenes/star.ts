@@ -2,6 +2,8 @@ import * as THREE from "three";
 import type { StarData } from "../data/types";
 import { deriveStarColor } from "../starColor";
 import { loadTexture } from "../textureCache";
+import { makeStarSurfaceTexture } from "../starTexture";
+import { addStarGlow } from "../starGlow";
 import type { Spinnable } from "../spin";
 
 export type StarCompareTarget = "sun" | "earth" | null;
@@ -14,13 +16,16 @@ const MIN_VISIBLE_RADIUS = 0.05; // la Terre à l'échelle solaire serait un poi
 const STAR_SPIN_SPEED = 0.0009; // vitesse générique : la rotation stellaire des cibles n'est pas mesurée ici
 
 function starColorFor(star: StarData, isSun: boolean): string {
-  return isSun ? "#ffd97a" : deriveStarColor(star.spectype);
+  return isSun ? "#ffd97a" : deriveStarColor(star.spectype, star.st_teff);
 }
 
 function starMesh(radius: number, color: string, texture?: string | null): THREE.Mesh {
+  // Pas de photo réelle disponible pour une étoile autre que le Soleil (cf.
+  // starTexture.ts) : texture procédurale de granulation à défaut d'une
+  // couleur plate, plausible mais jamais présentée comme une observation.
   const material = texture
     ? new THREE.MeshBasicMaterial({ map: loadTexture(texture) })
-    : new THREE.MeshBasicMaterial({ color });
+    : new THREE.MeshBasicMaterial({ map: makeStarSurfaceTexture(color) });
   return new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), material);
 }
 
@@ -43,6 +48,7 @@ export function buildStarScene(
     const radius = 6;
     const mesh = starMesh(radius, color, isSun ? star.texture : null);
     group.add(mesh);
+    addStarGlow(group, color, radius);
     return {
       group,
       cameraPos: new THREE.Vector3(0, 4, radius * 3.2),
@@ -66,6 +72,8 @@ export function buildStarScene(
   mesh2.position.x = r2 + gap / 2;
 
   group.add(mesh1, mesh2);
+  addStarGlow(group, color, r1, mesh1.position);
+  addStarGlow(group, otherColor, r2, mesh2.position);
 
   const halfWidthLeft = Math.abs(mesh1.position.x) + r1;
   const halfWidthRight = mesh2.position.x + r2;

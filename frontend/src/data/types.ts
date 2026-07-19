@@ -50,6 +50,16 @@ export interface MoonData {
   // convention que PlanetData.learn_more.
   learn_more?: string;
   learn_more_en?: string;
+  // Vraie atmosphère épaisse et opaque (pas juste des traces) : cas réel
+  // unique dans ce jeu de données = Titan (azote/méthane, brume orange,
+  // confirmée par l'atterrisseur Huygens en 2005). absent/undefined = lune
+  // sans atmosphère significative (immense majorité des lunes réelles :
+  // ciel noir même en plein jour, cf. observations Apollo sur la Lune).
+  // Quand vrai, la vue surface (moonSurface.ts) affiche un ciel de brume
+  // teinté par `color` au lieu du ciel noir étoilé, et masque la planète
+  // dans le ciel (invisible depuis le sol à travers la brume, comme
+  // constaté par Huygens : Saturne n'est pas visible depuis la surface).
+  has_thick_atmosphere?: boolean;
 }
 
 export interface RingData {
@@ -76,6 +86,14 @@ export interface PlanetData {
   ring: RingData | null;
   note: string;
   note_en: string;
+  // Classification usuelle (pas une taxonomie officielle IAU — les
+  // exoplanètes n'en ont pas — mais les catégories informelles standard de la
+  // littérature) : classe de taille/masse + classe thermique combinées (ex.
+  // "Jupiter chaud", "Super-Terre tempérée"), et éventuellement une catégorie
+  // spéciale reconnue (monde hycéen, planète gonflée...) si le corps l'a.
+  // absent = pas encore classifié (Système Solaire notamment, où le nom
+  // usuel suffit).
+  planet_type?: { fr: string; en: string };
   spectrum_ref?: string | null;
   dwarf?: boolean; // planète naine (ex. Pluton, Cérès, Éris) — même structure de données, juste un badge distinct
   // Inclinaison RÉELLE de l'orbite par rapport au plan de l'écliptique (Système
@@ -102,12 +120,50 @@ export interface PlanetData {
   // dépliable pour ce corps.
   learn_more?: string;
   learn_more_en?: string;
+  // Interprétation scientifique calibrée par une recherche dédiée à ce corps
+  // précis (couleur, brume, densité de nuages + justification), utilisée à la
+  // place de l'heuristique générique (atmosphere/heuristic.ts) quand
+  // showScientificInterpretation est actif. Distinct de `color`/`texture`
+  // (réservés à une donnée réelle connue, toujours affichée quel que soit ce
+  // bouton) : ceci reste désactivable, car ça reste une interprétation et non
+  // une observation directe. absent/null = repli sur l'heuristique générique.
+  interpretation_override?: {
+    skyColor: string;
+    hazeColor: string;
+    cloudDensity: number;
+    description: { fr: string; en: string };
+    // Style de rendu procédural (planetTexture.ts) : absent = déduit de
+    // cloudDensity (repli générique, inchangé). "cloudy" = amas nuageux
+    // organiques teintés par hazeColor (mondes océaniques/nuageux, ex.
+    // TRAPPIST-1 d/e) ; "icyCracks" = réseau de fissures linéaires façon
+    // banquise (ex. TRAPPIST-1 f) — distinct des bandes horizontales
+    // "gasBands" utilisées par défaut pour les géantes gazeuses/mondes très
+    // nuageux (ex. HD 189733 b).
+    textureStyle?: "rocky" | "cloudy" | "icyCracks" | "gasBands" | "lava";
+  } | null;
+}
+
+// Étoile compagne d'un système binaire/multiple gravitationnellement lié
+// (distincte de l'étoile primaire SystemData.star). Cas réel unique dans ce
+// jeu de données : 55 Cancri B, naine rouge M4.5V à ~1065 UA de 55 Cancri A —
+// non modélisée comme un objet 3D séparé (échelle incompatible avec les
+// orbites planétaires du système, de 0,01 à 5,6 UA) : données textuelles
+// uniquement, exposées via learn_more.
+export interface CompanionStarData extends StarData {
+  separation_au: number; // séparation moyenne connue, UA
+  // Estimation par la 3e loi de Kepler (a³/M_total) à partir de la séparation
+  // et des masses combinées — PAS une période mesurée (l'orbite, large de
+  // plusieurs dizaines de milliers d'années, n'a jamais été observée sur un
+  // arc significatif). À traiter comme un ordre de grandeur, pas une donnée
+  // précise.
+  orbital_period_years_estimate: number;
 }
 
 export interface SystemData {
   id: string;
   name: string;
   star: StarData;
+  companionStar?: CompanionStarData | null;
   planets: PlanetData[];
 }
 

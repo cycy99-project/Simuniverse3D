@@ -22,8 +22,18 @@ export function onLangChange(cb: () => void): void {
 }
 
 const dict = {
-  hintGalaxy: { fr: "Clique sur une étoile pour entrer dans son système.", en: "Click a star to enter its system." },
-  hintSystem: { fr: "Clique sur une planète pour voir son atmosphère simulée.", en: "Click a planet to see its simulated atmosphere." },
+  distanceHudTravel: {
+    fr: "voyage",
+    en: "travel",
+  },
+  hintGalaxy: {
+    fr: "Clique sur une étoile pour la sélectionner, puis Explorer pour entrer dans son système.",
+    en: "Click a star to select it, then Explore to enter its system.",
+  },
+  hintSystem: {
+    fr: "Clique sur une planète pour la sélectionner, puis Explorer pour voir son atmosphère simulée.",
+    en: "Click a planet to select it, then Explore to see its simulated atmosphere.",
+  },
   hintAtmosphere: {
     fr: "Vue atmosphère — souris pour tourner ; clique ou Échap pour revenir au système.",
     en: "Atmosphere view — drag to rotate; click or Esc to go back to the system.",
@@ -41,6 +51,7 @@ const dict = {
   mass: { fr: "Masse", en: "Mass" },
   equilibriumTemp: { fr: "Température d'équilibre", en: "Equilibrium temperature" },
   molecules: { fr: "Molécules", en: "Molecules" },
+  planetType: { fr: "Type de planète", en: "Planet type" },
   noMoleculeDetected: { fr: "Aucune molécule détectée", en: "No molecule detected" },
   reference: { fr: "Référence", en: "Reference" },
   learnMore: { fr: "📖 En savoir plus", en: "📖 Learn more" },
@@ -69,6 +80,7 @@ const dict = {
     fr: "Vue étoile — clique ou Échap pour revenir au système.",
     en: "Star view — click or Esc to go back to the system.",
   },
+  starCategory: { fr: "Catégorie", en: "Category" },
   starRadius: { fr: "Rayon", en: "Radius" },
   starComposition: { fr: "Composition", en: "Composition" },
   starCompositionText: {
@@ -117,6 +129,40 @@ const dict = {
     en: "Habitable zone not computable for this system (missing stellar temperature/radius)",
   },
   habitableZoneLabel: { fr: "Zone habitable (théorique)", en: "Habitable zone (theoretical)" },
+  moonScaleShow: { fr: "🔎 Échelle réelle (par défaut)", en: "🔎 Real scale (default)" },
+  moonScaleHide: { fr: "👁 Échelle visuelle (lisibilité)", en: "👁 Visual scale (readability)" },
+  moonScaleRealHint: {
+    fr: "Taille proportionnelle réelle (rayon lune / rayon planète) : certains satellites deviennent minuscules — zoomez et repérez-les par leur nom.",
+    en: "Real proportional size (moon radius / planet radius): some moons become tiny — zoom in and locate them by name.",
+  },
+  moonSurfaceViewPrefix: { fr: "🌌 Vue de", en: "🌌 View of" },
+  moonSurfaceViewHide: { fr: "👁 Retour à la vue du satellite", en: "👁 Back to moon view" },
+  hintMoonSurface: {
+    fr: "Vue imaginée depuis la surface — taille et couleur réelles de la planète, sol schématique. Glisse la souris pour regarder autour de toi (pas de zoom ni déplacement).",
+    en: "Imagined surface view — real size and color of the planet, schematic ground. Drag the mouse to look around (no zoom or movement).",
+  },
+  hintMoonSurfaceHazy: {
+    fr: "Vue imaginée depuis la surface — brume atmosphérique réelle et opaque : ni étoiles ni planète visibles depuis le sol (comme constaté par la sonde Huygens). Glisse la souris pour regarder autour de toi (pas de zoom ni déplacement).",
+    en: "Imagined surface view — real, opaque atmospheric haze: no stars or planet visible from the ground (as found by the Huygens probe). Drag the mouse to look around (no zoom or movement).",
+  },
+  skyQuestionAirless: {
+    fr: "🌌 Pourquoi le ciel est-il noir, même en plein jour ?",
+    en: "🌌 Why is the sky black, even in broad daylight?",
+  },
+  skyAnswerAirless: {
+    fr: "Sans atmosphère, il n'y a rien pour diffuser la lumière du Soleil dans toutes les directions : le ciel reste noir même en plein jour, exactement comme les astronautes d'Apollo l'ont observé et photographié sur la Lune.",
+    en: "With no atmosphere, there's nothing to scatter sunlight in every direction: the sky stays black even in broad daylight — exactly as the Apollo astronauts observed and photographed on the Moon.",
+  },
+  skyQuestionTitan: {
+    fr: "🌫️ Pourquoi le ciel de Titan est-il orange et jamais noir ?",
+    en: "🌫️ Why is Titan's sky orange and never black?",
+  },
+  skyAnswerTitan: {
+    fr: "Titan est la seule lune du Système solaire dotée d'une atmosphère dense (azote et méthane) : elle diffuse la lumière et forme une brume opaque orangée qui masque totalement le ciel étoilé — et même Saturne, pourtant énorme dans son ciel. En se posant en 2005, la sonde Huygens n'a jamais pu l'apercevoir à travers cette brume.",
+    en: "Titan is the only moon in the Solar System with a dense atmosphere (nitrogen and methane): it scatters light and forms an opaque orange haze that completely hides the starry sky — and even Saturn, despite being huge in its sky. When it landed in 2005, the Huygens probe was never able to glimpse it through this haze.",
+  },
+  daySwitchToNight: { fr: "🌙 Vue de nuit", en: "🌙 Night view" },
+  daySwitchToDay: { fr: "☀️ Vue de jour", en: "☀️ Day view" },
   sciInterpOn: { fr: "🔬 Interprétation scientifique : ON", en: "🔬 Scientific interpretation: ON" },
   sciInterpOff: { fr: "🔬 Interprétation scientifique : OFF", en: "🔬 Scientific interpretation: OFF" },
   sciInterpNote: {
@@ -138,6 +184,10 @@ const dict = {
     fr: "Cartouches simplifiées et anecdotes ludiques, pensées pour les plus jeunes.",
     en: "Simplified panels and fun facts, designed for younger explorers.",
   },
+  selectionTypeSystem: { fr: "Système", en: "System" },
+  selectionTypeStar: { fr: "Étoile", en: "Star" },
+  selectionTypePlanet: { fr: "Planète", en: "Planet" },
+  selectionExplore: { fr: "Explorer →", en: "Explore →" },
 } satisfies Record<string, { fr: string; en: string }>;
 
 export type DictKey = keyof typeof dict;

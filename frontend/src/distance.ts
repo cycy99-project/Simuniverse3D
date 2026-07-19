@@ -1,7 +1,9 @@
 import type { PlanetData, SystemData } from "./data/types";
+import { DISTANCE_SCALE } from "./scenes/galaxy";
 
-const AU_KM = 149_597_870.7;
-const LY_KM = 9.4607e12;
+export const AU_KM = 149_597_870.7;
+export const LY_KM = 9.4607e12;
+const PC_KM = 3.0857e13;
 const SECONDS_PER_YEAR = 365.25 * 24 * 3600;
 
 // Voyager 1 : ~62 100 km/h, l'objet fabriqué par l'homme le plus rapide à
@@ -28,6 +30,36 @@ function formatYears(years: number): { fr: string; en: string } {
   }
   const m = years / 1_000_000;
   return { fr: `${m.toFixed(2)} millions d'années`, en: `${m.toFixed(2)} million years` };
+}
+
+// Temps de trajet à la vitesse de Voyager 1 (cf. VOYAGER_SPEED_KMS ci-dessus) —
+// même référence "meilleure technologie actuelle" utilisée partout dans
+// l'appli (panneau d'info planète, repère de distance de la vue galaxie).
+function travelTimeForKm(distanceKm: number): { fr: string; en: string } {
+  const years = distanceKm / VOYAGER_SPEED_KMS / SECONDS_PER_YEAR;
+  return formatYears(years);
+}
+
+// Seuil de bascule UA/années-lumière du repère de distance dynamique de la
+// vue galaxie (cf. main.ts::updateDistanceHud) : 1 al ≈ 63 241 UA.
+const AU_PER_LY = LY_KM / AU_KM;
+
+// Convertit la distance caméra↔Soleil (unités de scène de la vue galaxie,
+// cf. scenes/galaxy.ts::starPosition) en distance réelle affichable + temps
+// de trajet équivalent, pour le repère dynamique façon "Solar System Scope"
+// demandé par l'utilisateur : UA en dessous d'un seuil, années-lumière
+// au-delà — bascule automatique selon le niveau de zoom, comme sur le site
+// de référence.
+export function computeGalaxyViewDistance(sceneDistance: number): EarthDistanceInfo {
+  // Inverse de starPosition : displayDist = sqrt(pc) * DISTANCE_SCALE.
+  const pc = (sceneDistance / DISTANCE_SCALE) ** 2;
+  const au = (pc * PC_KM) / AU_KM;
+  const distanceKm = pc * PC_KM;
+  const distance =
+    au < AU_PER_LY
+      ? { fr: `${au.toFixed(1)} UA`, en: `${au.toFixed(1)} AU` }
+      : { fr: `${(au / AU_PER_LY).toFixed(2)} années-lumière`, en: `${(au / AU_PER_LY).toFixed(2)} light-years` };
+  return { distance, travelTime: travelTimeForKm(distanceKm) };
 }
 
 export function computeEarthDistance(system: SystemData, planet: PlanetData): EarthDistanceInfo {
@@ -62,7 +94,5 @@ export function computeEarthDistance(system: SystemData, planet: PlanetData): Ea
     };
   }
 
-  const years = distanceKm / VOYAGER_SPEED_KMS / SECONDS_PER_YEAR;
-  const travelTime = formatYears(years);
-  return { distance, travelTime };
+  return { distance, travelTime: travelTimeForKm(distanceKm) };
 }

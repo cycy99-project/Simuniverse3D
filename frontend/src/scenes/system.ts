@@ -2,12 +2,13 @@ import * as THREE from "three";
 import type { PlanetData, SystemData } from "../data/types";
 import { deriveAtmosphere } from "../atmosphere/heuristic";
 import { deriveStarColor } from "../starColor";
+import { makeStarSurfaceTexture } from "../starTexture";
+import { addStarGlow } from "../starGlow";
 import { computeHabitableZone } from "../habitableZone";
 import { loadTexture } from "../textureCache";
 import type { Spinnable } from "../spin";
 import { buildMoons } from "./moons";
 import { buildRing } from "./rings";
-import { VOYAGER_1, VOYAGER_2, currentDistanceAU, voyagerPosition, type VoyagerInfo } from "../voyager";
 import { localizeName } from "../nameTranslations";
 import { makeLabelSprite } from "../labelSprite";
 import { makeAsteroidBelt, makeKuiperCloud } from "./asteroids";
@@ -29,7 +30,7 @@ function planetMaterial(planet: PlanetData, showScientificInterpretation: boolea
     return new THREE.MeshBasicMaterial({ color: planet.color });
   }
   const color = showScientificInterpretation
-    ? deriveAtmosphere(planet.molecules, planet.pl_eqt).skyColor
+    ? (planet.interpretation_override ?? deriveAtmosphere(planet.molecules, planet.pl_eqt)).skyColor
     : NEUTRAL_UNKNOWN_COLOR;
   return new THREE.MeshBasicMaterial({ color });
 }
@@ -76,25 +77,6 @@ const MOON_SCALE = {
   maxMoonSize: 0.22,
   gapMultiplier: 1.15,
 };
-
-function makeVoyagerMarker(color: number): THREE.Mesh {
-  return new THREE.Mesh(new THREE.OctahedronGeometry(0.45, 0), new THREE.MeshBasicMaterial({ color }));
-}
-
-// Ligne radiale (pas un anneau d'orbite) : les sondes Voyager sont sur une
-// trajectoire d'échappement hyperbolique en ligne quasi droite, pas en orbite
-// fermée autour du Soleil — un anneau circulaire serait factuellement faux.
-// Part de la Terre (lancement réel des deux sondes en 1977), pas du Soleil —
-// point schématique fixe sur l'orbite terrestre (comme l'azimut des sondes,
-// cf. voyager.ts), la Terre elle-même continuant d'orbiter en continu.
-function makeRadialLine(start: THREE.Vector3, target: THREE.Vector3): THREE.Line {
-  const points = [start, target];
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  const material = new THREE.LineDashedMaterial({ color: 0x556074, dashSize: 2, gapSize: 1.2 });
-  const line = new THREE.Line(geometry, material);
-  line.computeLineDistances();
-  return line;
-}
 
 // Fond étoilé purement décoratif : positions aléatoires sur une coquille
 // sphérique très éloignée (bien au-delà de la Ceinture de Kuiper), pas les
@@ -154,12 +136,16 @@ export function buildSystemScene(
   // disque schématique (avant : taille fixe 2) pouvait dépasser le rayon
   // orbital de ses propres planètes les plus proches.
   const starRadius = isSun ? 2.5 : Math.min(2.5, Math.max(0.8, 2.5 * (system.star.st_rad ?? 1)));
-  const starColor = isSun ? "#ffd97a" : deriveStarColor(system.star.spectype);
+  const starColor = isSun ? "#ffd97a" : deriveStarColor(system.star.spectype, system.star.st_teff);
+  // Pas de photo réelle disponible pour une étoile autre que le Soleil (cf.
+  // starTexture.ts) : texture procédurale de granulation à défaut d'une
+  // couleur plate, plausible mais jamais présentée comme une observation.
   const starMaterial = system.star.texture
     ? new THREE.MeshBasicMaterial({ map: loadTexture(system.star.texture) })
-    : new THREE.MeshBasicMaterial({ color: starColor });
+    : new THREE.MeshBasicMaterial({ map: makeStarSurfaceTexture(starColor) });
   const starMesh = new THREE.Mesh(new THREE.SphereGeometry(starRadius, 24, 24), starMaterial);
   group.add(starMesh);
+  addStarGlow(group, starColor, starRadius);
   clickable.set(starMesh, STAR_CLICK_ID);
   group.add(makeLabelSprite(localizeName(system.star.name)).translateY(starRadius + 2));
 
@@ -186,12 +172,10 @@ export function buildSystemScene(
   }
 
   let maxOrbit = 5;
-  let earthOrbitRadius = computeOrbitRadius(1);
   system.planets.forEach((planet, index) => {
     const orbitAU = planet.pl_orbsmax ?? 1;
     const orbitRadius = computeOrbitRadius(orbitAU);
     maxOrbit = Math.max(maxOrbit, orbitRadius);
-    if (planet.name === "Terre") earthOrbitRadius = orbitRadius;
 
     // Deux groupes imbriqués (même principe que les lunes, cf. moons.ts) :
     // le groupe extérieur porte le VRAI tilt orbital (magnitude réelle,
@@ -308,31 +292,11 @@ export function buildSystemScene(
     maxOrbit = Math.max(maxOrbit, Math.sqrt(KUIPER_BELT_AU[1]) * ORBIT_SCALE);
   }
 
-  // Position réelle (extrapolée depuis une mesure de référence connue, avec
-  // la vraie latitude écliptique de chaque sonde — voir voyager.ts), mais
-  // uniquement significative pour notre propre Soleil.
-  if (isSun) {
-    for (const v of [VOYAGER_1, VOYAGER_2] as VoyagerInfo[]) {
-      const distanceAU = currentDistanceAU(v);
-      const radius = Math.sqrt(distanceAU) * ORBIT_SCALE;
-      const pos = voyagerPosition(v, radius);
-      // Les sondes sont bien plus loin que les planètes (échelle sqrt) : sans
-      // ça, le cadrage caméra par défaut (basé sur les orbites planétaires)
-      // les laisse hors champ et une seule semblait visible.
-      maxOrbit = Math.max(maxOrbit, radius);
-
-      group.add(makeRadialLine(new THREE.Vector3(earthOrbitRadius, 0, 0), pos));
-
-      const marker = makeVoyagerMarker(v.color);
-      marker.position.copy(pos);
-      group.add(marker);
-      clickable.set(marker, v.id);
-
-      const label = makeLabelSprite(v.name);
-      label.position.copy(pos).add(new THREE.Vector3(0, 1.5, 0));
-      group.add(label);
-    }
-  }
+  // Les sondes Voyager 1/2 ne sont plus représentées dans cette vue système
+  // (trop loin de l'échelle utile ici, cf. leur distance en UA — même à
+  // maxOrbit exclu du cadrage caméra, les traits/marqueurs restaient une
+  // distraction visuelle) : elles restent visibles et cliquables uniquement
+  // dans la vue galaxie (cf. scenes/galaxy.ts), où leur échelle a du sens.
 
   return {
     group,

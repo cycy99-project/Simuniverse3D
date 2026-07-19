@@ -2,6 +2,7 @@ import * as THREE from "three";
 import type { PlanetData } from "../data/types";
 import { deriveAtmosphere, type AtmosphereVisual } from "../atmosphere/heuristic";
 import { loadTexture } from "../textureCache";
+import { makePlanetSurfaceTexture } from "../planetTexture";
 import type { Spinnable } from "../spin";
 import { buildMoons } from "./moons";
 import { buildRing } from "./rings";
@@ -66,7 +67,20 @@ function materialFor(
   if (planet.color) {
     return new THREE.MeshBasicMaterial({ color: planet.color });
   }
-  return new THREE.MeshBasicMaterial({ color: showScientificInterpretation ? visual.skyColor : NEUTRAL_UNKNOWN_COLOR });
+  if (showScientificInterpretation) {
+    // Texture procédurale (granulation/nuages/bandes/craquelures, cf.
+    // planetTexture.ts) plutôt qu'un aplat uni : plus lisible visuellement,
+    // jamais présentée comme une observation réelle.
+    return new THREE.MeshBasicMaterial({
+      map: makePlanetSurfaceTexture(
+        visual.skyColor,
+        visual.hazeColor,
+        visual.cloudDensity,
+        planet.interpretation_override?.textureStyle,
+      ),
+    });
+  }
+  return new THREE.MeshBasicMaterial({ color: NEUTRAL_UNKNOWN_COLOR });
 }
 
 function buildPlanetGroup(
@@ -74,7 +88,11 @@ function buildPlanetGroup(
   radius: number,
   showScientificInterpretation: boolean,
 ): { group: THREE.Group; visual: AtmosphereVisual } {
-  const visual = deriveAtmosphere(planet.molecules, planet.pl_eqt);
+  // Une recherche dédiée à ce corps précis (interpretation_override, cf.
+  // types.ts) prime sur l'heuristique générique molécules+température —
+  // celle-ci reste le repli par défaut pour tout corps non encore étudié en
+  // détail.
+  const visual = planet.interpretation_override ?? deriveAtmosphere(planet.molecules, planet.pl_eqt);
   const group = new THREE.Group();
   group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), materialFor(planet, visual, showScientificInterpretation)));
 
@@ -105,6 +123,7 @@ export function buildAtmosphereScene(
   planet: PlanetData,
   compareWithEarth: PlanetData | null,
   showScientificInterpretation = true,
+  realMoonScale = false,
 ): AtmosphereSceneResult {
   const group = new THREE.Group();
 
@@ -113,7 +132,11 @@ export function buildAtmosphereScene(
     const { group: planetGroup, visual } = buildPlanetGroup(planet, radius, showScientificInterpretation);
     group.add(planetGroup);
 
-    const moons = buildMoons(planet, new THREE.Vector3(0, 0, 0), { ...MOON_SCALE, planetVisualRadius: radius });
+    const moons = buildMoons(planet, new THREE.Vector3(0, 0, 0), {
+      ...MOON_SCALE,
+      planetVisualRadius: radius,
+      realScale: realMoonScale,
+    });
     group.add(...moons.objects);
 
     const camDist = Math.max(radius * 3.2, moons.maxOrbitRadius * 2.4);

@@ -35,7 +35,16 @@ export interface MoonScaleOptions {
   // grandes/espacées pour rester lisibles — désactivée dans la vue système
   // (échelle trop petite, labels qui se chevaucheraient entre les lunes).
   showLabels?: boolean;
+  // Vrai ratio (rayon lune / rayon planète, tous deux réels) au lieu de
+  // l'étirement min-max visuel ci-dessus — certaines lunes (Phobos, Mimas...)
+  // deviennent alors quasi invisibles, comme dans la réalité ; le nom au-dessus
+  // (showLabels) reste la seule façon fiable de les repérer une fois zoomé.
+  realScale?: boolean;
 }
+
+// Rayon terrestre en km, pour convertir pl_rade (rayons terrestres) en km et
+// obtenir le vrai rayon de la planète comparé au rayon réel (km) de sa lune.
+const EARTH_RADIUS_KM = 6371;
 
 function makeOrbitRing(radius: number): THREE.Line {
   const points: THREE.Vector3[] = [];
@@ -97,6 +106,14 @@ function moonSizes(moons: MoonData[], opts: MoonScaleOptions): number[] {
   });
 }
 
+// Taille à l'échelle réelle : planetVisualRadius représente le vrai rayon de
+// la planète à l'écran, donc (radius_km lune / radius_km planète) appliqué
+// tel quel donne un rayon lune honnête — sans clamp ni étirement, contrairement
+// à moonSizes() ci-dessus qui est une convention de lisibilité, pas une mesure.
+function moonSizesRealScale(moons: MoonData[], planetRadiusKm: number, planetVisualRadius: number): number[] {
+  return moons.map((m) => planetVisualRadius * (m.radius_km / planetRadiusKm));
+}
+
 // Chaque lune orbite via un pivot centré sur la planète, contenant l'anneau
 // d'orbite et la lune décalée en x — on fait tourner le pivot (rotation.y)
 // plutôt que la lune directement, pour obtenir une vraie révolution autour
@@ -115,7 +132,10 @@ export function buildMoons(planet: PlanetData, position: THREE.Vector3, opts: Mo
   // respecté, contrairement à l'ancien décalage `index * moonRadius` qui
   // pouvait déformer les distances relatives.
   let previousOuterEdge = opts.planetVisualRadius * gap;
-  const sizes = moonSizes(planet.moons, opts);
+  const planetRadiusKm = (planet.pl_rade ?? 1) * EARTH_RADIUS_KM;
+  const sizes = opts.realScale
+    ? moonSizesRealScale(planet.moons, planetRadiusKm, opts.planetVisualRadius)
+    : moonSizes(planet.moons, opts);
 
   planet.moons.forEach((moon, index) => {
     const moonRadius = sizes[index];

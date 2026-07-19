@@ -2,26 +2,48 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { loadSeedData } from "./data/loader";
 import type { SeedData, SystemData, PlanetData, MoonData, AtmosphereSource } from "./data/types";
-import { buildGalaxyScene } from "./scenes/galaxy";
+import { buildGalaxyScene, applyGalaxyReveal, type RevealableSystem, type SunLine } from "./scenes/galaxy";
 import { buildSystemScene, STAR_CLICK_ID } from "./scenes/system";
 import { buildAtmosphereScene } from "./scenes/atmosphere";
 import { buildMoonFocusScene } from "./scenes/moonFocus";
+import { buildMoonSurfaceScene } from "./scenes/moonSurface";
 import { buildStarScene, type StarCompareTarget } from "./scenes/star";
 import { VOYAGER_1, VOYAGER_2, currentDistanceAU, currentDistanceKm, type VoyagerInfo } from "./voyager";
 import type { Spinnable } from "./spin";
-import { computeEarthDistance } from "./distance";
+import { computeEarthDistance, computeGalaxyViewDistance } from "./distance";
 import { t, getLang, setLang, onLangChange, type Lang } from "./i18n";
 import { formatTemp, getTempUnit, setTempUnit, onTempUnitChange, type TempUnit } from "./units";
 import { localizeName } from "./nameTranslations";
 import { photoLinksFor } from "./photoLinks";
 import { loadPhotoManifest, photosFor, type PhotoEntry } from "./photoGallery";
 import { gravityAnecdote } from "./gravityAnecdotes";
+import { classifyStar } from "./starClassification";
+import { createSelectionMarker, fitSelectionMarker } from "./selectionMarker";
 
 type AppState =
   | { view: "galaxy" }
   | { view: "system"; systemId: string }
   | { view: "star"; systemId: string }
   | { view: "atmosphere"; systemId: string; planetName: string };
+
+// Cible d'une sélection en attente de confirmation ("Nouvelle Navigation") :
+// un clic sur un système/une étoile/une planète ne fait plus basculer l'état
+// (AppState) immédiatement — il désigne juste cette cible, affichée via le
+// losange 3D + l'encart "Explorer" (cf. selectPending/updateSelectionCard
+// plus bas). Seul le clic sur "Explorer" déclenche réellement setState(...).
+type PendingTarget =
+  | { kind: "system"; systemId: string }
+  | { kind: "star"; systemId: string }
+  | { kind: "planet"; systemId: string; planetName: string };
+
+interface PendingSelection {
+  target: PendingTarget;
+  // Clé dans la map `clickable` courante correspondant à l'astre sélectionné
+  // (pas une référence directe à l'Object3D : celui-ci est détruit et
+  // recréé à chaque render(), y compris pour des re-rendus sans rapport avec
+  // la sélection en cours, ex. bascule d'un toggle — cf. resolvePendingObject).
+  id: string;
+}
 
 const SOURCE_LABEL_KEYS: Record<AtmosphereSource, Parameters<typeof t>[0]> = {
   known: "sourceKnown",
@@ -39,6 +61,9 @@ const unitToggleEl = document.getElementById("unit-toggle")!;
 const compareToggleEl = document.getElementById("compare-toggle")!;
 const orbitPlaneToggleEl = document.getElementById("orbit-plane-toggle") as HTMLButtonElement;
 const habitableZoneToggleEl = document.getElementById("habitable-zone-toggle") as HTMLButtonElement;
+const moonScaleToggleEl = document.getElementById("moon-scale-toggle") as HTMLButtonElement;
+const moonSurfaceToggleEl = document.getElementById("moon-surface-toggle") as HTMLButtonElement;
+const dayNightToggleEl = document.getElementById("day-night-toggle") as HTMLButtonElement;
 const sciInterpToggleEl = document.getElementById("sci-interp-toggle") as HTMLButtonElement;
 const studentModeToggleEl = document.getElementById("student-mode-toggle") as HTMLButtonElement;
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
@@ -52,6 +77,13 @@ const lightboxCaptionEl = document.getElementById("lightbox-caption")!;
 const lightboxCloseEl = document.getElementById("lightbox-close")!;
 const lightboxPrevEl = document.getElementById("lightbox-prev")!;
 const lightboxNextEl = document.getElementById("lightbox-next")!;
+const selectionCardEl = document.getElementById("selection-card")!;
+const selectionCardLabelEl = document.getElementById("selection-card-label")!;
+const selectionCardTypeEl = document.getElementById("selection-card-type")!;
+const selectionCardExploreEl = document.getElementById("selection-card-explore") as HTMLButtonElement;
+const distanceHudEl = document.getElementById("distance-hud")!;
+const distanceHudValueEl = document.getElementById("distance-hud-value")!;
+const distanceHudTravelEl = document.getElementById("distance-hud-travel")!;
 
 const MUSIC_MUTED_KEY = "universe3d.musicMuted";
 let musicMuted = localStorage.getItem(MUSIC_MUTED_KEY) === "true";
@@ -122,27 +154,64 @@ onTempUnitChange(() => {
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
+// Pas de tone mapping HDR : toute la scène est en couleurs plates non
+// éclairées (MeshBasicMaterial), sans bloom ni éclairage physique — une
+// courbe filmique (ACES) désaturait à tort les couleurs saturées (ex. la
+// couleur corps-noir d'une naine rouge, proche du blanc sur son canal rouge)
+// vers un jaune-blanc, la rendant visuellement indiscernable du Soleil.
+renderer.toneMapping = THREE.NoToneMapping;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
+// Vue surface d'un satellite (moonSurface.ts) : position caméra FIXE (on est
+// debout au même endroit), on ne peut que regarder autour de soi (souris),
+// pas zoomer/reculer/s'élever — remplace OrbitControls (qui déplacerait la
+// caméra) par une simple rotation yaw/pitch appliquée directement à la caméra.
+let lookAroundActive = false;
+let lookYaw = 0;
+let lookPitch = 0;
+let lookDragLastPos: { x: number; y: number } | null = null;
+const LOOK_SENSITIVITY = 0.0025;
+const LOOK_MAX_PITCH = Math.PI / 2 - 0.05;
+
+function applyLookRotation() {
+  camera.rotation.order = "YXZ";
+  camera.rotation.set(lookPitch, lookYaw, 0);
+}
+
+function setLookDirection(from: THREE.Vector3, to: THREE.Vector3) {
+  const dir = to.clone().sub(from).normalize();
+  lookPitch = Math.asin(THREE.MathUtils.clamp(dir.y, -1, 1));
+  lookYaw = Math.atan2(dir.x, -dir.z);
+  applyLookRotation();
+}
+
 let scene = new THREE.Scene();
 let clickable = new Map<THREE.Object3D, string>();
 let seed: SeedData;
 let state: AppState = { view: "galaxy" };
 let compareWithEarth = false;
+let moonSurfaceView = false;
+let dayMode = true;
 let starCompareMode: StarCompareTarget = null;
 let selectedMoon: string | null = null;
 let selectedVoyager: VoyagerInfo | null = null;
+let pendingSelection: PendingSelection | null = null;
+let selectionMarkerSprite: THREE.Sprite | null = null;
 // Photos actuellement affichées dans le panneau d'info (mis à jour à chaque
 // rendu de galerie) : permet à la lightbox de naviguer précédent/suivant sans
 // devoir re-résoudre le corps céleste concerné.
 let currentGalleryPhotos: PhotoEntry[] = [];
 let lightboxIndex = 0;
 let spinGroups: Spinnable[] = [];
+// Révélation progressive + traits Soleil→système de la vue galaxie (cf.
+// scenes/galaxy.ts::applyGalaxyReveal), recalculés à chaque frame pendant que
+// cette vue est active — vidés comme spinGroups à chaque changement de vue.
+let galaxyRevealables: RevealableSystem[] = [];
+let galaxySunLines: SunLine[] = [];
 // Permet de figer les orbites (planète + satellites) pour cliquer précisément
 // sur un satellite en mouvement ; ne réinitialise pas la sélection en cours.
 let animationPaused = false;
@@ -194,6 +263,13 @@ studentModeToggleEl.onclick = () => {
   renderStudentModeToggle();
   render();
 };
+
+// Universel (toutes vues/systèmes/planètes), persisté comme showScientificInterpretation :
+// par défaut ON — la taille réelle (rayon lune / rayon planète) est la valeur
+// honnête par défaut ; l'étirement visuel min-max de moonSizes() (moons.ts)
+// devient l'option pour qui préfère la lisibilité au réalisme.
+const REAL_MOON_SCALE_KEY = "universe3d.realMoonScale";
+let realMoonScale = localStorage.getItem(REAL_MOON_SCALE_KEY) !== "false";
 
 function formatRotationPeriod(rotationHours: number | null): string | null {
   if (rotationHours === null) return null;
@@ -354,9 +430,13 @@ function setState(next: AppState) {
   starCompareMode = null;
   selectedMoon = null;
   selectedVoyager = null;
+  pendingSelection = null;
+  moonSurfaceView = false;
+  dayMode = true;
   // animationPaused n'est PAS réinitialisé ici : c'est une préférence globale
   // qui doit survivre à la navigation (ex. mettre en pause le Système
   // Solaire, cliquer une planète, puis revenir doit rester en pause).
+  // realMoonScale non plus : préférence persistée (comme showScientificInterpretation).
   render();
 }
 
@@ -366,11 +446,15 @@ function render() {
   clickable = new Map();
 
   spinGroups = [];
+  galaxyRevealables = [];
+  galaxySunLines = [];
 
   if (state.view === "galaxy") {
     const result = buildGalaxyScene(seed);
     scene.add(result.group);
     clickable = result.clickable;
+    galaxyRevealables = result.revealables;
+    galaxySunLines = result.sunLines;
     camera.position.copy(result.cameraPos);
     controls.target.set(0, 0, 0);
     renderBreadcrumb();
@@ -382,6 +466,11 @@ function render() {
     renderCompareToggle(null, false);
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
+    moonScaleToggleEl.style.display = "none";
+    moonSurfaceToggleEl.style.display = "none";
+    dayNightToggleEl.style.display = "none";
+    lookAroundActive = false;
+    controls.enabled = true;
     renderPauseToggle(false);
     hintEl.textContent = t("hintGalaxy");
   } else if (state.view === "system") {
@@ -411,6 +500,11 @@ function render() {
     } else {
       renderHabitableZoneToggle(result.habitableZoneAvailable);
     }
+    moonScaleToggleEl.style.display = "none";
+    moonSurfaceToggleEl.style.display = "none";
+    dayNightToggleEl.style.display = "none";
+    lookAroundActive = false;
+    controls.enabled = true;
     renderPauseToggle(true);
     hintEl.textContent = t("hintSystem");
   } else if (state.view === "star") {
@@ -427,6 +521,11 @@ function render() {
     renderStarCompareToggle(isSun);
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
+    moonScaleToggleEl.style.display = "none";
+    moonSurfaceToggleEl.style.display = "none";
+    dayNightToggleEl.style.display = "none";
+    lookAroundActive = false;
+    controls.enabled = true;
     renderPauseToggle(false);
     hintEl.textContent = t("hintStar");
   } else {
@@ -435,7 +534,29 @@ function render() {
     const isEarth = system.id === "sol" && planet.name === "Terre";
     const moon = selectedMoon ? planet.moons.find((m) => m.name === selectedMoon) ?? null : null;
 
-    if (moon) {
+    if (moon && moonSurfaceView) {
+      // Vue imaginée : debout à la surface du satellite, on regarde la
+      // planète autour de laquelle il orbite (cf. moonSurface.ts). Caméra
+      // figée (pas d'OrbitControls, qui déplacerait la position) : seule la
+      // direction du regard (souris) peut changer, cf. lookAroundActive.
+      const surfaceResult = buildMoonSurfaceScene(moon, planet, showScientificInterpretation, dayMode);
+      scene.add(surfaceResult.group);
+      clickable = new Map();
+      camera.position.copy(surfaceResult.cameraPos);
+      controls.enabled = false;
+      lookAroundActive = true;
+      setLookDirection(surfaceResult.cameraPos, surfaceResult.cameraTarget);
+      renderBreadcrumb(system, planet, undefined, moon);
+      renderMoonInfoPanel(moon, true);
+      compareToggleEl.style.display = "none";
+      orbitPlaneToggleEl.style.display = "none";
+      habitableZoneToggleEl.style.display = "none";
+      moonScaleToggleEl.style.display = "none";
+      renderMoonSurfaceToggle(planet, true);
+      renderDayNightToggle();
+      renderPauseToggle(false);
+      hintEl.textContent = moon.has_thick_atmosphere ? t("hintMoonSurfaceHazy") : t("hintMoonSurface");
+    } else if (moon) {
       // Vue satellite dédiée : caméra recentrée sur la lune seule (et non
       // sur la planète avec la lune juste sélectionnée), pour un vrai
       // sentiment de "descendre" d'un niveau, cohérent avec le chemin de fil
@@ -446,6 +567,8 @@ function render() {
       spinGroups = moonResult.spinnables;
       camera.position.copy(moonResult.cameraPos);
       controls.target.set(0, 0, 0);
+      controls.enabled = true;
+      lookAroundActive = false;
       renderBreadcrumb(system, planet, undefined, moon);
       renderMoonInfoPanel(moon);
       compareToggleEl.style.display = "block";
@@ -453,29 +576,134 @@ function render() {
       compareToggleEl.onclick = () => toggleCompare();
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
+      moonScaleToggleEl.style.display = "none";
+      dayNightToggleEl.style.display = "none";
+      renderMoonSurfaceToggle(planet, false);
       renderPauseToggle(false);
       hintEl.textContent = t("hintMoon");
     } else {
-      const result = buildAtmosphereScene(
-        planet,
-        compareWithEarth && !isEarth ? findEarthPlanet(seed) : null,
-        showScientificInterpretation,
-      );
+      const compareTarget = compareWithEarth && !isEarth ? findEarthPlanet(seed) : null;
+      const result = buildAtmosphereScene(planet, compareTarget, showScientificInterpretation, realMoonScale);
       scene.add(result.group);
       clickable = result.clickable;
       spinGroups = result.spinnables;
       camera.position.copy(result.cameraPos);
       controls.target.set(0, 0, 0);
+      controls.enabled = true;
+      lookAroundActive = false;
       renderBreadcrumb(system, planet);
       renderInfoPanel(system, planet, showScientificInterpretation ? result.visual.description[getLang()] : undefined);
       renderCompareToggle(planet, isEarth);
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
+      moonSurfaceToggleEl.style.display = "none";
+      dayNightToggleEl.style.display = "none";
+      // Pas de sens en mode comparaison (les lunes n'y sont pas affichées).
+      renderMoonScaleToggle(compareTarget ? [] : planet.moons);
       renderPauseToggle(planet.moons.length > 0);
       hintEl.textContent = t("hintAtmosphere");
     }
   }
-  controls.update();
+  if (!lookAroundActive) controls.update();
+  updateSelectionMarker();
+  updateSelectionCard();
+  distanceHudEl.classList.toggle("visible", state.view === "galaxy");
+  if (state.view === "galaxy") updateDistanceHud();
+}
+
+// Repère de distance dynamique + temps de trajet (vue galaxie uniquement,
+// cf. scenes/galaxy.ts::applyGalaxyReveal pour la révélation progressive des
+// systèmes/traits qui l'accompagne) : distance caméra↔Soleil (origine de la
+// scène), recalculée à chaque frame pendant que cette vue est active (cf.
+// animate()).
+function updateDistanceHud() {
+  const cameraDistance = camera.position.length();
+  const info = computeGalaxyViewDistance(cameraDistance);
+  const lang = getLang();
+  distanceHudValueEl.textContent = info.distance[lang];
+  distanceHudTravelEl.textContent = `${t("distanceHudTravel")} : ${info.travelTime[lang]}`;
+
+  const selectedSystemId = pendingSelection?.target.kind === "system" ? pendingSelection.target.systemId : null;
+  applyGalaxyReveal(galaxyRevealables, galaxySunLines, cameraDistance, selectedSystemId);
+}
+
+// Recherche l'Object3D actuel correspondant à `pendingSelection.id` dans la
+// map `clickable` fraîchement reconstruite par render() — jamais une
+// référence Object3D gardée d'un render() précédent (disposée avec l'ancienne
+// scène, cf. disposeScene). Les ids (system.id, STAR_CLICK_ID, planet.name)
+// sont stables d'un rendu à l'autre pour une même vue, donc cette
+// résolution retrouve le bon objet même après un re-rendu déclenché par un
+// toggle sans rapport (ex. plans orbitaux) pendant qu'une sélection est en attente.
+function resolvePendingObject(): THREE.Object3D | null {
+  if (!pendingSelection) return null;
+  for (const [obj, id] of clickable) {
+    if (id === pendingSelection.id) return obj;
+  }
+  return null;
+}
+
+function updateSelectionMarker() {
+  if (selectionMarkerSprite) {
+    scene.remove(selectionMarkerSprite);
+    selectionMarkerSprite = null;
+  }
+  const target = resolvePendingObject();
+  if (!target) return;
+  const marker = createSelectionMarker();
+  fitSelectionMarker(marker, target);
+  scene.add(marker);
+  selectionMarkerSprite = marker;
+}
+
+function updateSelectionCard() {
+  if (!pendingSelection) {
+    selectionCardEl.classList.remove("visible");
+    selectionCardExploreEl.onclick = null;
+    return;
+  }
+  const target = pendingSelection.target;
+  let label: string;
+  let typeLabel: string;
+  if (target.kind === "system") {
+    label = localizeName(findSystem(target.systemId).name);
+    typeLabel = t("selectionTypeSystem");
+  } else if (target.kind === "star") {
+    label = `☉ ${localizeName(findSystem(target.systemId).star.name)}`;
+    typeLabel = t("selectionTypeStar");
+  } else {
+    label = localizeName(findPlanet(findSystem(target.systemId), target.planetName).name);
+    typeLabel = t("selectionTypePlanet");
+  }
+  selectionCardLabelEl.textContent = label;
+  selectionCardTypeEl.textContent = typeLabel;
+  selectionCardExploreEl.textContent = t("selectionExplore");
+  selectionCardExploreEl.onclick = () => {
+    pendingSelection = null;
+    if (target.kind === "system") setState({ view: "system", systemId: target.systemId });
+    else if (target.kind === "star") setState({ view: "star", systemId: target.systemId });
+    else setState({ view: "atmosphere", systemId: target.systemId, planetName: target.planetName });
+  };
+  selectionCardEl.classList.add("visible");
+}
+
+// Désigne `target` comme sélection en attente sans reconstruire la scène
+// (pas de render() ici : ça réinitialiserait la caméra à la position par
+// défaut de la vue, ce qui ferait perdre à l'utilisateur le cadrage qu'il a
+// choisi juste pour prévisualiser un astre — cf. Nouvelle Navigation).
+function selectPending(target: PendingTarget, id: string) {
+  if (selectedVoyager) {
+    selectedVoyager = null;
+    renderInfoPanel(state.view === "system" ? findSystem(state.systemId) : null);
+  }
+  pendingSelection = { target, id };
+  updateSelectionMarker();
+  updateSelectionCard();
+}
+
+function clearPendingSelection() {
+  pendingSelection = null;
+  updateSelectionMarker();
+  updateSelectionCard();
 }
 
 function toggleCompare() {
@@ -520,6 +748,45 @@ function renderHabitableZoneToggle(available: boolean) {
         render();
       }
     : null;
+}
+
+function renderMoonScaleToggle(moons: MoonData[]) {
+  if (moons.length === 0) {
+    moonScaleToggleEl.style.display = "none";
+    moonScaleToggleEl.onclick = null;
+    return;
+  }
+  moonScaleToggleEl.style.display = "block";
+  moonScaleToggleEl.classList.toggle("active", realMoonScale);
+  moonScaleToggleEl.textContent = realMoonScale ? t("moonScaleHide") : t("moonScaleShow");
+  moonScaleToggleEl.title = realMoonScale ? t("moonScaleRealHint") : "";
+  moonScaleToggleEl.onclick = () => {
+    realMoonScale = !realMoonScale;
+    localStorage.setItem(REAL_MOON_SCALE_KEY, String(realMoonScale));
+    render();
+  };
+}
+
+function renderMoonSurfaceToggle(planet: PlanetData, active: boolean) {
+  moonSurfaceToggleEl.style.display = "block";
+  moonSurfaceToggleEl.classList.toggle("active", active);
+  moonSurfaceToggleEl.textContent = active
+    ? t("moonSurfaceViewHide")
+    : `${t("moonSurfaceViewPrefix")} ${localizeName(planet.name)}`;
+  moonSurfaceToggleEl.onclick = () => {
+    moonSurfaceView = !moonSurfaceView;
+    render();
+  };
+}
+
+function renderDayNightToggle() {
+  dayNightToggleEl.style.display = "block";
+  dayNightToggleEl.classList.toggle("active", !dayMode);
+  dayNightToggleEl.textContent = dayMode ? t("daySwitchToNight") : t("daySwitchToDay");
+  dayNightToggleEl.onclick = () => {
+    dayMode = !dayMode;
+    render();
+  };
 }
 
 function renderPauseToggle(show: boolean) {
@@ -570,9 +837,11 @@ function renderStarInfoPanel(system: SystemData, isSun: boolean) {
   const lang = getLang();
   const radiusKm = star.st_rad != null ? Math.round(star.st_rad * 695_700).toLocaleString(getLang()) : "?";
   const note = isSun ? t("starKnownNote") : t("starArchiveNote");
+  const category = classifyStar(star.spectype, isSun);
 
   infoPanelEl.innerHTML = `
     <h2>☉ ${localizeName(star.name)}</h2>
+    <p>${t("starCategory")} : ${lang === "fr" ? category.fr : category.en}</p>
     <p>${t("spectralType")} : ${star.spectype ?? t("unknown")}</p>
     <p>${t("temperature")} : ${formatTemp(star.st_teff)}</p>
     <p>${t("starRadius")} : ${star.st_rad ?? "?"} R☉ (${radiusKm} km)</p>
@@ -671,8 +940,11 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
   infoPanelEl.classList.add("visible");
 
   if (!planet) {
+    const lang = getLang();
+    const category = classifyStar(system.star.spectype, system.id === "sol");
     infoPanelEl.innerHTML = `
       <h2>${localizeName(system.name)}</h2>
+      <p>${t("starCategory")} : ${lang === "fr" ? category.fr : category.en}</p>
       <p>${t("spectralType")} : ${system.star.spectype ?? t("unknown")}</p>
       <p>${t("temperature")} : ${formatTemp(system.star.st_teff)}</p>
       <p>${t("distance")} : ${system.star.sy_dist ?? 0} pc</p>
@@ -703,6 +975,7 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
     ${planet.dwarf ? `<span class="badge dwarf">${t("dwarfPlanetBadge")}</span>` : ""}
     <p>${t("orbitRadiusMass")} : ${planet.pl_orbsmax ?? "?"} UA — ${t("radius")} : ${planet.pl_rade ?? "?"} R⊕ — ${t("mass")} : ${planet.pl_bmasse ?? "?"} M⊕</p>
     <p>${t("equilibriumTemp")} : ${formatTemp(planet.pl_eqt)}</p>
+    ${planet.planet_type ? `<p><strong>${t("planetType")} :</strong> ${lang === "fr" ? planet.planet_type.fr : planet.planet_type.en}</p>` : ""}
     ${gravityLineHtml(gravityMs2)}
     ${studentMode ? gravityAnecdoteHtml(planet.name, gravityMs2) : ""}
     <p><strong>${t("molecules")} :</strong> ${molecules}</p>
@@ -726,7 +999,17 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
   `;
 }
 
-function renderMoonInfoPanel(moon: MoonData) {
+// Anecdote sous forme de question repliable, affichée uniquement dans la vue
+// surface (inSurfaceView) : explique pourquoi le ciel apparaît noir (lunes
+// sans atmosphère, cf. photos Apollo) ou, cas unique de Titan, pourquoi il ne
+// l'est jamais (brume opaque confirmée par la sonde Huygens) — cf. moonSurface.ts.
+function skyAnecdoteHtml(moon: MoonData): string {
+  const question = moon.has_thick_atmosphere ? t("skyQuestionTitan") : t("skyQuestionAirless");
+  const answer = moon.has_thick_atmosphere ? t("skyAnswerTitan") : t("skyAnswerAirless");
+  return `<details class="learn-more"><summary>${question}</summary><p>${answer}</p></details>`;
+}
+
+function renderMoonInfoPanel(moon: MoonData, inSurfaceView = false) {
   infoPanelEl.classList.add("visible");
   const lang = getLang();
   const absPeriod = Math.abs(moon.period_days);
@@ -742,6 +1025,7 @@ function renderMoonInfoPanel(moon: MoonData) {
     ${gravityLineHtml(moon.gravity_ms2 ?? null)}
     ${studentMode ? gravityAnecdoteHtml(moon.name, moon.gravity_ms2 ?? null) : ""}
     <p><em style="font-size: 11px; opacity: 0.7;">${sourceNote}</em></p>
+    ${inSurfaceView ? skyAnecdoteHtml(moon) : ""}
     ${learnMoreHtml(lang === "fr" ? moon.learn_more : moon.learn_more_en)}
     ${photoLinksHtml(moon.name)}
   `;
@@ -758,6 +1042,27 @@ const CLICK_MOVE_THRESHOLD = 5;
 
 canvas.addEventListener("pointerdown", (event) => {
   pointerDownPos = { x: event.clientX, y: event.clientY };
+  lookDragLastPos = { x: event.clientX, y: event.clientY };
+});
+
+// Vue surface (lookAroundActive) : rotation caméra libre à la souris, sans
+// passer par OrbitControls (qui déplacerait la caméra plutôt que de la faire
+// pivoter sur place) — cf. déclaration de lookAroundActive.
+canvas.addEventListener("pointermove", (event) => {
+  if (!lookAroundActive || !lookDragLastPos) return;
+  const dx = event.clientX - lookDragLastPos.x;
+  const dy = event.clientY - lookDragLastPos.y;
+  lookDragLastPos = { x: event.clientX, y: event.clientY };
+  lookYaw -= dx * LOOK_SENSITIVITY;
+  lookPitch = THREE.MathUtils.clamp(lookPitch - dy * LOOK_SENSITIVITY, -LOOK_MAX_PITCH, LOOK_MAX_PITCH);
+  applyLookRotation();
+});
+
+canvas.addEventListener("pointerup", () => {
+  lookDragLastPos = null;
+});
+canvas.addEventListener("pointercancel", () => {
+  lookDragLastPos = null;
 });
 
 canvas.addEventListener("click", (event) => {
@@ -790,30 +1095,29 @@ canvas.addEventListener("click", (event) => {
         return;
       }
     }
-    // Clic dans le vide : d'abord désélectionner la lune affichée, sinon
-    // revenir au système (un niveau de retour à la fois).
+    // Clic dans le vide : désélectionner la lune affichée s'il y en a une.
+    // Un clic dans le vide ne fait plus jamais sortir de la vue (Nouvelle
+    // Navigation) — seul le bouton "Explorer" (pour système/étoile/planète)
+    // ou le fil d'Ariane font revenir en arrière depuis ici.
     if (selectedMoon) {
       selectedMoon = null;
+      moonSurfaceView = false;
+      dayMode = true;
       render();
-      return;
     }
-    goBack();
     return;
   }
 
   if (intersects.length === 0) {
-    // Clic dans le vide depuis la vue système ou galaxie : d'abord
-    // désélectionner une sonde Voyager affichée, sinon revenir en arrière.
-    if (state.view === "system") {
-      if (selectedVoyager) {
-        selectedVoyager = null;
-        render();
-        return;
-      }
-      goBack();
-    } else if (state.view === "galaxy" && selectedVoyager) {
+    // Clic dans le vide depuis la vue système ou galaxie : désélectionner une
+    // sonde Voyager et/ou une sélection en attente (losange + encart
+    // "Explorer") si affichées. Ne navigue plus jamais en arrière (cf.
+    // Nouvelle Navigation) : seul "Explorer" ou le fil d'Ariane le font.
+    if (selectedVoyager) {
       selectedVoyager = null;
       render();
+    } else if (pendingSelection) {
+      clearPendingSelection();
     }
     return;
   }
@@ -827,16 +1131,16 @@ canvas.addEventListener("click", (event) => {
       selectedVoyager = id === VOYAGER_1.id ? VOYAGER_1 : VOYAGER_2;
       render();
     } else {
-      setState({ view: "system", systemId: id });
+      selectPending({ kind: "system", systemId: id }, id);
     }
   } else if (state.view === "system") {
     if (id === STAR_CLICK_ID) {
-      setState({ view: "star", systemId: state.systemId });
+      selectPending({ kind: "star", systemId: state.systemId }, id);
     } else if (id === VOYAGER_1.id || id === VOYAGER_2.id) {
       selectedVoyager = id === VOYAGER_1.id ? VOYAGER_1 : VOYAGER_2;
       render();
     } else {
-      setState({ view: "atmosphere", systemId: state.systemId, planetName: id });
+      selectPending({ kind: "planet", systemId: state.systemId, planetName: id }, id);
     }
   }
 });
@@ -848,7 +1152,20 @@ function animate() {
   // l'autre au lieu de tourner chacune sur elle-même. La vitesse dépend de
   // la vraie période de rotation sidérale (voir atmosphere.ts::spinSpeed).
   if (!animationPaused) spinGroups.forEach(({ group, speed }) => (group.rotation.y += speed));
-  controls.update();
+  // La sélection en attente (losange + encart "Explorer") ne provoque pas de
+  // render() — cf. selectPending — donc sans ceci le losange resterait figé
+  // à la position où l'astre se trouvait au moment du clic, alors que sa
+  // planète continue son orbite (spinGroups ci-dessus) : on recale juste sa
+  // position/échelle à chaque frame, sans recréer le sprite.
+  if (pendingSelection && selectionMarkerSprite) {
+    const target = resolvePendingObject();
+    if (target) fitSelectionMarker(selectionMarkerSprite, target);
+  }
+  // Repère de distance + révélation progressive : recalculés à chaque frame
+  // (pas seulement à chaque render()) car la caméra bouge en continu via
+  // OrbitControls (zoom/rotation) sans qu'aucun render() ne soit déclenché.
+  if (state.view === "galaxy") updateDistanceHud();
+  if (!lookAroundActive) controls.update();
   renderer.render(scene, camera);
 }
 
@@ -927,7 +1244,12 @@ searchInputEl.addEventListener("keydown", (event) => {
 searchInputEl.addEventListener("change", () => jumpToSearchResult(searchInputEl.value));
 
 loadPhotoManifest();
-loadSeedData().then((data) => {
+// Les libellés 3D (labelSprite.ts, scenes/galaxy.ts) sont rasterisés une
+// seule fois dans une texture canvas : si "Orbitron" n'est pas encore
+// chargée au moment du premier dessin, le fallback système reste figé dans
+// la texture pour de bon (pas de redessin automatique comme du texte DOM).
+// On attend donc explicitement son chargement avant le premier render().
+Promise.all([document.fonts.load('700 32px "Orbitron"'), loadSeedData()]).then(([, data]) => {
   seed = data;
   refreshSearchIndex();
   render();
