@@ -122,6 +122,18 @@ mais pas un vide de marché aussi béant que suggéré initialement.
   donnée par système, ex. `constellation` sur `StarData`). Demandé par
   Cyril le 2026-07-20, à faire plus tard.
 
+## Bugs connus (à corriger plus tard)
+
+- **Distance lune↔planète trop compressée visuellement** (ex. Lune vs
+  Terre, Charon vs Pluton dans `scenes/moons.ts`) : `naturalRadius` utilise
+  une échelle en racine carrée de `orbit_km` (`Math.sqrt(moon.orbit_km /
+  50_000) * opts.orbitScale`), puis est repoussée par le clamp anti-
+  chevauchement `Math.max(naturalRadius, previousOuterEdge + moonRadius *
+  1.5)` — pour des systèmes à une seule lune proche (Terre, Pluton), le
+  clamp ou la compression racine carrée dominent et rapprochent la lune
+  bien plus que sa distance réelle ne le justifierait. Signalé par Cyril
+  le 2026-07-20.
+
 ## Prochaines étapes
 
 1. Définir le MVP : scope minimal démontrable (ex. Soleil + ~20-50 étoiles
