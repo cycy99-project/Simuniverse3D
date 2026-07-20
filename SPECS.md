@@ -116,6 +116,11 @@ mais pas un vide de marché aussi béant que suggéré initialement.
   nécessite une nouvelle scène, un nouvel état dans la state machine et une
   nouvelle échelle (mégaparsecs), pas un simple ajustement. Demandé par
   Cyril le 2026-07-12, reporté à un prochain chantier.
+- **Vue des constellations connues** dans la vue 3D (probablement la vue
+  galaxie/voisinage stellaire) + indiquer, pour chaque système d'étoile du
+  jeu de données, dans quelle constellation il se trouve (nouveau champ de
+  donnée par système, ex. `constellation` sur `StarData`). Demandé par
+  Cyril le 2026-07-20, à faire plus tard.
 
 ## Prochaines étapes
 
