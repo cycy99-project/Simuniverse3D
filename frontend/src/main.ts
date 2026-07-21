@@ -16,6 +16,7 @@ import { formatTemp, getTempUnit, setTempUnit, onTempUnitChange, type TempUnit }
 import { localizeName } from "./nameTranslations";
 import { photoLinksFor } from "./photoLinks";
 import { loadPhotoManifest, photosFor, type PhotoEntry } from "./photoGallery";
+import { musicPlaylist, type MusicTrack } from "./musicPlaylist";
 import { gravityAnecdote } from "./gravityAnecdotes";
 import { classifyStar } from "./starClassification";
 import { createSelectionMarker, fitSelectionMarker } from "./selectionMarker";
@@ -69,6 +70,8 @@ const studentModeToggleEl = document.getElementById("student-mode-toggle") as HT
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
 const pauseToggleEl = document.getElementById("pause-toggle") as HTMLButtonElement;
 const bgMusicEl = document.getElementById("bg-music") as HTMLAudioElement;
+const creditsMusicTitleEl = document.getElementById("credits-music-title")!;
+const creditsMusicAuthorEl = document.getElementById("credits-music-author")!;
 const searchInputEl = document.getElementById("search-input") as HTMLInputElement;
 const searchDatalistEl = document.getElementById("search-datalist") as HTMLDataListElement;
 const lightboxEl = document.getElementById("lightbox")!;
@@ -89,6 +92,7 @@ const MUSIC_MUTED_KEY = "universe3d.musicMuted";
 let musicMuted = localStorage.getItem(MUSIC_MUTED_KEY) === "true";
 bgMusicEl.volume = 0.35;
 bgMusicEl.muted = musicMuted;
+bgMusicEl.loop = false;
 
 function renderMusicToggle() {
   musicToggleEl.textContent = musicMuted ? "🔇 Musique" : "🔊 Musique";
@@ -104,17 +108,39 @@ musicToggleEl.onclick = () => {
   renderMusicToggle();
 };
 
+// Lecture aléatoire des pistes de musicPlaylist.ts (public/sounds/) : un sac
+// mélangé (Fisher-Yates) est reconstitué à chaque fois qu'il est épuisé, pour
+// ne jamais rejouer un morceau avant d'avoir entendu tous les autres. À
+// chaque nouveau morceau, titre + auteur sont réaffichés dans #credits.
+let musicQueue: MusicTrack[] = [];
+
+function shuffle<T>(items: T[]): T[] {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function playNextTrack() {
+  if (musicQueue.length === 0) musicQueue = shuffle(musicPlaylist);
+  const track = musicQueue.shift()!;
+  bgMusicEl.src = `/sounds/${track.file}`;
+  creditsMusicTitleEl.textContent = track.title;
+  creditsMusicAuthorEl.textContent = track.author;
+  if (!musicMuted) bgMusicEl.play().catch(() => {});
+}
+bgMusicEl.addEventListener("ended", playNextTrack);
+playNextTrack();
+
 // Les navigateurs bloquent l'autoplay avec son avant toute interaction : on
-// tente immédiatement, puis on retente au premier geste utilisateur si besoin.
-bgMusicEl.play().catch(() => {
-  const resumeOnInteraction = () => {
-    if (!musicMuted) bgMusicEl.play().catch(() => {});
-    document.removeEventListener("pointerdown", resumeOnInteraction);
-    document.removeEventListener("keydown", resumeOnInteraction);
-  };
-  document.addEventListener("pointerdown", resumeOnInteraction, { once: true });
-  document.addEventListener("keydown", resumeOnInteraction, { once: true });
-});
+// retente au premier geste utilisateur si besoin (même morceau déjà chargé).
+const resumeOnInteraction = () => {
+  if (!musicMuted) bgMusicEl.play().catch(() => {});
+};
+document.addEventListener("pointerdown", resumeOnInteraction, { once: true });
+document.addEventListener("keydown", resumeOnInteraction, { once: true });
 
 function renderLangToggle() {
   const lang = getLang();
