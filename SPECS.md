@@ -121,6 +121,11 @@ mais pas un vide de marché aussi béant que suggéré initialement.
   jeu de données, dans quelle constellation il se trouve (nouveau champ de
   donnée par système, ex. `constellation` sur `StarData`). Demandé par
   Cyril le 2026-07-20, à faire plus tard.
+- **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
+  clavier — uniquement à l'intérieur d'un système solaire donné (pas en vue
+  galaxie) : remplacerait ponctuellement OrbitControls par un déplacement
+  libre caméra (avance/recul/rotation) dans la scène `system.ts` déjà
+  chargée. Demandé par Cyril le 2026-07-21, à faire plus tard.
 
 ## Bugs connus (à corriger plus tard)
 
