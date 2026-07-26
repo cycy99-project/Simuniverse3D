@@ -1,67 +1,227 @@
 [
   {
-    "file": "orbites-derivantes.mp3",
-    "title": "Orbites Dérivantes",
+    "file": "drifting-orbits.mp3",
+    "title": "Drifting Orbits",
     "author": "cycyno"
   },
   {
-    "file": "au-bord-du-vide.mp3",
-    "title": "Au Bord Du Vide",
+    "file": "at-the-edge-of-the-void.mp3",
+    "title": "At the Edge of the Void",
     "author": "cycyno"
   },
   {
-    "file": "au-bord-du-vide-2.mp3",
-    "title": "Au Bord Du Vide 2",
+    "file": "at-the-edge-of-the-void-2.mp3",
+    "title": "At the Edge of the Void 2",
     "author": "cycyno"
   },
   {
-    "file": "horizon-infini.mp3",
-    "title": "Horizon Infini",
+    "file": "infinite-horizon.mp3",
+    "title": "Infinite Horizon",
     "author": "cycyno"
   },
   {
-    "file": "horizon-infini-2.mp3",
-    "title": "Horizon Infini 2",
+    "file": "infinite-horizon-2.mp3",
+    "title": "Infinite Horizon 2",
     "author": "cycyno"
   },
   {
-    "file": "horizons-noirs.mp3",
-    "title": "Horizons Noirs",
+    "file": "dark-horizons.mp3",
+    "title": "Dark Horizons",
     "author": "cycyno"
   },
   {
-    "file": "horizons-noirs-2.mp3",
-    "title": "Horizons Noirs 2",
+    "file": "dark-horizons-2.mp3",
+    "title": "Dark Horizons 2",
     "author": "cycyno"
   },
   {
-    "file": "voyage-aux-confins.mp3",
-    "title": "Voyage Aux Confins",
+    "file": "journey-to-the-edge.mp3",
+    "title": "Journey to the Edge",
     "author": "cycyno"
   },
   {
-    "file": "voyage-aux-confins-2.mp3",
-    "title": "Voyage Aux Confins 2",
+    "file": "journey-to-the-edge-2.mp3",
+    "title": "Journey to the Edge 2",
     "author": "cycyno"
   },
   {
-    "file": "orbite-souterraine-2.mp3",
-    "title": "Orbite Souterraine 2",
+    "file": "underground-orbit-2.mp3",
+    "title": "Underground Orbit 2",
     "author": "cycyno"
   },
   {
-    "file": "orbite-souterraine.mp3",
-    "title": "Orbite Souterraine",
+    "file": "underground-orbit.mp3",
+    "title": "Underground Orbit",
     "author": "cycyno"
   },
   {
-    "file": "frontiere-siderale-2.mp3",
-    "title": "Frontière Siderale 2",
+    "file": "celestial-frontier-2.mp3",
+    "title": "Celestial Frontier 2",
     "author": "cycyno"
   },
   {
-    "file": "frontiere-siderale.mp3",
-    "title": "Frontière Siderale",
+    "file": "celestial-frontier.mp3",
+    "title": "Celestial Frontier",
+    "author": "cycyno"
+  },
+  {
+    "file": "acceleration-2.mp3",
+    "title": "Acceleration 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "acceleration.mp3",
+    "title": "Acceleration",
+    "author": "cycyno"
+  },
+  {
+    "file": "bench-suite-2.mp3",
+    "title": "Bench Suite 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "bench-suite.mp3",
+    "title": "Bench Suite",
+    "author": "cycyno"
+  },
+  {
+    "file": "celestial-bell-2.mp3",
+    "title": "Celestial Bell 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "celestial-bell.mp3",
+    "title": "Celestial Bell",
+    "author": "cycyno"
+  },
+  {
+    "file": "dream-of-ruins-2.mp3",
+    "title": "Dream of Ruins 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "dream-of-ruins.mp3",
+    "title": "Dream of Ruins",
+    "author": "cycyno"
+  },
+  {
+    "file": "heading-into-the-shadow-2.mp3",
+    "title": "Heading Into the Shadow 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "heading-into-the-shadow.mp3",
+    "title": "Heading Into the Shadow",
+    "author": "cycyno"
+  },
+  {
+    "file": "heart-of-chrome-2.mp3",
+    "title": "Heart of Chrome 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "heart-of-chrome.mp3",
+    "title": "Heart of Chrome",
+    "author": "cycyno"
+  },
+  {
+    "file": "heart-of-metal-2.mp3",
+    "title": "Heart of Metal 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "heart-of-metal.mp3",
+    "title": "Heart of Metal",
+    "author": "cycyno"
+  },
+  {
+    "file": "heart-of-steel-2.mp3",
+    "title": "Heart of Steel 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "heart-of-steel.mp3",
+    "title": "Heart of Steel",
+    "author": "cycyno"
+  },
+  {
+    "file": "march-to-the-ring-2.mp3",
+    "title": "March to the Ring 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "march-to-the-ring.mp3",
+    "title": "March to the Ring",
+    "author": "cycyno"
+  },
+  {
+    "file": "mist-of-ruins-2.mp3",
+    "title": "Mist of Ruins 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "mist-of-ruins.mp3",
+    "title": "Mist of Ruins",
+    "author": "cycyno"
+  },
+  {
+    "file": "nocturnal-orbits-2.mp3",
+    "title": "Nocturnal Orbits 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "nocturnal-orbits.mp3",
+    "title": "Nocturnal Orbits",
+    "author": "cycyno"
+  },
+  {
+    "file": "path-of-shadows-2.mp3",
+    "title": "Path of Shadows 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "path-of-shadows.mp3",
+    "title": "Path of Shadows",
+    "author": "cycyno"
+  },
+  {
+    "file": "secret-horizons-2.mp3",
+    "title": "Secret Horizons 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "secret-horizons.mp3",
+    "title": "Secret Horizons",
+    "author": "cycyno"
+  },
+  {
+    "file": "secret-orbit-2.mp3",
+    "title": "Secret Orbit 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "secret-orbit.mp3",
+    "title": "Secret Orbit",
+    "author": "cycyno"
+  },
+  {
+    "file": "two-hearts-in-the-void-2.mp3",
+    "title": "Two Hearts in the Void 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "two-hearts-in-the-void.mp3",
+    "title": "Two Hearts in the Void",
+    "author": "cycyno"
+  },
+  {
+    "file": "under-the-willows-2.mp3",
+    "title": "Under the Willows 2",
+    "author": "cycyno"
+  },
+  {
+    "file": "under-the-willows.mp3",
+    "title": "Under the Willows",
     "author": "cycyno"
   }
 ]
