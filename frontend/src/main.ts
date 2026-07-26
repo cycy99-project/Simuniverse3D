@@ -37,6 +37,7 @@ import { gravityAnecdote } from "./gravityAnecdotes";
 import { classifyStar } from "./starClassification";
 import { createSelectionMarker, fitSelectionMarker } from "./selectionMarker";
 import { trackPageView } from "./track";
+import { isMobile, onMobileChange } from "./responsive";
 
 trackPageView();
 
@@ -119,6 +120,30 @@ const selectionCardExploreEl = document.getElementById("selection-card-explore")
 const distanceHudEl = document.getElementById("distance-hud")!;
 const distanceHudValueEl = document.getElementById("distance-hud-value")!;
 const distanceHudTravelEl = document.getElementById("distance-hud-travel")!;
+
+// UI mobile (barre de navigation du bas + 3 tiroirs) — cf. responsive.ts et
+// applyChromeMode()/setMobileSheet() plus bas. N'existe que dans le DOM ;
+// visible uniquement sous <html class="is-mobile">.
+const mnavHomeEl = document.getElementById("mnav-home") as HTMLButtonElement;
+const mnavSearchEl = document.getElementById("mnav-search") as HTMLButtonElement;
+const mnavInfoEl = document.getElementById("mnav-info") as HTMLButtonElement;
+const mnavSettingsEl = document.getElementById("mnav-settings") as HTMLButtonElement;
+const mnavHomeLabelEl = document.getElementById("mnav-home-label")!;
+const mnavSearchLabelEl = document.getElementById("mnav-search-label")!;
+const mnavInfoLabelEl = document.getElementById("mnav-info-label")!;
+const mnavSettingsLabelEl = document.getElementById("mnav-settings-label")!;
+const mobileSearchOverlayEl = document.getElementById("mobile-search-overlay")!;
+const mobileSearchTitleEl = document.getElementById("mobile-search-title")!;
+const mobileSearchSlotEl = document.getElementById("mobile-search-slot")!;
+const mobileSearchCloseEl = document.getElementById("mobile-search-close")!;
+const mobileInfoSheetEl = document.getElementById("mobile-info-sheet")!;
+const mobileInfoTitleEl = document.getElementById("mobile-info-title")!;
+const mobileInfoSlotEl = document.getElementById("mobile-info-slot")!;
+const mobileInfoCloseEl = document.getElementById("mobile-info-close")!;
+const mobileSettingsSheetEl = document.getElementById("mobile-settings-sheet")!;
+const mobileSettingsTitleEl = document.getElementById("mobile-settings-title")!;
+const mobileSettingsSlotEl = document.getElementById("mobile-settings-slot")!;
+const mobileSettingsCloseEl = document.getElementById("mobile-settings-close")!;
 
 const MUSIC_MUTED_KEY = "universe3d.musicMuted";
 let musicMuted = localStorage.getItem(MUSIC_MUTED_KEY) === "true";
@@ -207,6 +232,87 @@ homeChoiceSky2dEl.onclick = () => {
   setState({ view: "sky2d" });
 };
 
+// ---------------------------------------------------------------------------
+// UI mobile : barre de navigation du bas + 3 tiroirs (Recherche/Infos/
+// Réglages). Ne duplique aucune logique métier — les tiroirs sont de simples
+// conteneurs vides dans lesquels les éléments desktop existants (#search-box,
+// #info-panel, les toggles de #right-toggles) sont réellement déplacés
+// (appendChild), pas recréés. Toutes les fonctions renderXToggle()/
+// renderXInfoPanel() existantes continuent d'écrire dans les mêmes éléments,
+// où qu'ils vivent dans le DOM à cet instant.
+// ---------------------------------------------------------------------------
+
+const desktopHomes = new Map<HTMLElement, { parent: Node; before: Node | null }>();
+
+function moveTo(el: HTMLElement, target: HTMLElement, mobile: boolean) {
+  if (mobile) {
+    if (!desktopHomes.has(el)) desktopHomes.set(el, { parent: el.parentNode!, before: el.nextSibling });
+    target.appendChild(el);
+  } else {
+    const home = desktopHomes.get(el);
+    if (home) home.parent.insertBefore(el, home.before);
+  }
+}
+
+function applyChromeMode(mobile: boolean) {
+  moveTo(document.getElementById("search-box")!, mobileSearchSlotEl, mobile);
+  moveTo(infoPanelEl as HTMLElement, mobileInfoSlotEl, mobile);
+  [
+    langToggleEl,
+    unitToggleEl,
+    sciInterpToggleEl,
+    orbitPlaneToggleEl,
+    habitableZoneToggleEl,
+    moonScaleToggleEl,
+    moonDistanceToggleEl,
+    moonSurfaceToggleEl,
+    exoSkyToggleEl,
+    sunLocatorToggleEl,
+    dayNightToggleEl,
+    compareToggleGroupEl,
+    pauseToggleEl,
+    musicToggleEl,
+  ].forEach((el) => moveTo(el as HTMLElement, mobileSettingsSlotEl, mobile));
+}
+applyChromeMode(isMobile());
+onMobileChange(applyChromeMode);
+
+type MobileSheet = "none" | "search" | "info" | "settings";
+let activeMobileSheet: MobileSheet = "none";
+
+function setMobileSheet(next: MobileSheet) {
+  activeMobileSheet = next;
+  mobileSearchOverlayEl.classList.toggle("open", next === "search");
+  mobileInfoSheetEl.classList.toggle("open", next === "info");
+  mobileSettingsSheetEl.classList.toggle("open", next === "settings");
+  mnavSearchEl.classList.toggle("active", next === "search");
+  mnavInfoEl.classList.toggle("active", next === "info");
+  mnavSettingsEl.classList.toggle("active", next === "settings");
+  if (next === "search") searchInputEl.focus();
+}
+
+mnavHomeEl.onclick = () => {
+  setMobileSheet("none");
+  setState({ view: "home" });
+};
+mnavSearchEl.onclick = () => setMobileSheet(activeMobileSheet === "search" ? "none" : "search");
+mnavInfoEl.onclick = () => setMobileSheet(activeMobileSheet === "info" ? "none" : "info");
+mnavSettingsEl.onclick = () => setMobileSheet(activeMobileSheet === "settings" ? "none" : "settings");
+mobileSearchCloseEl.onclick = () => setMobileSheet("none");
+mobileInfoCloseEl.onclick = () => setMobileSheet("none");
+mobileSettingsCloseEl.onclick = () => setMobileSheet("none");
+
+function renderMobileNavTexts() {
+  mnavHomeLabelEl.textContent = t("mobileNavHome");
+  mnavSearchLabelEl.textContent = t("mobileNavSearch");
+  mnavInfoLabelEl.textContent = t("mobileNavInfo");
+  mnavSettingsLabelEl.textContent = t("mobileNavSettings");
+  mobileSearchTitleEl.textContent = t("mobileSearchTitle");
+  mobileInfoTitleEl.textContent = t("mobileInfoTitle");
+  mobileSettingsTitleEl.textContent = t("mobileSettingsTitle");
+}
+renderMobileNavTexts();
+
 function renderCreditsAndA11yTexts() {
   creditsTexturesLabelEl.textContent = t("creditsTextures");
   creditsConstellationsLabelEl.textContent = t("creditsConstellations");
@@ -223,6 +329,7 @@ onLangChange(() => {
   renderHomeTexts();
   renderCreditsAndA11yTexts();
   renderMusicToggle();
+  renderMobileNavTexts();
   render();
 });
 
@@ -558,6 +665,7 @@ function findPlanet(system: SystemData, planetName: string): PlanetData {
 }
 
 function setState(next: AppState) {
+  setMobileSheet("none");
   state = next;
   compareWithEarth = false;
   starCompareMode = null;
@@ -1475,16 +1583,52 @@ const pointer = new THREE.Vector2();
 let pointerDownPos: { x: number; y: number } | null = null;
 const CLICK_MOVE_THRESHOLD = 5;
 
+// Zoom pincement tactile (mêmes 3 vues "regarder autour de soi" que le zoom
+// molette ci-dessous) : les Pointer Events ne donnent que la position du
+// doigt courant — on doit suivre nous-mêmes chaque contact actif (par
+// pointerId) pour calculer l'écart entre deux doigts. N'interfère jamais
+// avec le pinch-to-dolly natif d'OrbitControls (vues galaxie/système/étoile/
+// lune) car controls.enabled est déjà à false dans ces 3 vues.
+const activeTouches = new Map<number, { x: number; y: number }>();
+let pinchStartDistance: number | null = null;
+let pinchStartFov = DEFAULT_FOV;
+
+function touchDistance(): number | null {
+  if (activeTouches.size < 2) return null;
+  const [a, b] = Array.from(activeTouches.values());
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
 canvas.addEventListener("pointerdown", (event) => {
   pointerDownPos = { x: event.clientX, y: event.clientY };
   lookDragLastPos = { x: event.clientX, y: event.clientY };
+  if (event.pointerType === "touch") {
+    activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (activeTouches.size === 2) {
+      pinchStartDistance = touchDistance();
+      pinchStartFov = lookFov;
+      pointerDownPos = null; // évite qu'un "click" ne se déclenche juste après un pincement
+    }
+  }
 });
 
 // Vue surface (lookAroundActive) : rotation caméra libre à la souris, sans
 // passer par OrbitControls (qui déplacerait la caméra plutôt que de la faire
 // pivoter sur place) — cf. déclaration de lookAroundActive.
 canvas.addEventListener("pointermove", (event) => {
-  if (!lookAroundActive || !lookDragLastPos) return;
+  if (event.pointerType === "touch" && activeTouches.has(event.pointerId)) {
+    activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (lookAroundActive && activeTouches.size >= 2 && pinchStartDistance !== null) {
+      const distance = touchDistance();
+      if (distance) {
+        lookFov = THREE.MathUtils.clamp(pinchStartFov * (pinchStartDistance / distance), LOOK_FOV_MIN, LOOK_FOV_MAX);
+        camera.fov = lookFov;
+        camera.updateProjectionMatrix();
+      }
+      return; // un pincement à 2 doigts ne doit pas aussi faire tourner la caméra
+    }
+  }
+  if (!lookAroundActive || !lookDragLastPos || activeTouches.size >= 2) return;
   const dx = event.clientX - lookDragLastPos.x;
   const dy = event.clientY - lookDragLastPos.y;
   lookDragLastPos = { x: event.clientX, y: event.clientY };
@@ -1493,12 +1637,15 @@ canvas.addEventListener("pointermove", (event) => {
   applyLookRotation();
 });
 
-canvas.addEventListener("pointerup", () => {
+function releaseTouch(event: PointerEvent) {
   lookDragLastPos = null;
-});
-canvas.addEventListener("pointercancel", () => {
-  lookDragLastPos = null;
-});
+  if (event.pointerType === "touch") {
+    activeTouches.delete(event.pointerId);
+    if (activeTouches.size < 2) pinchStartDistance = null;
+  }
+}
+canvas.addEventListener("pointerup", releaseTouch);
+canvas.addEventListener("pointercancel", releaseTouch);
 
 // Zoom molette (vues "regarder autour de soi" uniquement — cf. lookFov) :
 // { passive: false } + preventDefault pour empêcher le scroll de la page

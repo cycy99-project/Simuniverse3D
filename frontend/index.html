@@ -219,6 +219,87 @@
       @media (prefers-reduced-motion: reduce) {
         #ui-overlay button { transition: none; }
         .home-choice { transition: none; }
+        #mobile-info-sheet, #mobile-settings-sheet { transition: none; }
+      }
+
+      /* ====================================================================
+         UI mobile — bascule automatique via <html class="is-mobile"> (cf.
+         src/responsive.ts, basé sur la largeur de viewport). Sans cette
+         classe (desktop), aucune de ces règles ne s'applique : le layout
+         desktop existant reste strictement identique.
+         ==================================================================== */
+      html.is-mobile #ui-overlay button { min-height: 44px; min-width: 44px; font-size: 14px; }
+      html.is-mobile #top-left-bar #home-btn { display: none; }
+      html.is-mobile #breadcrumb { max-width: calc(100vw - 24px); overflow-x: auto; white-space: nowrap; }
+      html.is-mobile #credits { display: none; }
+      html.is-mobile #bottom-left { display: none; }
+      html.is-mobile #distance-hud { bottom: calc(56px + var(--space-4)); }
+      html.is-mobile #selection-card { bottom: calc(56px + var(--space-4) + var(--space-3)); }
+      html.is-mobile .lightbox-nav, html.is-mobile #lightbox-close { min-height: 44px; min-width: 44px; }
+
+      /* Panneaux/toggles déplacés en JS (applyChromeMode/moveTo, main.ts) dans
+         les tiroirs mobiles ci-dessous : neutralise leur positionnement
+         absolu d'origine une fois réinsérés dans un conteneur en flux normal.
+         Les fonctions renderXToggle()/renderXInfoPanel() existantes ne
+         changent pas — elles continuent d'écrire dans les mêmes éléments,
+         où qu'ils vivent dans le DOM. */
+      html.is-mobile #search-box { position: static; transform: none; width: 100%; }
+      html.is-mobile #search-input { width: 100%; box-sizing: border-box; }
+      html.is-mobile #info-panel { position: static; width: 100%; height: auto; border-left: none; padding: 0; }
+      html.is-mobile #right-toggles { display: none; }
+      html.is-mobile #compare-toggle-group,
+      html.is-mobile #pause-toggle {
+        position: static; display: flex; width: 100%;
+      }
+      html.is-mobile #mobile-settings-slot { display: flex; flex-direction: column; gap: var(--space-3); }
+      html.is-mobile #mobile-settings-slot > * { width: 100%; }
+      html.is-mobile #mobile-settings-slot button {
+        max-width: none; width: 100%; text-align: left; box-sizing: border-box;
+      }
+
+      /* Barre de navigation mobile (bas d'écran, 4 entrées : Accueil / Recherche / Infos / Réglages) */
+      #mobile-bottom-nav { display: none; }
+      html.is-mobile #mobile-bottom-nav {
+        display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+        height: 56px; background: var(--color-card-solid); border-top: 1px solid var(--color-border);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
+      #mobile-bottom-nav .mnav-btn {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 2px; background: none; border: none; border-radius: 0; color: var(--color-muted);
+        min-height: 56px;
+      }
+      #mobile-bottom-nav .mnav-btn.active { color: var(--color-fg); background: var(--color-accent-bg); }
+      #mobile-bottom-nav .mnav-icon { font-size: 20px; line-height: 1; }
+      #mobile-bottom-nav .mnav-label { font-size: 10px; letter-spacing: 0.02em; }
+
+      /* Tiroir plein écran (Recherche) et tiroirs remontant du bas (Infos, Réglages) */
+      #mobile-search-overlay { display: none; }
+      html.is-mobile #mobile-search-overlay.open {
+        display: flex; flex-direction: column; position: fixed; inset: 0; z-index: 50;
+        background: var(--color-bg);
+      }
+      #mobile-info-sheet, #mobile-settings-sheet { display: none; }
+      html.is-mobile #mobile-info-sheet, html.is-mobile #mobile-settings-sheet {
+        display: flex; flex-direction: column; position: fixed; left: 0; right: 0; bottom: 56px; z-index: 45;
+        max-height: 70vh; background: var(--color-card-solid);
+        border: 1px solid var(--color-border); border-bottom: none;
+        border-top-left-radius: 16px; border-top-right-radius: 16px;
+        transform: translateY(100%); transition: transform 200ms ease-out;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
+      }
+      html.is-mobile #mobile-info-sheet.open, html.is-mobile #mobile-settings-sheet.open {
+        transform: translateY(0);
+      }
+      .mobile-sheet-header {
+        display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+        padding: 14px 16px; border-bottom: 1px solid var(--color-border);
+        font-family: var(--font-display); letter-spacing: 0.03em; font-size: 15px;
+      }
+      .mobile-sheet-body { padding: 12px 16px; overflow-y: auto; }
+      .mobile-sheet-close {
+        font-family: var(--font-display); background: none; border: none; color: var(--color-fg);
+        font-size: 22px; line-height: 1; padding: 4px 8px; cursor: pointer; min-height: 0;
       }
     </style>
   </head>
@@ -283,6 +364,45 @@
           <div id="distance-hud-travel" class="distance-hud-travel"></div>
         </div>
         <div id="credits"><span id="credits-textures-label"></span> : <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0) — <span id="credits-constellations-label"></span> : <a href="https://github.com/dcf21/constellation-stick-figures" target="_blank" rel="noopener">dcf21/constellation-stick-figures</a> (GPLv3, D. Ford) — <span id="credits-music-label"></span> : <span id="credits-music-title">Orbites Dérivantes</span> (<span id="credits-music-author">cycyno</span>)</div>
+        <nav id="mobile-bottom-nav">
+          <button id="mnav-home" type="button" class="mnav-btn">
+            <span class="mnav-icon" aria-hidden="true">🏠</span>
+            <span class="mnav-label" id="mnav-home-label"></span>
+          </button>
+          <button id="mnav-search" type="button" class="mnav-btn">
+            <span class="mnav-icon" aria-hidden="true">🔍</span>
+            <span class="mnav-label" id="mnav-search-label"></span>
+          </button>
+          <button id="mnav-info" type="button" class="mnav-btn">
+            <span class="mnav-icon" aria-hidden="true">ℹ️</span>
+            <span class="mnav-label" id="mnav-info-label"></span>
+          </button>
+          <button id="mnav-settings" type="button" class="mnav-btn">
+            <span class="mnav-icon" aria-hidden="true">⚙️</span>
+            <span class="mnav-label" id="mnav-settings-label"></span>
+          </button>
+        </nav>
+        <div id="mobile-search-overlay">
+          <div class="mobile-sheet-header">
+            <span id="mobile-search-title"></span>
+            <button type="button" class="mobile-sheet-close" id="mobile-search-close">✕</button>
+          </div>
+          <div class="mobile-sheet-body" id="mobile-search-slot"></div>
+        </div>
+        <div id="mobile-info-sheet">
+          <div class="mobile-sheet-header">
+            <span id="mobile-info-title"></span>
+            <button type="button" class="mobile-sheet-close" id="mobile-info-close">✕</button>
+          </div>
+          <div class="mobile-sheet-body" id="mobile-info-slot"></div>
+        </div>
+        <div id="mobile-settings-sheet">
+          <div class="mobile-sheet-header">
+            <span id="mobile-settings-title"></span>
+            <button type="button" class="mobile-sheet-close" id="mobile-settings-close">✕</button>
+          </div>
+          <div class="mobile-sheet-body" id="mobile-settings-slot"></div>
+        </div>
       </div>
       <audio id="bg-music" preload="auto"></audio>
       <div id="lightbox">
