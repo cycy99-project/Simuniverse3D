@@ -1,7 +1,8 @@
 # Déploiement UNIVERSE3D — Hetzner VPS
 
-Site 100% statique (Vite + TypeScript + Three.js, pas de backend, pas de DB,
-pas de secret) servi par nginx dans un container Docker, mutualisé avec le
+Frontend 100% statique (Vite + TypeScript + Three.js) servi par nginx, plus
+une petite API FastAPI + SQLite (`universe3d-api`) pour le dashboard de
+fréquentation (`/admin.html`). Deux containers Docker, mutualisés avec le
 Caddy déjà en place pour Cycymulator/TchinQuiz/LoupsGarous sur le même VPS.
 
 ## Prérequis
@@ -18,9 +19,19 @@ curl -fsSL https://raw.githubusercontent.com/cycy99-project/Simuniverse3D/main/d
 Le script :
 1. vérifie Docker + le réseau `hetzner_web` partagé,
 2. clone le repo dans `/srv/universe3d`,
-3. build l'image et démarre le container,
-4. ajoute automatiquement le vhost `universe3d.duckdns.org` au Caddyfile de
-   Cycymulator et recharge Caddy.
+3. génère `.env` (mot de passe admin + clé de session, aléatoires),
+4. build les images et démarre les containers (frontend + API stats),
+5. ajoute automatiquement le vhost `universe3d.duckdns.org` au Caddyfile de
+   Cycymulator (routage `/api/*` → API, reste → frontend) et recharge Caddy.
+
+## Dashboard fréquentation
+
+`https://universe3d.duckdns.org/admin.html` — vues totales/7j/30j, visiteurs
+distincts, répartition par pays (géolocalisation IP via ip-api.com), 30
+dernières visites. Mot de passe dans `.env` (`ADMIN_PASSWORD`). Les vues
+brutes sont purgées après 30 jours et agrégées en résumé mensuel permanent
+(pas d'IP conservée au-delà de 30 jours) — même pattern que le suivi de
+connexions de Cycymulator (`api/login_tracker.py`).
 
 ## Mise à jour
 

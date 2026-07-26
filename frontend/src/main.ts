@@ -36,6 +36,9 @@ import { musicPlaylist, type MusicTrack } from "./musicPlaylist";
 import { gravityAnecdote } from "./gravityAnecdotes";
 import { classifyStar } from "./starClassification";
 import { createSelectionMarker, fitSelectionMarker } from "./selectionMarker";
+import { trackPageView } from "./track";
+
+trackPageView();
 
 type AppState =
   | { view: "home" }

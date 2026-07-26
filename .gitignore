@@ -10,3 +10,8 @@ __pycache__/
 # dupliqués et resservis depuis frontend/public/photos/ une fois traités —
 # jamais lu par le code, pas la peine de le versionner).
 /img/
+
+# Secrets + DB SQLite de l'API stats/admin (jamais commités, cf. deploy/hetzner)
+deploy/hetzner/.env
+data/stats/
+*.db

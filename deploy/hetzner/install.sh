@@ -3,7 +3,8 @@
 # UNIVERSE3D — Bootstrap script pour Hetzner VPS Ubuntu 22.04 / 24.04
 # ============================================================================
 # Prérequis : Cycymulator déjà installé sur le VPS (Docker + Caddy en place).
-# Site 100% statique : pas de .env, pas de DB, pas de secret à générer.
+# Frontend 100% statique + petite API stats/admin (FastAPI + SQLite) avec un
+# secret (mot de passe admin), généré automatiquement au 1er bootstrap.
 #
 # Usage :
 #   curl -fsSL https://raw.githubusercontent.com/cycy99-project/Simuniverse3D/main/deploy/hetzner/install.sh | bash
@@ -58,6 +59,22 @@ fi
 
 cd "$INSTALL_DIR/deploy/hetzner"
 
+# ----- .env -------------------------------------------------------------
+if [[ ! -f .env ]]; then
+    log "Création de .env (secrets générés automatiquement)…"
+    $SUDO cp .env.example .env
+    ADMIN_PWD=$(openssl rand -base64 18 | tr -d '/+=')
+    SECRET=$(openssl rand -base64 32)
+    $SUDO sed -i "s|change-me-strong-password|$ADMIN_PWD|" .env
+    $SUDO sed -i "s|change-me-32-bytes-base64|$SECRET|" .env
+    log "✅ Secrets générés. Mot de passe admin initial sauvegardé dans .env"
+else
+    log ".env déjà présent, conservé."
+fi
+
+# ----- Volume SQLite persistant ----------------------------------------------
+$SUDO mkdir -p "$INSTALL_DIR/data/stats"
+
 # ----- Build & démarrage ----------------------------------------------------
 log "Build de l'image Docker (peut prendre 1-2 min la 1ère fois)…"
 $SUDO docker compose build
@@ -92,6 +109,9 @@ echo "     IP du VPS : $(curl -s -4 ifconfig.me)"
 echo "     Va sur https://www.duckdns.org/ → créer/modifier universe3d → cette IP."
 echo "  2. Attends 1-2 min la propagation DNS + Let's Encrypt :"
 echo "     curl -I https://$DOMAIN"
+echo "  3. Connecte-toi au dashboard fréquentation :"
+echo "     URL  : https://$DOMAIN/admin.html"
+echo "     Pass : voir ADMIN_PASSWORD dans $INSTALL_DIR/deploy/hetzner/.env"
 echo
 echo "🔧 Mise à jour future :"
 echo "  cd $INSTALL_DIR/deploy/hetzner && ./update.sh"

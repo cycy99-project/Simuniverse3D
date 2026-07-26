@@ -1,10 +1,14 @@
 # UNIVERSE3D — docker-compose pour Hetzner VPS (mutualisé avec Cycymulator)
 # Lancement : depuis ce dossier, `docker compose up -d`
 #
-# Site 100% statique (pas de backend, pas de DB, pas de secret) : un seul
-# service nginx qui sert le build Vite et rejoint le réseau externe
-# `hetzner_web` partagé avec le Caddy de Cycymulator, qui le reverse-proxie
-# depuis https://universe3d.duckdns.org.
+# 2 services :
+# - universe3d       : frontend statique (nginx) qui sert le build Vite
+# - universe3d-api    : petite API FastAPI (stats de fréquentation + admin),
+#                       SQLite persistant, seul composant avec un secret (mot
+#                       de passe admin) — cf. .env.example
+# Les deux rejoignent le réseau externe `hetzner_web` partagé avec le Caddy
+# de Cycymulator, qui route /api/* vers universe3d-api et le reste vers
+# universe3d (cf. Caddyfile.snippet).
 
 name: universe3d
 
@@ -22,6 +26,30 @@ services:
       - web      # Caddy -> universe3d:80
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    mem_limit: 128m
+
+  universe3d-api:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    image: universe3d-api:latest
+    container_name: universe3d-api
+    restart: unless-stopped
+    expose:
+      - "8000"   # interne uniquement, atteignable via Caddy sur le réseau hetzner_web
+    volumes:
+      - ../../data/stats:/app/data   # SQLite persistant (stats.db)
+    environment:
+      TZ: Europe/Paris
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+    networks:
+      - web      # Caddy -> universe3d-api:8000
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3

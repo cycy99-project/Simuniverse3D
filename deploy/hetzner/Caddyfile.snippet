@@ -5,9 +5,17 @@
 #
 # Caddy va automatiquement obtenir un certificat Let's Encrypt pour
 # universe3d.duckdns.org (à condition que le DNS pointe sur l'IP du VPS).
+#
+# /api/* est routé vers l'API stats/admin (universe3d-api:8000), le reste
+# vers le frontend statique (universe3d:80) — même origine, pas de CORS.
 
 universe3d.duckdns.org {
-    reverse_proxy universe3d:80
+    handle /api/* {
+        reverse_proxy universe3d-api:8000
+    }
+    handle {
+        reverse_proxy universe3d:80
+    }
     encode gzip zstd
     header {
         Strict-Transport-Security "max-age=31536000;"

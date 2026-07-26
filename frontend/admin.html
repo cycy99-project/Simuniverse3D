@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>UNIVERSE3D — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --color-bg: #0b0b10;
+        --color-fg: #f8fafc;
+        --color-card: #14161e;
+        --color-border: #1e293b;
+        --color-muted: #94a3b8;
+        --color-accent: #3b82f6;
+        --font-display: "Orbitron", system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100dvh; background: var(--color-bg); color: var(--color-fg); font-family: system-ui, sans-serif; }
+      h1 { font-family: var(--font-display); font-size: 20px; letter-spacing: 0.04em; margin: 0 0 24px; }
+      h2 { font-family: var(--font-display); font-size: 14px; letter-spacing: 0.04em; color: var(--color-muted); margin: 0 0 12px; text-transform: uppercase; }
+      a { color: var(--color-accent); }
+
+      #login-view, #dashboard-view { display: none; }
+      body.state-login #login-view { display: flex; }
+      body.state-dashboard #dashboard-view { display: block; }
+
+      #login-view {
+        min-height: 100dvh; align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+      }
+      #login-view form {
+        display: flex; flex-direction: column; gap: 12px; width: min(320px, 90vw);
+        background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 24px;
+      }
+      #login-view input {
+        min-height: 44px; border-radius: 6px; border: 1px solid var(--color-border); background: #0b0b10;
+        color: var(--color-fg); padding: 0 12px; font-size: 16px;
+      }
+      #login-view button, .action-btn {
+        min-height: 44px; border-radius: 6px; border: 1px solid var(--color-accent); background: var(--color-accent);
+        color: #fff; font-family: var(--font-display); font-size: 13px; letter-spacing: 0.04em; cursor: pointer;
+      }
+      #login-view button:disabled { opacity: 0.5; cursor: default; }
+      #login-error { color: #f87171; font-size: 13px; min-height: 18px; }
+
+      #dashboard-view { max-width: 960px; margin: 0 auto; padding: 24px 16px 64px; }
+      .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+      .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 32px; }
+      .kpi-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 16px; }
+      .kpi-value { font-family: var(--font-display); font-size: 28px; }
+      .kpi-label { color: var(--color-muted); font-size: 12px; margin-top: 4px; }
+
+      section { margin-bottom: 32px; }
+      .bars { display: flex; align-items: flex-end; gap: 4px; height: 120px; }
+      .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+      .bar { width: 100%; background: var(--color-accent); border-radius: 3px 3px 0 0; min-height: 2px; }
+      .bar-label { font-size: 10px; color: var(--color-muted); margin-top: 4px; white-space: nowrap; }
+
+      table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); }
+      th { color: var(--color-muted); font-weight: 500; }
+      td.num { text-align: right; font-variant-numeric: tabular-nums; }
+      .ua-cell { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-muted); }
+
+      .empty { color: var(--color-muted); font-size: 13px; padding: 16px 0; }
+      #logout-btn { background: transparent; color: var(--color-muted); border-color: var(--color-border); }
+      .table-wrap { overflow-x: auto; }
+    </style>
+  </head>
+  <body class="state-login">
+    <div id="login-view">
+      <h1>UNIVERSE3D — Admin</h1>
+      <form id="login-form">
+        <input type="password" id="password-input" placeholder="Mot de passe" autocomplete="current-password" required />
+        <button type="submit" id="login-submit">Connexion</button>
+        <div id="login-error"></div>
+      </form>
+    </div>
+
+    <div id="dashboard-view">
+      <div class="top-row">
+        <h1>UNIVERSE3D — Fréquentation</h1>
+        <div style="display:flex; gap:8px;">
+          <a class="action-btn" id="csv-link" href="/api/admin/views.csv" style="text-decoration:none; display:inline-flex; align-items:center; padding:0 16px;">Export CSV</a>
+          <button class="action-btn" id="logout-btn">Déconnexion</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <section>
+        <h2>Vues des 14 derniers jours</h2>
+        <div class="bars" id="daily-bars"></div>
+      </section>
+
+      <section>
+        <h2>Répartition par pays (30 derniers jours)</h2>
+        <div class="table-wrap">
+          <table id="countries-table">
+            <thead><tr><th>Pays</th><th class="num">Vues</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Dernières visites</h2>
+        <div class="table-wrap">
+          <table id="recent-table">
+            <thead><tr><th>Date (UTC)</th><th>Page</th><th>Localisation</th><th>Navigateur</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Historique mensuel archivé</h2>
+        <div class="table-wrap">
+          <table id="monthly-table">
+            <thead><tr><th>Mois</th><th class="num">Vues</th><th class="num">Pays</th><th class="num">IP distinctes</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="/src/admin.ts"></script>
+  </body>
+</html>
