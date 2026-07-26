@@ -1,0 +1,17 @@
+# Bloc Caddy à AJOUTER au Caddyfile existant de Cycymulator
+# (/srv/cycymulator/deploy/hetzner/Caddyfile) puis recharger Caddy avec :
+#   cd /srv/cycymulator/deploy/hetzner
+#   docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile
+#
+# Caddy va automatiquement obtenir un certificat Let's Encrypt pour
+# universe3d.duckdns.org (à condition que le DNS pointe sur l'IP du VPS).
+
+universe3d.duckdns.org {
+    reverse_proxy universe3d:80
+    encode gzip zstd
+    header {
+        Strict-Transport-Security "max-age=31536000;"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

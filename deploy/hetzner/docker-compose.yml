@@ -1,0 +1,33 @@
+# UNIVERSE3D — docker-compose pour Hetzner VPS (mutualisé avec Cycymulator)
+# Lancement : depuis ce dossier, `docker compose up -d`
+#
+# Site 100% statique (pas de backend, pas de DB, pas de secret) : un seul
+# service nginx qui sert le build Vite et rejoint le réseau externe
+# `hetzner_web` partagé avec le Caddy de Cycymulator, qui le reverse-proxie
+# depuis https://universe3d.duckdns.org.
+
+name: universe3d
+
+services:
+  universe3d:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    image: universe3d:latest
+    container_name: universe3d
+    restart: unless-stopped
+    expose:
+      - "80"     # interne uniquement, atteignable via Caddy sur le réseau hetzner_web
+    networks:
+      - web      # Caddy -> universe3d:80
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    mem_limit: 128m
+
+networks:
+  web:
+    external: true
+    name: hetzner_web   # réseau du Caddy Cycymulator (déjà créé par /srv/cycymulator/deploy/hetzner)
