@@ -63,6 +63,7 @@ const compareToggleEl = document.getElementById("compare-toggle")!;
 const orbitPlaneToggleEl = document.getElementById("orbit-plane-toggle") as HTMLButtonElement;
 const habitableZoneToggleEl = document.getElementById("habitable-zone-toggle") as HTMLButtonElement;
 const moonScaleToggleEl = document.getElementById("moon-scale-toggle") as HTMLButtonElement;
+const moonDistanceToggleEl = document.getElementById("moon-distance-toggle") as HTMLButtonElement;
 const moonSurfaceToggleEl = document.getElementById("moon-surface-toggle") as HTMLButtonElement;
 const dayNightToggleEl = document.getElementById("day-night-toggle") as HTMLButtonElement;
 const sciInterpToggleEl = document.getElementById("sci-interp-toggle") as HTMLButtonElement;
@@ -297,6 +298,14 @@ studentModeToggleEl.onclick = () => {
 const REAL_MOON_SCALE_KEY = "universe3d.realMoonScale";
 let realMoonScale = localStorage.getItem(REAL_MOON_SCALE_KEY) !== "false";
 
+// Universel (vues système et planète), persisté comme realMoonScale : par
+// défaut OFF — la distance stylisée (compression racine carrée +
+// anti-chevauchement, cf. moons.ts) reste le comportement historique par
+// défaut ; la distance réelle (parfois énorme pour une lune irrégulière
+// lointaine) est une option qui éloigne la caméra en conséquence.
+const REAL_MOON_DISTANCE_KEY = "universe3d.realMoonDistance";
+let realMoonDistance = localStorage.getItem(REAL_MOON_DISTANCE_KEY) === "true";
+
 function formatRotationPeriod(rotationHours: number | null): string | null {
   if (rotationHours === null) return null;
   const hours = Math.abs(rotationHours);
@@ -493,6 +502,7 @@ function render() {
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
     moonScaleToggleEl.style.display = "none";
+    moonDistanceToggleEl.style.display = "none";
     moonSurfaceToggleEl.style.display = "none";
     dayNightToggleEl.style.display = "none";
     lookAroundActive = false;
@@ -507,6 +517,7 @@ function render() {
       showRealOrbitalPlanes && hasRealInclinations,
       showHabitableZone && system.id !== "sol",
       showScientificInterpretation,
+      realMoonDistance,
     );
     scene.add(result.group);
     clickable = result.clickable;
@@ -527,6 +538,7 @@ function render() {
       renderHabitableZoneToggle(result.habitableZoneAvailable);
     }
     moonScaleToggleEl.style.display = "none";
+    renderMoonDistanceToggle(system.planets.flatMap((p) => p.moons));
     moonSurfaceToggleEl.style.display = "none";
     dayNightToggleEl.style.display = "none";
     lookAroundActive = false;
@@ -548,6 +560,7 @@ function render() {
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
     moonScaleToggleEl.style.display = "none";
+    moonDistanceToggleEl.style.display = "none";
     moonSurfaceToggleEl.style.display = "none";
     dayNightToggleEl.style.display = "none";
     lookAroundActive = false;
@@ -578,6 +591,7 @@ function render() {
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
       moonScaleToggleEl.style.display = "none";
+      moonDistanceToggleEl.style.display = "none";
       renderMoonSurfaceToggle(planet, true);
       renderDayNightToggle();
       renderPauseToggle(false);
@@ -603,13 +617,20 @@ function render() {
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
       moonScaleToggleEl.style.display = "none";
+      moonDistanceToggleEl.style.display = "none";
       dayNightToggleEl.style.display = "none";
       renderMoonSurfaceToggle(planet, false);
       renderPauseToggle(false);
       hintEl.textContent = t("hintMoon");
     } else {
       const compareTarget = compareWithEarth && !isEarth ? findEarthPlanet(seed) : null;
-      const result = buildAtmosphereScene(planet, compareTarget, showScientificInterpretation, realMoonScale);
+      const result = buildAtmosphereScene(
+        planet,
+        compareTarget,
+        showScientificInterpretation,
+        realMoonScale,
+        realMoonDistance,
+      );
       scene.add(result.group);
       clickable = result.clickable;
       spinGroups = result.spinnables;
@@ -626,6 +647,7 @@ function render() {
       dayNightToggleEl.style.display = "none";
       // Pas de sens en mode comparaison (les lunes n'y sont pas affichées).
       renderMoonScaleToggle(compareTarget ? [] : planet.moons);
+      renderMoonDistanceToggle(compareTarget ? [] : planet.moons);
       renderPauseToggle(planet.moons.length > 0);
       hintEl.textContent = t("hintAtmosphere");
     }
@@ -789,6 +811,23 @@ function renderMoonScaleToggle(moons: MoonData[]) {
   moonScaleToggleEl.onclick = () => {
     realMoonScale = !realMoonScale;
     localStorage.setItem(REAL_MOON_SCALE_KEY, String(realMoonScale));
+    render();
+  };
+}
+
+function renderMoonDistanceToggle(moons: MoonData[]) {
+  if (moons.length === 0) {
+    moonDistanceToggleEl.style.display = "none";
+    moonDistanceToggleEl.onclick = null;
+    return;
+  }
+  moonDistanceToggleEl.style.display = "block";
+  moonDistanceToggleEl.classList.toggle("active", realMoonDistance);
+  moonDistanceToggleEl.textContent = realMoonDistance ? t("moonDistanceHide") : t("moonDistanceShow");
+  moonDistanceToggleEl.title = realMoonDistance ? t("moonDistanceRealHint") : "";
+  moonDistanceToggleEl.onclick = () => {
+    realMoonDistance = !realMoonDistance;
+    localStorage.setItem(REAL_MOON_DISTANCE_KEY, String(realMoonDistance));
     render();
   };
 }

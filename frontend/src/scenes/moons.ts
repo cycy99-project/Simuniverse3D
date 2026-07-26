@@ -40,6 +40,12 @@ export interface MoonScaleOptions {
   // deviennent alors quasi invisibles, comme dans la réalité ; le nom au-dessus
   // (showLabels) reste la seule façon fiable de les repérer une fois zoomé.
   realScale?: boolean;
+  // Distance réelle (orbit_km lune / rayon planète, tous deux réels) au lieu
+  // de la compression en racine carrée + clamp anti-chevauchement ci-dessous —
+  // certaines lunes irrégulières lointaines (Néréide, Phoebé...) s'éloignent
+  // alors énormément, sans plafond artificiel ; c'est à l'appelant (system.ts,
+  // atmosphere.ts) d'éloigner la caméra en conséquence via maxOrbitRadius.
+  realDistance?: boolean;
 }
 
 // Rayon terrestre en km, pour convertir pl_rade (rayons terrestres) en km et
@@ -114,6 +120,15 @@ function moonSizesRealScale(moons: MoonData[], planetRadiusKm: number, planetVis
   return moons.map((m) => planetVisualRadius * (m.radius_km / planetRadiusKm));
 }
 
+// Distance à l'échelle réelle : même principe que moonSizesRealScale(), mais
+// pour l'orbite — un ratio direct (orbit_km / planetRadiusKm), sans la
+// compression en racine carrée ni le clamp anti-chevauchement utilisés par
+// défaut. Peut repousser une lune très loin (ex. Néréide à ~470 rayons de
+// Neptune) ; c'est le comportement recherché quand ce mode est actif.
+function moonOrbitRealScale(orbitKm: number, planetRadiusKm: number, planetVisualRadius: number): number {
+  return planetVisualRadius * (orbitKm / planetRadiusKm);
+}
+
 // Chaque lune orbite via un pivot centré sur la planète, contenant l'anneau
 // d'orbite et la lune décalée en x — on fait tourner le pivot (rotation.y)
 // plutôt que la lune directement, pour obtenir une vraie révolution autour
@@ -139,8 +154,15 @@ export function buildMoons(planet: PlanetData, position: THREE.Vector3, opts: Mo
 
   planet.moons.forEach((moon, index) => {
     const moonRadius = sizes[index];
-    const naturalRadius = opts.planetVisualRadius * gap + Math.sqrt(moon.orbit_km / 50_000) * opts.orbitScale;
-    const orbitRadius = Math.max(naturalRadius, previousOuterEdge + moonRadius * 1.5);
+    const orbitRadius = opts.realDistance
+      ? Math.max(
+          opts.planetVisualRadius * gap,
+          moonOrbitRealScale(moon.orbit_km, planetRadiusKm, opts.planetVisualRadius),
+        )
+      : Math.max(
+          opts.planetVisualRadius * gap + Math.sqrt(moon.orbit_km / 50_000) * opts.orbitScale,
+          previousOuterEdge + moonRadius * 1.5,
+        );
     previousOuterEdge = orbitRadius + moonRadius;
 
     // Deux groupes imbriqués pour combiner une VRAIE inclinaison orbitale

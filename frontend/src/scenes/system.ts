@@ -122,6 +122,7 @@ export function buildSystemScene(
   realOrbitalPlanes = false,
   showHabitableZone = false,
   showScientificInterpretation = true,
+  realMoonDistance = false,
 ): SystemSceneResult {
   const group = new THREE.Group();
   const clickable = new Map<THREE.Object3D, string>();
@@ -218,9 +219,18 @@ export function buildSystemScene(
     label.position.copy(localPos).add(new THREE.Vector3(0, size + 1.5, 0));
     pivot.add(label);
 
-    const moons = buildMoons(planet, localPos, { ...MOON_SCALE, planetVisualRadius: size });
+    const moons = buildMoons(planet, localPos, {
+      ...MOON_SCALE,
+      planetVisualRadius: size,
+      realDistance: realMoonDistance,
+    });
     pivot.add(...moons.objects);
     spinnables.push(...moons.spinnables);
+    // En mode distance réelle, une lune irrégulière lointaine (Néréide,
+    // Phoebé...) peut s'étendre bien au-delà de l'orbite de sa propre
+    // planète autour de l'étoile — il faut alors l'inclure dans le cadrage
+    // caméra, pas seulement les orbites planétaires.
+    maxOrbit = Math.max(maxOrbit, orbitRadius + moons.maxOrbitRadius);
 
     if (planet.ring) {
       const ringMesh = buildRing(planet.ring, size);

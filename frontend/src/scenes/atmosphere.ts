@@ -124,6 +124,7 @@ export function buildAtmosphereScene(
   compareWithEarth: PlanetData | null,
   showScientificInterpretation = true,
   realMoonScale = false,
+  realMoonDistance = false,
 ): AtmosphereSceneResult {
   const group = new THREE.Group();
 
@@ -136,6 +137,7 @@ export function buildAtmosphereScene(
       ...MOON_SCALE,
       planetVisualRadius: radius,
       realScale: realMoonScale,
+      realDistance: realMoonDistance,
     });
     group.add(...moons.objects);
 

@@ -135,6 +135,12 @@ const dict = {
     fr: "Taille proportionnelle réelle (rayon lune / rayon planète) : certains satellites deviennent minuscules — zoomez et repérez-les par leur nom.",
     en: "Real proportional size (moon radius / planet radius): some moons become tiny — zoom in and locate them by name.",
   },
+  moonDistanceShow: { fr: "📏 Distance réelle", en: "📏 Real distance" },
+  moonDistanceHide: { fr: "📏 Distance stylisée (lisibilité)", en: "📏 Stylized distance (readability)" },
+  moonDistanceRealHint: {
+    fr: "Distance proportionnelle réelle (orbite lune / rayon planète), sans compression : certains satellites s'éloignent beaucoup — la caméra recule automatiquement pour les garder dans le champ.",
+    en: "Real proportional distance (moon orbit / planet radius), uncompressed: some moons move very far away — the camera automatically pulls back to keep them in frame.",
+  },
   moonSurfaceViewPrefix: { fr: "🌌 Vue de", en: "🌌 View of" },
   moonSurfaceViewHide: { fr: "👁 Retour à la vue du satellite", en: "👁 Back to moon view" },
   hintMoonSurface: {
