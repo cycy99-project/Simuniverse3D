@@ -1,5 +1,6 @@
 import type { PlanetData, SystemData } from "./data/types";
 import { DISTANCE_SCALE } from "./scenes/galaxy";
+import { nearestHistoricalEvent, type HistoricalEvent } from "./history/timeline";
 
 export const AU_KM = 149_597_870.7;
 export const LY_KM = 9.4607e12;
@@ -95,4 +96,23 @@ export function computeEarthDistance(system: SystemData, planet: PlanetData): Ea
   }
 
   return { distance, travelTime: travelTimeForKm(distanceKm) };
+}
+
+export interface HistoricalAnecdoteResult {
+  yearSeen: number;
+  event: HistoricalEvent;
+}
+
+// Délai lumière = distance en années-lumière : ce qu'on observerait de la
+// Terre aujourd'hui depuis cette exoplanète a donc mis "distanceLy" années à
+// nous parvenir — l'exoplanète, elle, verrait la Terre telle qu'elle était en
+// (année courante - distanceLy). Non applicable au Système Solaire (le
+// Soleil n'a pas de sy_dist réelle vue depuis lui-même).
+export function computeHistoricalAnecdote(system: SystemData): HistoricalAnecdoteResult | null {
+  if (system.id === "sol") return null;
+  const distancePc = system.star.sy_dist;
+  if (!distancePc) return null;
+  const distanceLy = distancePc * 3.26156;
+  const yearSeen = Math.round(new Date().getFullYear() - distanceLy);
+  return { yearSeen, event: nearestHistoricalEvent(yearSeen) };
 }

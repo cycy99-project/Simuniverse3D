@@ -41,7 +41,10 @@
       #ui-overlay button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
       #ui-overlay button.active { background: var(--color-accent-bg); color: #ffffff; border-color: var(--color-accent); }
       #ui-overlay button:disabled { opacity: 0.4; cursor: default; }
-      #breadcrumb { position: absolute; top: var(--space-4); left: var(--space-4); font-family: var(--font-display); font-size: 14px; letter-spacing: 0.03em; opacity: 0.8; }
+      #top-left-bar { position: absolute; top: var(--space-4); left: var(--space-4); z-index: 10; display: flex; align-items: center; gap: var(--space-3); }
+      #home-btn { display: none; padding: 4px 10px; font-size: 13px; }
+      #home-btn.visible { display: inline-block; }
+      #breadcrumb { font-family: var(--font-display); font-size: 14px; letter-spacing: 0.03em; opacity: 0.8; }
       #search-box { position: absolute; top: var(--space-4); left: 50%; transform: translateX(-50%); z-index: 10; }
       #search-input {
         font-family: inherit; font-size: 13px; background: var(--color-card); border: 1px solid var(--color-border);
@@ -69,10 +72,15 @@
       #lang-toggle button { padding: 4px 8px; }
       #unit-toggle { display: flex; gap: var(--space-2); }
       #unit-toggle button { padding: 4px 8px; }
-      #compare-toggle {
+      /* Deux boutons persistants (Terre / Soleil) plutôt qu'un unique bouton
+         cyclique : un seul comparatif actif à la fois (l'un désactive
+         l'autre), mais les deux restent visibles et cliquables en permanence
+         sur les fiches planète et étoile. */
+      #compare-toggle-group {
         position: absolute; top: 40px; left: var(--space-4); z-index: 10; display: none;
-        padding: 6px 10px;
+        gap: var(--space-3);
       }
+      #compare-toggle-group button { padding: 6px 10px; }
       #pause-toggle {
         position: absolute; top: 76px; left: var(--space-4); z-index: 10; display: none;
         padding: 6px 10px;
@@ -89,12 +97,13 @@
       }
       #music-toggle.muted { opacity: 0.5; }
       #sci-interp-toggle { padding: 6px 10px; max-width: 220px; text-align: right; }
-      #student-mode-toggle { padding: 6px 10px; max-width: 220px; text-align: right; }
       #orbit-plane-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #habitable-zone-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #moon-scale-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #moon-distance-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #moon-surface-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
+      #exo-sky-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
+      #sun-locator-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #day-night-toggle { display: none; padding: 6px 10px; max-width: 220px; text-align: right; }
       #info-panel {
         position: absolute; top: 0; right: 0; height: 100%; width: 320px;
@@ -116,6 +125,13 @@
       .learn-more { margin: 8px 0; }
       .learn-more summary { cursor: pointer; color: var(--color-accent, #8fd0ff); font-size: 13px; }
       .learn-more p { margin-top: 6px; font-size: 13px; line-height: 1.5; }
+      .constellation-systems { list-style: none; margin: 6px 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+      .link-button {
+        display: block; width: 100%; text-align: left; background: var(--color-accent-bg);
+        border: 1px solid var(--color-border); color: #ffffff; border-radius: 6px;
+        padding: 8px 12px; font-size: 13px; min-height: 38px;
+      }
+      .link-button:hover { border-color: var(--color-accent); }
       /* Encart de sélection ("Nouvelle Navigation") : un clic sur un système/
          une étoile/une planète ne navigue plus directement — il affiche ce
          petit encart + le losange 3D autour de l'astre (selectionMarker.ts),
@@ -172,8 +188,37 @@
       #lightbox-prev { left: 8px; }
       #lightbox-next { right: 8px; }
       #lightbox-close:focus-visible, .lightbox-nav:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      /* Page d'accueil : nouveau point d'entrée de l'app (remplace le boot
+         direct sur la vue galaxie) — un choix entre les deux vues du ciel,
+         par-dessus un fond étoilé 3D discret (cf. main.ts, réutilise
+         galaxy.ts::makeStarfield). */
+      /* pointer-events: none sur le conteneur plein écran (sinon il capte les
+         clics destinés à #bottom-left/#credits qui se trouvent visuellement
+         dessous, cf. #ui-overlay > * { pointer-events: auto } plus haut) —
+         seuls les éléments interactifs (.home-choice) le réactivent. */
+      #home-screen {
+        display: none; position: absolute; inset: 0; z-index: 30; pointer-events: none;
+        align-items: center; justify-content: center; flex-direction: column; gap: 28px;
+        text-align: center; padding: 24px; box-sizing: border-box;
+      }
+      #home-screen.visible { display: flex; }
+      #home-title { font-family: var(--font-display); font-size: clamp(28px, 5vw, 48px); letter-spacing: 0.1em; margin: 0; text-transform: uppercase; }
+      #home-subtitle { color: var(--color-muted); font-size: 14px; margin: 0; max-width: 480px; }
+      #home-choices { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+      .home-choice {
+        font-family: var(--font-display); background: var(--color-card-solid); border: 1px solid var(--color-border);
+        color: var(--color-fg); border-radius: 12px; padding: 28px 32px; width: 240px; cursor: pointer;
+        display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 0;
+        transition: border-color 150ms ease-out, transform 150ms ease-out; pointer-events: auto;
+      }
+      .home-choice:hover { border-color: var(--color-accent); color: var(--color-fg); transform: translateY(-4px); }
+      .home-choice:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+      .home-choice-icon { font-size: 40px; line-height: 1; }
+      .home-choice-label { font-size: 15px; letter-spacing: 0.04em; }
+      .home-choice-desc { font-family: system-ui, sans-serif; font-size: 12px; color: var(--color-muted); letter-spacing: normal; line-height: 1.4; }
       @media (prefers-reduced-motion: reduce) {
         #ui-overlay button { transition: none; }
+        .home-choice { transition: none; }
       }
     </style>
   </head>
@@ -181,7 +226,26 @@
     <div id="app">
       <canvas id="scene-canvas"></canvas>
       <div id="ui-overlay">
-        <div id="breadcrumb"></div>
+        <div id="top-left-bar">
+          <button id="home-btn" type="button"></button>
+          <div id="breadcrumb"></div>
+        </div>
+        <div id="home-screen">
+          <h1 id="home-title"></h1>
+          <p id="home-subtitle"></p>
+          <div id="home-choices">
+            <button id="home-choice-galaxy" class="home-choice" type="button">
+              <span class="home-choice-icon">🌌</span>
+              <span class="home-choice-label" id="home-choice-galaxy-label"></span>
+              <span class="home-choice-desc" id="home-choice-galaxy-desc"></span>
+            </button>
+            <button id="home-choice-sky2d" class="home-choice" type="button">
+              <span class="home-choice-icon">✨</span>
+              <span class="home-choice-label" id="home-choice-sky2d-label"></span>
+              <span class="home-choice-desc" id="home-choice-sky2d-desc"></span>
+            </button>
+          </div>
+        </div>
         <div id="search-box">
           <input id="search-input" type="text" autocomplete="off" list="search-datalist">
           <datalist id="search-datalist"></datalist>
@@ -190,15 +254,19 @@
           <div id="lang-toggle"></div>
           <div id="unit-toggle"></div>
           <button id="sci-interp-toggle"></button>
-          <button id="student-mode-toggle"></button>
           <button id="orbit-plane-toggle"></button>
           <button id="habitable-zone-toggle"></button>
           <button id="moon-scale-toggle"></button>
           <button id="moon-distance-toggle"></button>
           <button id="moon-surface-toggle"></button>
+          <button id="exo-sky-toggle"></button>
+          <button id="sun-locator-toggle"></button>
           <button id="day-night-toggle"></button>
         </div>
-        <button id="compare-toggle"></button>
+        <div id="compare-toggle-group">
+          <button id="compare-earth-toggle"></button>
+          <button id="compare-sun-toggle"></button>
+        </div>
         <button id="pause-toggle"></button>
         <div id="info-panel"></div>
         <div id="selection-card">
@@ -214,14 +282,14 @@
           <div id="distance-hud-value" class="distance-hud-value"></div>
           <div id="distance-hud-travel" class="distance-hud-travel"></div>
         </div>
-        <div id="credits">Textures : <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0) — Musique : <span id="credits-music-title">Orbites Dérivantes</span> (<span id="credits-music-author">cycyno</span>)</div>
+        <div id="credits"><span id="credits-textures-label"></span> : <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0) — <span id="credits-constellations-label"></span> : <a href="https://github.com/dcf21/constellation-stick-figures" target="_blank" rel="noopener">dcf21/constellation-stick-figures</a> (GPLv3, D. Ford) — <span id="credits-music-label"></span> : <span id="credits-music-title">Orbites Dérivantes</span> (<span id="credits-music-author">cycyno</span>)</div>
       </div>
       <audio id="bg-music" preload="auto"></audio>
       <div id="lightbox">
-        <button id="lightbox-close" aria-label="Fermer">✕</button>
-        <button id="lightbox-prev" class="lightbox-nav" aria-label="Précédent">‹</button>
+        <button id="lightbox-close">✕</button>
+        <button id="lightbox-prev" class="lightbox-nav">‹</button>
         <img id="lightbox-img" alt="">
-        <button id="lightbox-next" class="lightbox-nav" aria-label="Suivant">›</button>
+        <button id="lightbox-next" class="lightbox-nav">›</button>
         <div id="lightbox-caption"></div>
       </div>
     </div>

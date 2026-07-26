@@ -13,7 +13,8 @@
         "dec": null,
         "texture": "/textures/2k_sun.jpg",
         "learn_more": "Le Soleil concentre à lui seul plus de 99,8 % de la masse du Système solaire : il faudrait environ 1,3 million de Terres pour remplir son seul volume, alors qu'il ne s'agit pourtant que d'une étoile « moyenne », une naine jaune. Ce jaune est d'ailleurs une illusion : vu depuis l'espace, sans l'atmosphère terrestre pour disperser sa lumière bleue (le même phénomène qui rend le ciel bleu), le Soleil apparaît en réalité blanc. Autre curiosité : n'étant pas un corps solide mais une boule de plasma, il tourne plus vite à l'équateur (environ 25 jours) qu'aux pôles (environ 35 jours) — un phénomène appelé rotation différentielle.<br><br>Un photon émis par la fusion nucléaire au cœur du Soleil ne met que 8 minutes pour parcourir les 150 millions de km qui nous séparent — mais il lui faut d'abord des dizaines de milliers d'années, parfois estimées jusqu'à 170 000 ans selon les modèles, pour s'extraire du Soleil lui-même, rebondissant sans cesse d'une particule à l'autre dans une véritable « marche aléatoire » avant d'atteindre la surface. Encore plus déroutant : cette surface (la photosphère) affiche environ 5500 °C, alors que l'atmosphère qui l'entoure, la couronne, grimpe à 1-2 millions de degrés, soit des centaines de fois plus chaude — un paradoxe identifié dès 1939 et toujours pas totalement expliqué par les physiciens. À la surface, des cellules de convection appelées granules, chacune grande comme la France, naissent et s'effacent en à peine vingt minutes.<br><br>Le Soleil « chante » littéralement : il vibre comme une cloche géante sous l'effet d'ondes acoustiques internes, un phénomène étudié par l'héliosismologie et que la NASA a converti en sons audibles pour l'oreille humaine. Son champ magnétique s'inverse presque totalement tous les 11 ans, le pôle nord et le pôle sud échangeant leur place. En avril 2021, la sonde Parker Solar Probe est devenue le premier engin à « toucher » le Soleil en traversant sa couronne. Dans environ 5 milliards d'années, une fois son hydrogène épuisé, le Soleil gonflera en géante rouge au point d'engloutir Mercure et Vénus — et peut-être la Terre, un sort que les astronomes débattent encore.",
-        "learn_more_en": "The Sun alone accounts for more than 99.8% of the Solar System's mass: about 1.3 million Earths could fit inside its volume, yet it is only an 'average' star — a yellow dwarf. That yellow colour is actually an illusion: seen from space, without Earth's atmosphere to scatter away its blue light (the same effect that makes the sky blue), the Sun appears white. Another oddity: since it is not a solid body but a ball of plasma, it spins faster at its equator (about 25 days) than at its poles (about 35 days) — a phenomenon called differential rotation.<br><br>A photon created by nuclear fusion in the Sun's core takes only 8 minutes to cross the 150 million km to Earth — but it first needs tens of thousands of years, sometimes estimated at up to 170,000 years depending on the model, just to escape the Sun itself, bouncing endlessly from particle to particle in a true 'random walk' before reaching the surface. Even stranger: that surface (the photosphere) sits at around 5,500°C, while the atmosphere surrounding it, the corona, soars to 1-2 million degrees — hundreds of times hotter, a paradox first identified in 1939 that physicists still haven't fully explained. On the surface, convection cells called granules, each roughly the size of France, appear and vanish in barely twenty minutes.<br><br>The Sun literally 'sings': it rings like a giant bell, vibrating from internal acoustic waves in a phenomenon studied through helioseismology, which NASA has even converted into audible sound. Its magnetic field almost completely flips roughly every 11 years, with the north and south poles swapping places. In April 2021, the Parker Solar Probe became the first spacecraft to 'touch' the Sun by flying through its corona. In about 5 billion years, once its hydrogen is exhausted, the Sun will swell into a red giant large enough to swallow Mercury and Venus — and possibly Earth, a fate astronomers still debate."
+        "learn_more_en": "The Sun alone accounts for more than 99.8% of the Solar System's mass: about 1.3 million Earths could fit inside its volume, yet it is only an 'average' star — a yellow dwarf. That yellow colour is actually an illusion: seen from space, without Earth's atmosphere to scatter away its blue light (the same effect that makes the sky blue), the Sun appears white. Another oddity: since it is not a solid body but a ball of plasma, it spins faster at its equator (about 25 days) than at its poles (about 35 days) — a phenomenon called differential rotation.<br><br>A photon created by nuclear fusion in the Sun's core takes only 8 minutes to cross the 150 million km to Earth — but it first needs tens of thousands of years, sometimes estimated at up to 170,000 years depending on the model, just to escape the Sun itself, bouncing endlessly from particle to particle in a true 'random walk' before reaching the surface. Even stranger: that surface (the photosphere) sits at around 5,500°C, while the atmosphere surrounding it, the corona, soars to 1-2 million degrees — hundreds of times hotter, a paradox first identified in 1939 that physicists still haven't fully explained. On the surface, convection cells called granules, each roughly the size of France, appear and vanish in barely twenty minutes.<br><br>The Sun literally 'sings': it rings like a giant bell, vibrating from internal acoustic waves in a phenomenon studied through helioseismology, which NASA has even converted into audible sound. Its magnetic field almost completely flips roughly every 11 years, with the north and south poles swapping places. In April 2021, the Parker Solar Probe became the first spacecraft to 'touch' the Sun by flying through its corona. In about 5 billion years, once its hydrogen is exhausted, the Sun will swell into a red giant large enough to swallow Mercury and Venus — and possibly Earth, a fate astronomers still debate.",
+        "constellation": null
       },
       "planets": [
         {
@@ -587,7 +588,8 @@
         "st_rad": 0.939,
         "sy_dist": 213.982,
         "ra": 217.3266477,
-        "dec": -3.4444994
+        "dec": -3.4444994,
+        "constellation": "Virgo"
       },
       "planets": [
         {
@@ -615,7 +617,10 @@
           "ring": null,
           "note": "Première détection nette de CO2 par JWST (2022) ; SO2 = signature de photochimie active. Sodium et potassium également détectés. Un possible exo-satellite volcanique a été proposé en 2025, non confirmé.",
           "note_en": "First clear CO2 detection by JWST (2022); SO2 is a signature of active photochemistry. Sodium and potassium also detected. A possible volcanic exomoon was proposed in 2025, unconfirmed.",
-          "planet_type": { "fr": "Jupiter chaud gonflé (géante gazeuse à très faible densité, ~0,17 g/cm³)", "en": "Inflated hot Jupiter (gas giant with a very low density, ~0.17 g/cm³)" },
+          "planet_type": {
+            "fr": "Jupiter chaud gonflé (géante gazeuse à très faible densité, ~0,17 g/cm³)",
+            "en": "Inflated hot Jupiter (gas giant with a very low density, ~0.17 g/cm³)"
+          },
           "spectrum_ref": "Rustamkulov et al. 2023, Nature (NIRSpec PRISM, CO2 à 28σ) ; Ahrer et al. 2023, Nature (NIRCam) ; Tsai et al. 2023, Nature (SO2, photochimie) — JWST ERS",
           "learn_more": "Son nom vient du réseau de télescopes WASP (« Wide Angle Search for Planets »), de petits instruments grand-angle qui scrutent de vastes portions de ciel à la recherche des minuscules baisses de luminosité causées par un transit planétaire — WASP-39 b, détectée ainsi en 2011, est un « Jupiter chaud » extraordinairement gonflé : à peine 28 % de la masse de Jupiter pour 127 % de son rayon, soit une densité dérisoire d'environ 0,17 g/cm³, en orbite serrée à 4 jours de son étoile. Avant même JWST, le télescope Hubble y avait détecté sodium et potassium avec un signal si net qu'il s'agissait de la première mesure simultanée des ailes élargies par pression des deux raies alcalines sur une exoplanète — signe d'une atmosphère basse altitude relativement dégagée de nuages.<br><br>Puis vint le grand moment JWST : cible du tout premier programme « Early Release Science » du télescope (conçu pour démontrer rapidement ses capacités à toute la communauté scientifique), WASP-39 b a livré fin août 2022 la toute première détection nette et sans ambiguïté de CO2 dans l'atmosphère d'une exoplanète (Rustamkulov et al. 2023, Nature, signal à 28σ) — jusque-là, Hubble et Spitzer manquaient de la couverture spectrale nécessaire pour identifier les molécules carbonées avec certitude. Quelques mois plus tard, une bande d'absorption inattendue à 4 microns s'est révélée être du SO2 (Tsai et al. 2023, Nature) : la toute première preuve directe qu'un produit de la photochimie stellaire façonne l'atmosphère d'un Jupiter chaud — la lumière de l'étoile y détruit du H2S, dont les fragments s'oxydent en dioxyde de soufre, un peu comme une couche d'ozone extraterrestre. En 2025, une équipe menée par Apurva Oza (Caltech) a proposé, sans le confirmer, qu'une lune volcanique en orbite autour de la planète — un « exo-Io », par analogie avec la lune la plus volcanique du Système solaire — pourrait expliquer pourquoi les signaux de sodium, potassium et SO2 varient d'une observation à l'autre sur plus d'une décennie.",
           "learn_more_en": "Its name comes from the WASP telescope network ('Wide Angle Search for Planets'), small wide-field instruments scanning huge swaths of sky for the tiny brightness dips caused by a planetary transit — WASP-39 b, found this way in 2011, is an extraordinarily puffed-up 'hot Jupiter': just 28% of Jupiter's mass packed into 127% of its radius, for a laughably low density around 0.17 g/cm³, on a tight 4-day orbit around its star. Even before JWST, Hubble had detected sodium and potassium there with a signal so clean it marked the first-ever simultaneous measurement of both alkali lines' pressure-broadened wings on any exoplanet — a sign of a relatively cloud-free, low-altitude atmosphere.<br><br>Then came the big JWST moment: as a target of the telescope's very first 'Early Release Science' program (designed to quickly demonstrate its capabilities to the whole scientific community), WASP-39 b delivered, in late August 2022, the first clear, unambiguous detection of CO2 in any exoplanet's atmosphere (Rustamkulov et al. 2023, Nature, a 28σ signal) — until then, Hubble and Spitzer simply lacked the spectral coverage to nail down carbon-bearing molecules with certainty. A few months later, an unexpected absorption feature at 4 microns turned out to be SO2 (Tsai et al. 2023, Nature): the first direct proof that a photochemical byproduct shapes a hot Jupiter's atmosphere — starlight breaks apart H2S there, and the fragments oxidize into sulfur dioxide, something like an alien ozone layer. In 2025, a team led by Apurva Oza (Caltech) proposed, without confirming it, that a volcanic moon orbiting the planet — an 'exo-Io,' by analogy with the Solar System's most volcanic moon — could explain why the sodium, potassium, and SO2 signals vary from one observation to the next across more than a decade of data."
@@ -632,7 +637,8 @@
         "st_rad": 0.411,
         "sy_dist": 38.0266,
         "ra": 172.560141,
-        "dec": 7.5878315
+        "dec": 7.5878315,
+        "constellation": "Leo"
       },
       "planets": [
         {
@@ -653,7 +659,10 @@
           "ring": null,
           "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
           "note_en": "No public atmospheric spectroscopy data known for this MVP.",
-          "planet_type": { "fr": "Super-Terre ou mini-Neptune chaude (nature incertaine : non-transitante, rayon inconnu)", "en": "Warm Super-Earth or mini-Neptune (uncertain nature: non-transiting, radius unknown)" },
+          "planet_type": {
+            "fr": "Super-Terre ou mini-Neptune chaude (nature incertaine : non-transitante, rayon inconnu)",
+            "en": "Warm Super-Earth or mini-Neptune (uncertain nature: non-transiting, radius unknown)"
+          },
           "spectrum_ref": null,
           "learn_more": "Découverte en 2017 par vitesse radiale (spectrographe HARPS, Cloutier et al., A&A), K2-18 c a bien failli ne jamais être confirmée : dès 2018, une analyse utilisant les données du spectrographe CARMENES a semblé faire disparaître son signal orbital de 9 jours, jetant un doute sérieux sur son existence. Une réanalyse combinant HARPS et CARMENES publiée en 2019 par la même équipe a montré que cette disparition apparente provenait d'un petit nombre de mesures aberrantes, confirmant la planète et affinant sa masse minimale à environ 5,6 masses terrestres.<br><br>Contrairement à sa voisine K2-18 b, cette planète ne transite pas devant son étoile (leurs orbites ne sont pas coplanaires, avec un écart d'inclinaison mutuelle d'un à deux degrés) — ce qui la rend, pour l'instant, totalement inaccessible à la spectroscopie de transmission : aucune donnée sur une éventuelle atmosphère n'existe ni ne pourra exister avec les méthodes actuelles.",
           "learn_more_en": "Discovered in 2017 via radial velocity (HARPS spectrograph, Cloutier et al., A&A), K2-18 c very nearly wasn't confirmed at all: as early as 2018, an analysis using CARMENES spectrograph data seemed to make its 9-day orbital signal vanish, casting serious doubt on its existence. A reanalysis combining HARPS and CARMENES data, published in 2019 by the same team, showed that this apparent disappearance stemmed from a handful of outlier measurements, confirming the planet and refining its minimum mass to about 5.6 Earth masses.<br><br>Unlike its neighbor K2-18 b, this planet does not transit in front of its star (their orbits aren't coplanar, with a mutual inclination offset of one to two degrees) — which makes it, for now, completely out of reach for transmission spectroscopy: no data on any possible atmosphere exists, or can exist, with current methods."
@@ -679,7 +688,10 @@
           "ring": null,
           "note": "Candidate 'hycéenne' (océan sous atmosphère riche en H2). La détection initiale de DMS (2023-2024) est aujourd'hui largement contestée par des analyses indépendantes (2025-2026) et n'est pas considérée comme confirmée.",
           "note_en": "'Hycean' candidate (ocean under a H2-rich atmosphere). The initial DMS detection (2023-2024) is now largely contested by independent re-analyses (2025-2026) and is not considered confirmed.",
-          "planet_type": { "fr": "Sous-Neptune tempérée (candidate « monde hycéen »)", "en": "Temperate sub-Neptune (candidate \"Hycean world\")" },
+          "planet_type": {
+            "fr": "Sous-Neptune tempérée (candidate « monde hycéen »)",
+            "en": "Temperate sub-Neptune (candidate \"Hycean world\")"
+          },
           "spectrum_ref": "Madhusudhan et al. 2023, ApJL — JWST NIRISS/NIRSpec",
           "learn_more": "Découverte en 2015 grâce à K2, la seconde carrière du télescope Kepler après la panne de deux de ses quatre roues de réaction, K2-18 b est une sous-neptune (2,6 rayons terrestres) en zone habitable d'une naine rouge à environ 124 années-lumière. C'est la planète de référence du concept « hycéen », inventé en 2021 par l'astronome Nikku Madhusudhan (Cambridge) — mot-valise pour « hydrogen » et « ocean » : un monde à surface océanique recouvert d'une épaisse atmosphère riche en hydrogène, une catégorie plus facile à repérer et à sonder par spectroscopie que des planètes rocheuses de la taille de la Terre.<br><br>En 2023, la même équipe détecte du méthane et du CO2 (environ 1 % chacun) et rapporte, avec une significativité statistique explicitement qualifiée de faible par les auteurs eux-mêmes, une possible trace de diméthylsulfure (DMS) — une molécule quasi exclusivement produite par le phytoplancton marin sur Terre, et donc considérée comme une biosignature de choix. La couverture médiatique mondiale évoque alors un possible « signe de vie ». En 2025, en ajoutant des données de l'instrument MIRI, l'équipe annonce cette fois un signal à 3σ, présenté par Madhusudhan comme « la preuve la plus solide à ce jour d'une possible activité biologique » — mais plusieurs réanalyses indépendantes publiées la même année (Luque et al., A&A ; Schmidt et al. ; Pica-Ciamarra et al. ; Welbanks et al.) contestent la solidité statistique de cette détection, montrant que d'autres molécules ajustent tout aussi bien le spectre observé, et que des processus purement chimiques (sans vie) peuvent produire du DMS dans une atmosphère riche en hydrogène. Début 2026, le débat penche plutôt vers le rejet ou, à minima, un doute méthodologique fort — une controverse toujours active, à ne surtout pas présenter comme un fait acquis.",
           "learn_more_en": "Discovered in 2015 thanks to K2, Kepler's second career after two of its four reaction wheels failed, K2-18 b is a sub-Neptune (2.6 Earth radii) in the habitable zone of a red dwarf about 124 light-years away. It's the reference planet for the 'hycean' concept, coined in 2021 by astronomer Nikku Madhusudhan (Cambridge) — a portmanteau of 'hydrogen' and 'ocean': a world with an ocean surface under a thick, hydrogen-rich atmosphere, a category easier to spot and probe by spectroscopy than Earth-sized rocky planets.<br><br>In 2023, the same team detected methane and CO2 (about 1% each) and reported — with a statistical significance the authors themselves explicitly called weak — a possible trace of dimethyl sulfide (DMS), a molecule produced almost exclusively by marine phytoplankton on Earth and therefore considered a prime biosignature. Global media coverage promptly framed it as a possible 'sign of life.' In 2025, adding data from the MIRI instrument, the team announced a 3σ signal this time, presented by Madhusudhan as 'the strongest evidence yet of possible biological activity' — but several independent reanalyses published the same year (Luque et al., A&A; Schmidt et al.; Pica-Ciamarra et al.; Welbanks et al.) challenged the statistical solidity of that detection, showing that other molecules fit the observed spectrum just as well, and that purely chemical (non-biological) processes can produce DMS in a hydrogen-rich atmosphere. By early 2026 the debate leans toward rejection, or at least strong methodological doubt — a controversy still very much alive, and one that should never be presented as settled fact."
@@ -696,7 +708,8 @@
         "st_rad": 0.75,
         "sy_dist": 19.7638,
         "ra": 300.1821223,
-        "dec": 22.7097759
+        "dec": 22.7097759,
+        "constellation": "Vulpecula"
       },
       "planets": [
         {
@@ -722,7 +735,10 @@
           "ring": null,
           "note": "Jupiter chaud bleu : diffusion de Rayleigh par des nanoparticules de silicate en haute atmosphère (Hubble/STIS, Evans et al. 2013). Première détection de H2S extrasolaire (JWST NIRCam, Fu et al. 2024).",
           "note_en": "Blue hot Jupiter: Rayleigh scattering by high-altitude silicate haze particles (Hubble/STIS, Evans et al. 2013). First extrasolar H2S detection (JWST NIRCam, Fu et al. 2024).",
-          "planet_type": { "fr": "Jupiter chaud (géante gazeuse sur orbite très rapprochée, 2,2 jours)", "en": "Hot Jupiter (gas giant on an extremely close 2.2-day orbit)" },
+          "planet_type": {
+            "fr": "Jupiter chaud (géante gazeuse sur orbite très rapprochée, 2,2 jours)",
+            "en": "Hot Jupiter (gas giant on an extremely close 2.2-day orbit)"
+          },
           "spectrum_ref": "Evans et al. 2013, ApJL (HST/STIS, couleur) ; Fu et al. 2024, Nature (JWST NIRCam, H2S) ; Louden & Wheatley 2015, ApJL (vents, Na)",
           "interpretation_override": {
             "skyColor": "#1c3f6e",
@@ -750,7 +766,8 @@
         "ra": 346.6263919,
         "dec": -5.0434618,
         "learn_more": "Le nom « TRAPPIST » est un clin d'œil assumé : l'acronyme anglais choisi par l'équipe belge, « TRAnsiting Planets and PlanetesImals Small Telescope », a été bâti pour rimer avec les bières trappistes belges — l'astronome Emmanuel Jehin, coéquipier de Michaël Gillon (Université de Liège), le confirme volontiers dans la presse, bureaux ornés de bouteilles à côté des posters d'exoplanètes. Le petit télescope de 60 cm installé au Chili a d'abord révélé, en 2016, trois planètes tempérées (Gillon et al., Nature) ; l'année suivante, en combinant ces observations à celles du télescope spatial Spitzer, la même équipe annonçait quatre planètes supplémentaires, portant le total à sept (Gillon et al. 2017, Nature) — la plus grande famille de planètes de taille terrestre jamais découverte autour d'une même étoile.<br><br>TRAPPIST-1 est une naine rouge « ultra-froide » (type M8V, à peine 2566 K et 12 % du rayon solaire) : sa faible luminosité rapproche mécaniquement ses sept planètes, ce qui crée un contraste très favorable entre la lumière de l'étoile et celle filtrée par une atmosphère planétaire en transit — une aubaine pour la spectroscopie JWST. Le système est vu presque parfaitement par la tranche depuis la Terre, une configuration statistiquement rare qui a permis de voir transiter les sept planètes. Six d'entre elles (b à g) forment une chaîne de résonance orbitale unique en son genre : leurs périodes s'enchaînent selon des rapports simples (8:5, 5:3, 3:2, 3:2, 4:3), si précisément imbriquées que l'équipe de Rodrigo Luger a pu, dès 2017, prédire la période de la septième planète (h) avant même sa confirmation — un peu comme un mécanisme d'horlogerie céleste (Luger et al. 2017, Nature Astronomy).<br><br>Reste une question non tranchée : les naines rouges comme TRAPPIST-1 produisent des éruptions stellaires fréquentes, riches en UV et rayons X, qui pourraient éroder les atmosphères de leurs planètes proches au fil des milliards d'années. Certaines études (Wilson et al.) jugent le risque sérieux pour l'habitabilité du système ; d'autres, mesurant le taux réel d'éruptions (Paudel et al., Glazier et al.), concluent qu'il serait en réalité insuffisant pour causer une perte catastrophique d'ozone — un débat toujours ouvert, qui pèsera sur l'interprétation de chaque futur spectre JWST de ces sept mondes.",
-        "learn_more_en": "The name 'TRAPPIST' is a deliberate pun: the English backronym chosen by the Belgian team, 'TRAnsiting Planets and PlanetesImals Small Telescope,' was built to echo Belgium's famous Trappist beers — astronomer Emmanuel Jehin, teammate of Michaël Gillon (University of Liège), happily confirms this in interviews, their offices sporting beer bottles next to exoplanet posters. The small 60 cm telescope in Chile first revealed three temperate planets in 2016 (Gillon et al., Nature); the following year, combining those observations with data from the Spitzer Space Telescope, the same team announced four more planets, bringing the total to seven (Gillon et al. 2017, Nature) — the largest family of Earth-sized planets ever found around a single star.<br><br>TRAPPIST-1 is an 'ultracool' red dwarf (spectral type M8V, barely 2,566 K and 12% of the Sun's radius): its faint luminosity packs its seven planets tightly together, creating a highly favorable contrast between starlight and light filtered through a transiting planet's atmosphere — a boon for JWST spectroscopy. The system is seen almost perfectly edge-on from Earth, a statistically rare alignment that let all seven planets be caught in transit. Six of them (b through g) form an orbital resonance chain unlike any other known system: their periods lock into simple ratios (8:5, 5:3, 3:2, 3:2, 4:3), so precisely interlinked that Rodrigo Luger's team could predict the seventh planet's (h) period in 2017 before it was even confirmed — like a piece of celestial clockwork (Luger et al. 2017, Nature Astronomy).<br><br>One question remains unresolved: red dwarfs like TRAPPIST-1 produce frequent stellar flares rich in UV and X-rays, which could erode the atmospheres of their close-in planets over billions of years. Some studies (Wilson et al.) consider this a serious threat to the system's habitability; others, measuring the actual flare rate (Paudel et al., Glazier et al.), conclude it would actually be too weak to cause catastrophic ozone loss — a debate still very much open, and one that will shape how every future JWST spectrum of these seven worlds gets interpreted."
+        "learn_more_en": "The name 'TRAPPIST' is a deliberate pun: the English backronym chosen by the Belgian team, 'TRAnsiting Planets and PlanetesImals Small Telescope,' was built to echo Belgium's famous Trappist beers — astronomer Emmanuel Jehin, teammate of Michaël Gillon (University of Liège), happily confirms this in interviews, their offices sporting beer bottles next to exoplanet posters. The small 60 cm telescope in Chile first revealed three temperate planets in 2016 (Gillon et al., Nature); the following year, combining those observations with data from the Spitzer Space Telescope, the same team announced four more planets, bringing the total to seven (Gillon et al. 2017, Nature) — the largest family of Earth-sized planets ever found around a single star.<br><br>TRAPPIST-1 is an 'ultracool' red dwarf (spectral type M8V, barely 2,566 K and 12% of the Sun's radius): its faint luminosity packs its seven planets tightly together, creating a highly favorable contrast between starlight and light filtered through a transiting planet's atmosphere — a boon for JWST spectroscopy. The system is seen almost perfectly edge-on from Earth, a statistically rare alignment that let all seven planets be caught in transit. Six of them (b through g) form an orbital resonance chain unlike any other known system: their periods lock into simple ratios (8:5, 5:3, 3:2, 3:2, 4:3), so precisely interlinked that Rodrigo Luger's team could predict the seventh planet's (h) period in 2017 before it was even confirmed — like a piece of celestial clockwork (Luger et al. 2017, Nature Astronomy).<br><br>One question remains unresolved: red dwarfs like TRAPPIST-1 produce frequent stellar flares rich in UV and X-rays, which could erode the atmospheres of their close-in planets over billions of years. Some studies (Wilson et al.) consider this a serious threat to the system's habitability; others, measuring the actual flare rate (Paudel et al., Glazier et al.), conclude it would actually be too weak to cause catastrophic ozone loss — a debate still very much open, and one that will shape how every future JWST spectrum of these seven worlds gets interpreted.",
+        "constellation": "Aquarius"
       },
       "planets": [
         {
@@ -771,7 +788,10 @@
           "ring": null,
           "note": "Pas d'atmosphère significative détectée (JWST MIRI, 2023). Une courbe de phase thermique complète (Gillon et al. 2026) confirme l'absence d'atmosphère substantielle ; une composition de surface ultramafique est évoquée par des études de modélisation complémentaires, sans être une mesure directe.",
           "note_en": "No significant atmosphere detected (JWST MIRI, 2023). A full thermal phase curve (Gillon et al. 2026) confirms the absence of a substantial atmosphere; an ultramafic surface composition is suggested by complementary modeling studies, but is not a direct measurement.",
-          "planet_type": { "fr": "Terre chaude rocheuse (probablement sans atmosphère significative)", "en": "Hot rocky Earth-size planet (probably without a significant atmosphere)" },
+          "planet_type": {
+            "fr": "Terre chaude rocheuse (probablement sans atmosphère significative)",
+            "en": "Hot rocky Earth-size planet (probably without a significant atmosphere)"
+          },
           "spectrum_ref": "Greene et al. 2023, Nature ; Gillon et al. 2026, Nature Astronomy — JWST MIRI phase curve",
           "interpretation_override": {
             "skyColor": "#3a3a35",
@@ -803,7 +823,10 @@
           "ring": null,
           "note": "Pas d'atmosphère épaisse type CO2 détectée (JWST MIRI, 2023). Une courbe de phase thermique complète (Gillon et al. 2026) confirme l'absence d'atmosphère épaisse, mais une fine atmosphère résiduelle riche en oxygène reste compatible avec les données, au même titre qu'une surface nue.",
           "note_en": "No thick CO2-type atmosphere detected (JWST MIRI, 2023). A full thermal phase curve (Gillon et al. 2026) confirms the absence of a thick atmosphere, but a thin, oxygen-rich residual atmosphere remains just as consistent with the data as a bare surface.",
-          "planet_type": { "fr": "Terre chaude rocheuse (atmosphère épaisse improbable, nature exacte incertaine)", "en": "Hot rocky Earth-size planet (a thick atmosphere is unlikely, exact nature uncertain)" },
+          "planet_type": {
+            "fr": "Terre chaude rocheuse (atmosphère épaisse improbable, nature exacte incertaine)",
+            "en": "Hot rocky Earth-size planet (a thick atmosphere is unlikely, exact nature uncertain)"
+          },
           "spectrum_ref": "Zieba et al. 2023, Nature ; Gillon et al. 2026, Nature Astronomy — JWST MIRI phase curve",
           "interpretation_override": {
             "skyColor": "#403c34",
@@ -835,7 +858,10 @@
           "ring": null,
           "note": "Spectre de transmission plat (JWST NIRSpec, 2025) : atmosphères épaisses (riches en H2, ou type Vénus/Mars/Terre) exclues. Si une atmosphère existe, elle est très ténue ou masquée par des aérosols d'altitude.",
           "note_en": "Flat transmission spectrum (JWST NIRSpec, 2025): thick atmospheres (H2-rich, or Venus/Mars/Earth-like) ruled out. If an atmosphere exists, it is extremely thin or hidden by high-altitude aerosols.",
-          "planet_type": { "fr": "Sous-Terre tempérée (bord intérieur de la zone habitable ; candidate « monde océan »)", "en": "Temperate sub-Earth (inner edge of the habitable zone; candidate \"ocean world\")" },
+          "planet_type": {
+            "fr": "Sous-Terre tempérée (bord intérieur de la zone habitable ; candidate « monde océan »)",
+            "en": "Temperate sub-Earth (inner edge of the habitable zone; candidate \"ocean world\")"
+          },
           "spectrum_ref": "Piaulet-Ghorayeb et al. 2025, ApJ (in press) — JWST NIRSpec",
           "interpretation_override": {
             "skyColor": "#1f6f78",
@@ -868,7 +894,10 @@
           "ring": null,
           "note": "Spectre de transmission (JWST NIRSpec/PRISM, 4 transits, 2025) : atmosphères primaires épaisses riches en H2 exclues, mais résultat non tranché — une atmosphère fine dominée par N2 (traces de CO2/CH4) ou une surface rocheuse nue restent toutes deux compatibles avec les données.",
           "note_en": "Transmission spectrum (JWST NIRSpec/PRISM, 4 transits, 2025): thick H2-rich primary atmospheres ruled out, but the result is inconclusive — a thin N2-dominated atmosphere (CO2/CH4 traces) or a bare rocky surface are both consistent with the data.",
-          "planet_type": { "fr": "Terre tempérée (la plus semblable à la Terre du système, en zone habitable)", "en": "Temperate Earth-size planet (the most Earth-like of the system, within the habitable zone)" },
+          "planet_type": {
+            "fr": "Terre tempérée (la plus semblable à la Terre du système, en zone habitable)",
+            "en": "Temperate Earth-size planet (the most Earth-like of the system, within the habitable zone)"
+          },
           "spectrum_ref": "Espinoza et al. 2025, ApJL; Glidden et al. 2025, ApJL — JWST NIRSpec/PRISM",
           "interpretation_override": {
             "skyColor": "#4a5f9e",
@@ -901,7 +930,10 @@
           "ring": null,
           "note": "Aucune donnée de spectroscopie atmosphérique publique connue pour ce MVP.",
           "note_en": "No public atmospheric spectroscopy data known for this MVP.",
-          "planet_type": { "fr": "Terre tempérée à froide (jumelle de taille terrestre, bord froid de la zone habitable)", "en": "Temperate-to-cold Earth-size twin (cold edge of the habitable zone)" },
+          "planet_type": {
+            "fr": "Terre tempérée à froide (jumelle de taille terrestre, bord froid de la zone habitable)",
+            "en": "Temperate-to-cold Earth-size twin (cold edge of the habitable zone)"
+          },
           "spectrum_ref": null,
           "interpretation_override": {
             "skyColor": "#eef3f6",
@@ -934,7 +966,10 @@
           "ring": null,
           "note": "Aucune donnée de spectroscopie atmosphérique publiée et validée par les pairs connue pour ce MVP. Un résultat JWST à un stade préliminaire (prépublication/actes de conférence, non encore confirmé par les pairs) a été annoncé mais n'est pas repris ici tant qu'il n'est pas publié.",
           "note_en": "No peer-reviewed published atmospheric spectroscopy data known for this MVP. A preliminary JWST result (preprint/conference-stage, not yet peer-reviewed) has been announced but is not incorporated here until published.",
-          "planet_type": { "fr": "Terre froide (la plus grande des sept, orbite la plus circulaire)", "en": "Cold Earth-size planet (the largest of the seven, the most circular orbit)" },
+          "planet_type": {
+            "fr": "Terre froide (la plus grande des sept, orbite la plus circulaire)",
+            "en": "Cold Earth-size planet (the largest of the seven, the most circular orbit)"
+          },
           "spectrum_ref": null,
           "learn_more": "La plus grande des sept planètes (1,129 rayon terrestre), une véritable super-Terre à la limite externe de la zone habitable théorique (198,6 K, à peine un quart du flux solaire reçu par la Terre) et l'orbite la plus circulaire du système. Elle est au cœur d'une petite anecdote scientifique frustrante : en avril 2024, Björn Benneke (Université de Montréal) a présenté au congrès AASTCS « Extreme Solar Systems V » le tout premier spectre de transmission JWST haute précision d'une exo-Terre en zone habitable, obtenu sur deux transits en NIRSpec/PRISM — une couverture spectrale complète, en théorie sensible au CO2, à l'eau, au méthane, à l'ammoniac ou au SO2.<br><br>Mais ce résumé de conférence, publié seulement comme résumé (Bulletin of the American Astronomical Society), ne contient aucun résultat chiffré de détection ou de non-détection : une présentation de méthode et d'observations, pas une annonce scientifique tranchée. Aucun article évalué par les pairs n'a suivi à ce jour — un résultat qui existe, en quelque sorte, en suspens, ni confirmé ni infirmé publiquement.",
           "learn_more_en": "The largest of the seven planets (1.129 Earth radii), a genuine super-Earth sitting at the outer edge of the theoretical habitable zone (198.6 K, receiving barely a quarter of the stellar flux Earth gets) and the system's most circular orbit. It's at the center of a small, frustrating bit of scientific limbo: in April 2024, Björn Benneke (University of Montreal) presented, at the AASTCS 'Extreme Solar Systems V' conference, the very first high-precision JWST transmission spectrum of a habitable-zone exo-Earth, obtained over two NIRSpec/PRISM transits — full spectral coverage, in theory sensitive to CO2, water, methane, ammonia, or SO2.<br><br>But that conference summary, published only as an abstract (Bulletin of the American Astronomical Society), contains no detection or non-detection results at all: a presentation of method and observations, not a definitive scientific announcement. No peer-reviewed paper has followed to date — a result that exists, in a sense, in limbo, neither confirmed nor denied publicly."
@@ -957,7 +992,10 @@
           "ring": null,
           "note": "Spectre HST/WFC3 relativement plat (Garcia et al. 2022) : ne permet pas de détecter une atmosphère significative, mais n'exclut pas une atmosphère fine. Contrairement à d'autres planètes de ce système, TRAPPIST-1 h dispose de données d'observation publiées.",
           "note_en": "Relatively flat HST/WFC3 spectrum (Garcia et al. 2022): does not allow detection of a significant atmosphere, but does not rule out a thin one. Unlike some other planets in this system, TRAPPIST-1 h does have published observational data.",
-          "planet_type": { "fr": "Sous-Terre froide (la plus petite et la plus externe, hors zone habitable)", "en": "Cold sub-Earth (the smallest and outermost, beyond the habitable zone)" },
+          "planet_type": {
+            "fr": "Sous-Terre froide (la plus petite et la plus externe, hors zone habitable)",
+            "en": "Cold sub-Earth (the smallest and outermost, beyond the habitable zone)"
+          },
           "spectrum_ref": "Garcia et al. 2022, A&A — HST/WFC3",
           "learn_more": "La plus externe et la plus petite des sept planètes (0,755 rayon terrestre, un tiers de la masse de la Terre à peine), en orbite à 0,0619 UA — au-delà de la zone habitable classique, recevant à peu près l'énergie stellaire que Cérès reçoit du Soleil dans notre propre Système solaire. Sa confirmation orbitale a une anecdote sympathique : ses données Kepler/K2 (observées de décembre 2016 à mars 2017) n'ont été rendues publiques que le 8 mars 2017 — et l'équipe de Rodrigo Luger (alors doctorant), qui avait prédit sa période exacte grâce au modèle de résonance orbitale du système, a confirmé la correspondance en moins de deux heures.<br><br>Son spectre de transmission (Garcia et al. 2022, HST/WFC3, 3 transits) est plat, sans le moindre relief spectral détectable — un résultat compatible aussi bien avec une atmosphère à poids moléculaire très élevé, qu'avec une couche de nuages opaque, ou qu'avec l'absence totale d'atmosphère ; une enveloppe d'hydrogène/hélium primaire sans aérosols est jugée peu probable. Souvent comparée dans la presse grand public à Europe, la lune glacée de Jupiter, cette image reste une formulation journalistique plutôt qu'un résultat scientifique établi — mais elle illustre bien l'hypothèse d'un monde de glace qui reste, comme pour f et g, à confirmer par de futures observations JWST.",
           "learn_more_en": "The outermost and smallest of the seven planets (0.755 Earth radii, barely a third of Earth's mass), orbiting at 0.0619 AU — beyond the classic habitable zone, receiving roughly the same stellar energy that Ceres receives from the Sun in our own Solar System. Its orbital confirmation comes with a nice anecdote: its Kepler/K2 data (observed December 2016 to March 2017) were only released publicly on March 8, 2017 — and Rodrigo Luger's team (then a PhD student), who had predicted its exact period from the system's orbital resonance model, confirmed the match within two hours.<br><br>Its transmission spectrum (Garcia et al. 2022, HST/WFC3, 3 transits) is flat, with no detectable spectral features at all — a result consistent with either a very high molecular-weight atmosphere, an opaque cloud layer, or no atmosphere whatsoever; a cloud-free primary hydrogen/helium envelope is considered unlikely. Often compared in popular coverage to Europa, Jupiter's icy moon, that image is more a journalistic flourish than an established scientific result — but it does capture the ice-world hypothesis that, like f and g, still awaits confirmation from future JWST observations."
@@ -974,7 +1012,8 @@
         "st_rad": 1.055,
         "sy_dist": 352.464,
         "ra": 1.046,
-        "dec": -47.361
+        "dec": -47.361,
+        "constellation": "Phoenix"
       },
       "planets": [
         {
@@ -998,7 +1037,10 @@
           "ring": null,
           "note": "Détection nette de vapeur d'eau par JWST NIRISS/SOSS (2022), l'un des tout premiers spectres publiés du télescope. CO2 et potassium seulement soupçonnés (signal faible). Pas de nuage épais détecté, mais une diffusion renforcée évoque une brume fine — un cas resté partiellement débattu.",
           "note_en": "Clear water vapor detection by JWST NIRISS/SOSS (2022), one of the telescope's very first published spectra. CO2 and potassium only tentative (weak signal). No thick cloud deck detected, but enhanced scattering hints at a thin haze — a case that remains partly debated.",
-          "planet_type": { "fr": "Jupiter chaud (masse de « Saturne chaude » mais rayon de Jupiter, très faible densité ~0,35 g/cm³)", "en": "Hot Jupiter (Saturn-mass 'hot Saturn' but Jupiter-sized radius, very low density ~0.35 g/cm³)" },
+          "planet_type": {
+            "fr": "Jupiter chaud (masse de « Saturne chaude » mais rayon de Jupiter, très faible densité ~0,35 g/cm³)",
+            "en": "Hot Jupiter (Saturn-mass 'hot Saturn' but Jupiter-sized radius, very low density ~0.35 g/cm³)"
+          },
           "spectrum_ref": "Taylor et al. 2023, MNRAS 524, 817 (retrieval, H2O à 16,8σ, pas de nuage gris) ; Radica et al. 2023, MNRAS 524, 835 (réduction NIRISS/SOSS) — JWST Early Release Observations (ERO ; Pontoppidan et al. 2022)",
           "learn_more": "WASP-96 b a été repérée en 2013 par le réseau de télescopes robotiques WASP-South (« Wide Angle Search for Planets »), à l'affût des minuscules baisses de luminosité causées par un transit planétaire ; sa découverte a été publiée par Hellier et al. en 2014. C'est une géante gazeuse d'environ la moitié de la masse de Jupiter mais de taille comparable, en orbite très rapprochée (3,4 jours) autour d'une étoile assez semblable au Soleil, à environ 1 150 années-lumière dans la constellation du Phénix — une densité moyenne dérisoire d'à peine 0,35 g/cm³ trahit une atmosphère très gonflée par la chaleur de son étoile.<br><br>Le 12 juillet 2022, WASP-96 b est devenue l'une des toutes premières cibles dont JWST a livré un spectre au public, dans le cadre du programme de démonstration « Early Release Observations » (Pontoppidan et al. 2022) mené avec l'instrument NIRISS en mode SOSS. L'analyse détaillée publiée l'année suivante (Taylor et al. 2023 ; Radica et al. 2023, tous deux MNRAS) a confirmé une détection très nette de vapeur d'eau (16,8σ), avec des indices plus ténus de CO2 et de potassium (à peine 2 à 3σ, donc à confirmer). Aucun nuage gris opaque n'a été trouvé, ce qui en fait un cas pédagogique relativement « propre » pour l'enseignement de la spectroscopie de transit — mais les auteurs notent tout de même une préférence statistique (6σ) pour une brume fine ou des nuages inhomogènes plutôt qu'une atmosphère totalement dégagée. Une étude de modélisation complémentaire (Samra et al. 2023, A&A) prédit, par des calculs théoriques de microphysique des nuages, que des nuages de silicates pourraient se former en altitude sur cette planète — un résultat qui reste une prédiction de modèle, non une détection directe, et qui n'a pas encore été confirmé observationnellement.",
           "learn_more_en": "WASP-96 b was spotted in 2013 by the robotic WASP-South telescope network ('Wide Angle Search for Planets'), watching for the tiny brightness dips caused by a planetary transit; its discovery was published by Hellier et al. in 2014. It is a gas giant roughly half of Jupiter's mass but comparable in size, on a very tight 3.4-day orbit around a fairly Sun-like star about 1,150 light-years away in the constellation Phoenix — a laughably low average density of just 0.35 g/cm³ betrays an atmosphere heavily puffed up by its star's heat.<br><br>On July 12, 2022, WASP-96 b became one of the very first targets for which JWST released a spectrum to the public, as part of the telescope's 'Early Release Observations' demonstration program (Pontoppidan et al. 2022), using the NIRISS instrument in SOSS mode. The detailed follow-up analysis published the next year (Taylor et al. 2023; Radica et al. 2023, both MNRAS) confirmed a very clear water vapor detection (16.8σ), with fainter hints of CO2 and potassium (only 2-3σ, so still tentative). No opaque grey cloud deck was found, making this a relatively 'clean' textbook case for teaching transit spectroscopy — though the authors still note a statistical preference (6σ) for a thin haze or patchy clouds over a fully cloud-free atmosphere. A complementary modeling study (Samra et al. 2023, A&A) predicts, through theoretical cloud microphysics calculations, that silicate clouds could form at altitude on this planet — a model prediction, not a direct detection, and one that has not yet been observationally confirmed."
@@ -1015,7 +1057,8 @@
         "st_rad": 0.657,
         "sy_dist": 64.7414,
         "ra": 188.3864277,
-        "dec": -10.1462141
+        "dec": -10.1462141,
+        "constellation": "Virgo"
       },
       "planets": [
         {
@@ -1027,7 +1070,14 @@
           "discoverymethod": "Transit",
           "disc_year": 2017,
           "source": "jwst_spectroscopy",
-          "molecules": ["H2O", "CO2", "CO", "SO2", "NH3", "CH4"],
+          "molecules": [
+            "H2O",
+            "CO2",
+            "CO",
+            "SO2",
+            "NH3",
+            "CH4"
+          ],
           "color": null,
           "texture": null,
           "rotation_hours": null,
@@ -1037,7 +1087,10 @@
           "note": "Neptune chaud « super-puff » : avec une masse de 30,5 M⊕ mais un rayon quasi jovien (≈0,94 RJ), c'est l'une des exoplanètes les moins denses connues (≈0,13 g/cm³). JWST/MIRI a détecté SO2 et des nuages de silicates, mais un méthane très appauvri, révélant un chauffage interne — probablement marémoteur — et un cœur d'environ 11,5 M⊕.",
           "note_en": "A \"super-puff\" warm Neptune: with a mass of 30.5 M⊕ but a near-Jovian radius (≈0.94 RJ), it is one of the lowest-density exoplanets known (≈0.13 g/cm³). JWST/MIRI detected SO2 and silicate clouds, but heavily depleted methane, revealing an internal heat source — likely tidal — and a core of about 11.5 M⊕.",
           "spectrum_ref": "Dyrek et al. 2024, Nature 625, 51–54 (JWST MIRI, SO2 à 9σ + nuages de silicates, CH4 non détecté) ; Sing et al. 2024, Nature 630, 831–835 (JWST NIRSpec G395H, CH4 à 4,2σ mais appauvri ×1000, cœur ≈11,5 M⊕) ; Welbanks et al. 2024, Nature 630, 836–840 (HST WFC3 + JWST NIRCam/MIRI, H2O/CH4/CO/CO2/SO2/NH3, flux de chaleur interne élevé) ; Piaulet et al. 2021, AJ (masse révisée à 30,5 M⊕ + compagnon WASP-107 c)",
-          "planet_type": { "fr": "Neptune chaud gonflé (« super-puff », rayon quasi jovien pour une masse neptunienne, densité ≈0,13 g/cm³)", "en": "Inflated warm Neptune (\"super-puff\", near-Jovian radius for a Neptune-like mass, density ≈0.13 g/cm³)" },
+          "planet_type": {
+            "fr": "Neptune chaud gonflé (« super-puff », rayon quasi jovien pour une masse neptunienne, densité ≈0,13 g/cm³)",
+            "en": "Inflated warm Neptune (\"super-puff\", near-Jovian radius for a Neptune-like mass, density ≈0.13 g/cm³)"
+          },
           "learn_more": "Découverte en 2017 par le programme de transit WASP-South (Anderson et al. 2017) puis confirmée par vitesses radiales, WASP-107 b s'est immédiatement distinguée par sa densité extrêmement faible. Une mesure plus précise par vitesses radiales au télescope Keck (Piaulet et al. 2021) a révisé sa masse à 30,5 M⊕ pour un rayon proche de celui de Jupiter, soit une densité d'environ 0,13 g/cm³ — parmi les plus basses connues pour une exoplanète. Cette même étude a révélé un compagnon extérieur, WASP-107 c, sur une orbite excentrique d'environ 1088 jours, qui a probablement joué un rôle dans la migration et le fort désalignement orbital de WASP-107 b (orbite quasi polaire suggérée par des mesures d'effet Rossiter-McLaughlin, TESS-Keck Survey).<br><br>En 2023, le spectromètre MIRI de JWST a détecté à 9σ deux bandes de SO2 dans le spectre de transmission, signature de photochimie active, ainsi que des nuages de silicates en profondeur — mais aucune trace de méthane, une absence surprenante pour une planète aussi froide (736 K), où CH4 devrait normalement dominer la chimie carbonée à l'équilibre (Dyrek et al. 2024, Nature). Deux études complémentaires publiées quelques mois plus tard, combinant JWST NIRSpec/NIRCam et les données d'archives Hubble, ont finalement détecté un signal ténu de méthane (Sing et al. 2024 ; Welbanks et al. 2024, Nature) : le gaz est bien présent, mais appauvri d'environ trois ordres de grandeur par rapport aux prédictions chimiques à l'équilibre.<br><br>Ce déficit de méthane s'explique par un mélange vertical vigoureux qui remonte du gaz appauvri depuis un intérieur anormalement chaud, indiquant une température interne d'environ 460 K et un cœur d'environ 11,5 masses terrestres — l'une des premières contraintes solides sur la masse du cœur d'une géante gazeuse extrasolaire. L'origine de cette chaleur interne reste débattue, mais l'hypothèse la plus soutenue est un chauffage par effet de marée lié à l'excentricité de l'orbite, peut-être entretenue par WASP-107 c.",
           "learn_more_en": "Discovered in 2017 by the WASP-South transit survey (Anderson et al. 2017) and confirmed by radial velocity, WASP-107 b stood out immediately for its extremely low density. A more precise radial-velocity measurement with the Keck telescope (Piaulet et al. 2021) revised its mass to 30.5 M⊕ for a radius close to Jupiter's, giving a density of about 0.13 g/cm³ — among the lowest known for any exoplanet. The same study revealed an outer companion, WASP-107 c, on an eccentric ~1088-day orbit, which likely played a role in the migration and strong orbital misalignment of WASP-107 b (a near-polar orbit suggested by Rossiter-McLaughlin measurements, TESS-Keck Survey).<br><br>In 2023, JWST's MIRI instrument detected two SO2 bands at 9σ in the transmission spectrum, a signature of active photochemistry, along with deep silicate clouds — but no trace of methane, a surprising absence for such a cool planet (736 K), where CH4 should normally dominate equilibrium carbon chemistry (Dyrek et al. 2024, Nature). Two companion studies published a few months later, combining JWST NIRSpec/NIRCam with archival Hubble data, finally detected a faint methane signal (Sing et al. 2024; Welbanks et al. 2024, Nature): the gas is indeed present, but depleted by roughly three orders of magnitude relative to equilibrium-chemistry predictions.<br><br>This methane deficit is explained by vigorous vertical mixing that dredges up depleted gas from an unusually hot interior, pointing to an internal temperature of about 460 K and a core of roughly 11.5 Earth masses — one of the first solid constraints on the core mass of an extrasolar giant planet. The origin of this internal heat is still debated, but the leading hypothesis is tidal heating driven by orbital eccentricity, possibly sustained by WASP-107 c."
         }
@@ -1053,7 +1106,8 @@
         "st_rad": 1.38,
         "sy_dist": 405.908,
         "ra": 239.9622479,
-        "dec": -28.0617941
+        "dec": -28.0617941,
+        "constellation": "Scorpius"
       },
       "planets": [
         {
@@ -1065,7 +1119,11 @@
           "discoverymethod": "Transit",
           "disc_year": 2009,
           "source": "jwst_spectroscopy",
-          "molecules": ["H2O", "CO2", "SiO2"],
+          "molecules": [
+            "H2O",
+            "CO2",
+            "SiO2"
+          ],
           "color": null,
           "texture": null,
           "rotation_hours": null,
@@ -1075,7 +1133,10 @@
           "note": "Géante gazeuse extrêmement gonflée et de très faible densité (~0,1 g/cm³), sur une orbite rétrograde confirmée — la première exoplanète connue dans ce cas. JWST/MIRI y a détecté en 2023 des nanocristaux de quartz (SiO2) dans les nuages en haute altitude, une première identification minéralogique directe pour une exoplanète.",
           "note_en": "Extremely inflated, very low-density gas giant (~0.1 g/cm³) on a confirmed retrograde orbit — the first exoplanet known to have one. JWST/MIRI detected quartz (SiO2) nanocrystals in its high-altitude clouds in 2023, the first direct mineralogical identification in an exoplanet's clouds.",
           "spectrum_ref": "Grant et al. 2023, ApJL 956, L29 (JWST MIRI, programme JWST-TST DREAMS, nanocristaux de quartz SiO2) ; Alderson et al. 2022, MNRAS 512, 4185 (HST STIS+WFC3 et Spitzer IRAC, H2O >7σ, CO2 tentatif >3σ) ; Louie et al. 2024, AJ (JWST NIRISS SOSS, abondance de H2O super-solaire) ; Anderson et al. 2010, ApJ 709, 159 (découverte, rétrograde probable) ; Bayliss et al. 2010, ApJL 722, L224 (confirmation orbite rétrograde par effet Rossiter-McLaughlin, λ = 167,4° ± 11,2°)",
-          "planet_type": { "fr": "Jupiter chaud gonflé (géante gazeuse à très faible densité, ~0,1 g/cm³, l'une des plus « puffy » connues)", "en": "Inflated hot Jupiter (gas giant with an extremely low density, ~0.1 g/cm³, one of the puffiest known)" },
+          "planet_type": {
+            "fr": "Jupiter chaud gonflé (géante gazeuse à très faible densité, ~0,1 g/cm³, l'une des plus « puffy » connues)",
+            "en": "Inflated hot Jupiter (gas giant with an extremely low density, ~0.1 g/cm³, one of the puffiest known)"
+          },
           "learn_more": "WASP-17 b a été découverte par le programme de transits SuperWASP et annoncée par Anderson et al. (2010, ApJ 709, 159) sous le titre évocateur « An Ultra-Low Density Planet in a Probable Retrograde Orbit ». Avec un rayon d'environ 1,9 rayon jovien pour une masse d'à peine la moitié de celle de Jupiter, c'est l'une des planètes les moins denses connues (~0,1 g/cm³). L'article de découverte notait déjà des indices d'une orbite rétrograde, c'est-à-dire tournant dans le sens opposé à la rotation de son étoile — une configuration alors inédite parmi les exoplanètes. Cette rétrogradation a été confirmée par effet Rossiter-McLaughlin par Bayliss et al. (2010, ApJL 722, L224), qui ont mesuré un angle spin-orbite projeté de λ = 167,4° ± 11,2°, suggérant une histoire dynamique violente (diffusion planète-planète ou migration de Kozai) plutôt qu'une migration douce dans le disque protoplanétaire.<br><br>Côté atmosphère, une réanalyse complète combinant Hubble (STIS, WFC3) et Spitzer (IRAC) par Alderson et al. (2022, MNRAS 512, 4185) a confirmé une détection nette de vapeur d'eau (>7σ) et des indices plus ténus de CO2 (>3σ), tout en infirmant des détections antérieures de sodium et potassium qui n'ont pas résisté à cette analyse plus rigoureuse — un bon rappel que toutes les détections early-HST ne se confirment pas. Plus récemment, le JWST (instrument NIRISS SOSS) a permis à Louie et al. (2024, AJ) de mesurer une abondance d'eau précise et super-solaire, résolvant une ambiguïté laissée par les données précédentes.<br><br>La découverte la plus marquante reste celle de Grant et al. (2023, ApJL 956, L29), dans le cadre du programme JWST-TST DREAMS : le spectre de transmission obtenu par l'instrument MIRI en mars 2023 montre des signatures attribuées à des nanocristaux de quartz cristallin (SiO2) en haute atmosphère. C'est la première fois qu'un minéral précis — et non une simple famille de composés comme « silicates » — est identifié directement dans les nuages d'une exoplanète. Cette signature provient de résonances dans l'infrarouge moyen et ne renseigne pas sur une couleur visible du ciel de la planète ; aucune mesure de couleur optique n'existe pour WASP-17 b (contrairement par exemple à HD 189733 b), d'où l'absence volontaire d'une teinte de ciel personnalisée pour ce système.",
           "learn_more_en": "WASP-17 b was discovered by the SuperWASP transit survey and announced by Anderson et al. (2010, ApJ 709, 159) under the evocative title \"An Ultra-Low Density Planet in a Probable Retrograde Orbit.\" With a radius of about 1.9 Jupiter radii for barely half of Jupiter's mass, it is one of the least dense planets known (~0.1 g/cm³). The discovery paper already hinted at a retrograde orbit — one running opposite to the star's own rotation — a configuration then unprecedented among exoplanets. This retrograde motion was confirmed via the Rossiter-McLaughlin effect by Bayliss et al. (2010, ApJL 722, L224), who measured a sky-projected spin-orbit angle of λ = 167.4° ± 11.2°, pointing to a violent dynamical history (planet-planet scattering or Kozai migration) rather than smooth disk migration.<br><br>On the atmospheric side, a comprehensive reanalysis combining Hubble (STIS, WFC3) and Spitzer (IRAC) data by Alderson et al. (2022, MNRAS 512, 4185) confirmed a clear water vapor detection (>7σ) and weaker evidence for CO2 (>3σ), while overturning earlier claimed sodium and potassium detections that did not hold up under this more rigorous analysis — a useful reminder that not every early-HST detection survives scrutiny. More recently, JWST's NIRISS SOSS instrument allowed Louie et al. (2024, AJ) to pin down a precise, super-solar water abundance, resolving an ambiguity left by earlier data.<br><br>The most striking result remains Grant et al.'s (2023, ApJL 956, L29) finding, from the JWST-TST DREAMS program: the MIRI transmission spectrum obtained in March 2023 shows features attributed to nanocrystals of crystalline quartz (SiO2) high in the atmosphere. This marks the first time a specific mineral — rather than a broad class like \"silicates\" — has been identified directly in an exoplanet's clouds. The signature comes from mid-infrared resonance features and says nothing about the planet's visible sky color; no optical color measurement exists for WASP-17 b (unlike, for instance, HD 189733 b), which is why this system deliberately has no custom sky tint override."
         }
@@ -1091,7 +1152,8 @@
         "st_rad": 1.461,
         "sy_dist": 269.898,
         "ra": 107.60025,
-        "dec": -39.097269
+        "dec": -39.097269,
+        "constellation": "Puppis"
       },
       "planets": [
         {
@@ -1103,7 +1165,15 @@
           "discoverymethod": "Transit",
           "disc_year": 2016,
           "source": "jwst_spectroscopy",
-          "molecules": ["H2O", "Fe", "Mg", "Ca", "Cr", "V", "SiO"],
+          "molecules": [
+            "H2O",
+            "Fe",
+            "Mg",
+            "Ca",
+            "Cr",
+            "V",
+            "SiO"
+          ],
           "color": null,
           "texture": null,
           "rotation_hours": null,
@@ -1112,7 +1182,10 @@
           "ring": null,
           "note": "Jupiter ultra-chaud si proche de son étoile (période de 1,27 jour) qu'il frôle sa limite de Roche. Première exoplanète où une stratosphère a été détectée, via l'émission d'eau côté jour (Evans et al. 2017). De nombreux métaux neutres et ionisés (Fe, Mg, Ca, Cr, V) et du SiO ont été identifiés ; la détection de TiO/VO reste débattue selon les études.",
           "note_en": "Ultra-hot Jupiter so close to its star (1.27-day period) that it nearly grazes its Roche limit. The first exoplanet where a stratosphere was detected, via dayside water emission (Evans et al. 2017). Numerous neutral and ionized metals (Fe, Mg, Ca, Cr, V) and SiO have been identified; TiO/VO detection remains debated across studies.",
-          "planet_type": { "fr": "Jupiter ultra-chaud (géante gazeuse à orbite extrême, 1,27 jour, proche de sa limite de Roche)", "en": "Ultra-hot Jupiter (extreme close-in gas giant, 1.27-day orbit, near its Roche limit)" },
+          "planet_type": {
+            "fr": "Jupiter ultra-chaud (géante gazeuse à orbite extrême, 1,27 jour, proche de sa limite de Roche)",
+            "en": "Ultra-hot Jupiter (extreme close-in gas giant, 1.27-day orbit, near its Roche limit)"
+          },
           "spectrum_ref": "Evans et al. 2017, Nature 548 (HST/WFC3, émission d'H2O, première stratosphère détectée) ; Mikal-Evans et al. 2020, MNRAS (confirmation de l'émission d'eau) ; Mikal-Evans et al. 2022, Nature Astronomy 6 (courbe de phase, variations diurnes de la stratosphère) ; Hoeijmakers et al. 2020, A&A 641 (HARPS, Fe/Mg/Ca/Cr/V/Ni neutres et ionisés) ; Gapp et al. 2025, AJ (JWST/NIRSpec G395H, SiO à 5,2σ, dissociation thermique) ; TiO/VO : détection revendiquée par Ouyang et al. 2023, RAA, mais non confirmée par Merritt et al. 2020, A&A — statut débattu",
           "learn_more": "WASP-121 b a été découverte par transit dans le cadre du programme WASP (Wide Angle Search for Planets) et présentée par Delrez et al. (2016, MNRAS) comme un « hot Jupiter » remarquable : son demi-grand axe n'est qu'environ 1,15 fois son rayon de Roche, ce qui en fait l'une des planètes géantes les plus proches connues d'une désintégration par marée. Elle orbite en seulement 1,27 jour autour de WASP-121, une étoile F6 V active et plus chaude que le Soleil, à environ 270 parsecs de la Terre.<br><br>En 2017, des observations Hubble/WFC3 par Evans et al. (Nature) ont révélé la bande d'eau à 1,4 µm en émission plutôt qu'en absorption dans le spectre d'éclipse secondaire : une signature d'inversion thermique, qui fait de WASP-121 b la première exoplanète pour laquelle une stratosphère a été mise en évidence. Ce résultat a ensuite été confirmé par Mikal-Evans et al. (2020, MNRAS), puis affiné par une courbe de phase spectroscopique complète (Mikal-Evans et al. 2022, Nature Astronomy) montrant que la vapeur d'eau se dissocie thermiquement côté jour aux altitudes les plus chaudes, avant de se reformer côté nuit, plus frais.<br><br>Des spectrographes au sol à haute résolution (HARPS, ESPRESSO) ont depuis dressé un inventaire chimique très riche : fer, magnésium, calcium, chrome et vanadium neutres, ainsi que des espèces ionisées, ont été détectés par Hoeijmakers et al. (2020, A&A) dans une atmosphère assez chaude pour vaporiser des métaux réfractaires. Plus récemment, le JWST (spectromètre NIRSpec G395H, Gapp et al. 2025, AJ) a détecté du SiO et confirmé la dissociation thermique de H2O et H2 côté jour. La présence de TiO et VO, elle, reste disputée : revendiquée par certaines études sol (Ouyang et al. 2023, RAA) mais non retrouvée par d'autres (Merritt et al. 2020, A&A) — un point encore ouvert dans la littérature.",
           "learn_more_en": "WASP-121 b was discovered by transit under the WASP (Wide Angle Search for Planets) survey and presented by Delrez et al. (2016, MNRAS) as a remarkable hot Jupiter: its semi-major axis is only about 1.15 times its Roche radius, making it one of the closest known giant planets to tidal disruption. It orbits its host star in just 1.27 days around WASP-121, an active F6 V star hotter than the Sun, roughly 270 parsecs from Earth.<br><br>In 2017, Hubble/WFC3 observations by Evans et al. (Nature) revealed the 1.4 micron water band in emission rather than absorption in the secondary-eclipse spectrum — a signature of a thermal inversion, making WASP-121 b the first exoplanet for which a stratosphere was identified. This result was later confirmed by Mikal-Evans et al. (2020, MNRAS) and refined with a full spectroscopic phase curve (Mikal-Evans et al. 2022, Nature Astronomy) showing that water vapor thermally dissociates on the hottest dayside layers before reforming on the cooler nightside.<br><br>High-resolution ground-based spectrographs (HARPS, ESPRESSO) have since built a rich chemical inventory: neutral iron, magnesium, calcium, chromium and vanadium, along with ionized species, were detected by Hoeijmakers et al. (2020, A&A) in an atmosphere hot enough to vaporize refractory metals. More recently, JWST (NIRSpec G395H, Gapp et al. 2025, AJ) detected SiO and confirmed the thermal dissociation of H2O and H2 on the dayside. The presence of TiO and VO remains disputed — claimed by some ground-based studies (Ouyang et al. 2023, RAA) but not recovered by others (Merritt et al. 2020, A&A) — an open question in the literature."
@@ -1127,9 +1200,10 @@
         "spectype": "G0 V",
         "st_teff": 6117.0,
         "st_rad": 1.16,
-        "sy_dist": 48.30,
+        "sy_dist": 48.3,
         "ra": 330.795042,
-        "dec": 18.8842417
+        "dec": 18.8842417,
+        "constellation": "Pegasus"
       },
       "planets": [
         {
@@ -1141,7 +1215,14 @@
           "discoverymethod": "Radial Velocity",
           "disc_year": 1999,
           "source": "jwst_spectroscopy",
-          "molecules": ["Na", "H", "O", "C", "H2O", "CO2"],
+          "molecules": [
+            "Na",
+            "H",
+            "O",
+            "C",
+            "H2O",
+            "CO2"
+          ],
           "color": null,
           "texture": null,
           "rotation_hours": null,
@@ -1151,7 +1232,10 @@
           "note": "Première exoplanète découverte en transit (1999) et première exoplanète dont une atmosphère a été détectée (sodium, HST/STIS, 2001-2002). Surnommée « Osiris » après la découverte d'un panache d'hydrogène en évaporation hydrodynamique (HST, Vidal-Madjar et al. 2003).",
           "note_en": "First exoplanet discovered via transit (1999) and first exoplanet with a detected atmosphere (sodium, HST/STIS, 2001-2002). Nicknamed 'Osiris' after the discovery of an evaporating hydrodynamic hydrogen plume (HST, Vidal-Madjar et al. 2003).",
           "spectrum_ref": "Charbonneau et al. 2000, ApJL 529, L45 (transit photométrique, confirmation croisée avec Henry et al. 2000, ApJL 529, L41) ; Charbonneau et al. 2002, ApJ 568 (HST/STIS, détection du sodium — première atmosphère exoplanétaire) ; Vidal-Madjar et al. 2003, Nature 422 (HST/STIS, Lyman-alpha, hydrogène en évaporation au-delà du lobe de Roche) ; Vidal-Madjar et al. 2004, ApJL 604, L69 (HST/STIS, oxygène et carbone dans l'atmosphère en échappement hydrodynamique) ; Xue et al. 2024, ApJL 963, L5 (JWST NIRSpec, H2O et CO2, métallicité super-solaire, C/O très bas)",
-          "planet_type": { "fr": "Jupiter chaud (géante gazeuse gonflée, ~0,68 masse jovienne pour 1,39 rayon jovien, orbite de 3,5 jours)", "en": "Hot Jupiter (inflated gas giant, ~0.68 Jupiter masses for 1.39 Jupiter radii, 3.5-day orbit)" },
+          "planet_type": {
+            "fr": "Jupiter chaud (géante gazeuse gonflée, ~0,68 masse jovienne pour 1,39 rayon jovien, orbite de 3,5 jours)",
+            "en": "Hot Jupiter (inflated gas giant, ~0.68 Jupiter masses for 1.39 Jupiter radii, 3.5-day orbit)"
+          },
           "learn_more": "HD 209458 b occupe une place à part dans l'histoire de l'exoplanétologie : c'est la toute première exoplanète dont le transit devant son étoile a été observé. Détectée par vitesse radiale fin 1999, sa nature de planète en transit a été confirmée quasi simultanément par deux équipes indépendantes — Charbonneau, Brown et al. (2000, ApJL 529, L45) et Henry et al. (2000, ApJL 529, L41) — qui ont mesuré une baisse de luminosité de l'étoile lors du passage de la planète. Cette double confirmation a ouvert la voie à toute la méthode du transit, aujourd'hui la principale technique de détection d'exoplanètes.<br><br>En 2001-2002, Charbonneau et al. (ApJ 568) ont utilisé le spectrographe STIS du télescope spatial Hubble pour détecter une signature d'absorption du sodium dans l'atmosphère de la planète lors d'un transit : c'était la toute première détection d'une atmosphère autour d'une exoplanète. Peu après, Vidal-Madjar et al. (2003, Nature 422) ont observé, toujours avec HST/STIS, une absorption dans la raie Lyman-alpha bien plus étendue que la planète elle-même, révélant un nuage d'hydrogène s'échappant au-delà de son lobe de Roche — la première atmosphère exoplanétaire surprise en train de s'évaporer. C'est cette découverte qui a valu à la planète son surnom d'« Osiris », proposé par Vidal-Madjar et Lecavelier des Étangs (2003) en référence au dieu égyptien démembré ; ce nom reste informel et n'a pas été officiellement adopté par l'UAI.<br><br>En 2004, la même équipe (Vidal-Madjar et al., ApJL 604, L69) a détecté de l'oxygène et du carbone entraînés dans ce panache en échappement hydrodynamique, confirmant que la haute atmosphère de la planète est arrachée par le rayonnement stellaire. Deux décennies plus tard, le JWST (Xue et al. 2024, ApJL 963, L5) a observé la basse atmosphère de la planète en transmission et y a identifié de la vapeur d'eau et du CO2, avec une métallicité super-solaire et un rapport C/O étonnamment bas — reliant les toutes premières observations pionnières d'Osiris aux standards spectroscopiques actuels.",
           "learn_more_en": "HD 209458 b holds a unique place in exoplanet history: it is the very first exoplanet ever observed transiting its star. Detected via radial velocity in late 1999, its transiting nature was confirmed almost simultaneously by two independent teams — Charbonneau, Brown et al. (2000, ApJL 529, L45) and Henry et al. (2000, ApJL 529, L41) — who each measured a dip in the star's brightness as the planet passed in front of it. This double confirmation launched the transit method that remains the leading exoplanet-detection technique today.<br><br>In 2001-2002, Charbonneau et al. (ApJ 568) used the Hubble Space Telescope's STIS spectrograph to detect a sodium absorption signature in the planet's atmosphere during transit — the first-ever detection of an atmosphere around an exoplanet. Shortly after, Vidal-Madjar et al. (2003, Nature 422) used HST/STIS again to observe absorption in the Lyman-alpha line far more extended than the planet itself, revealing a cloud of hydrogen escaping beyond its Roche lobe — the first exoplanet atmosphere ever caught evaporating. This discovery earned the planet its nickname 'Osiris,' proposed by Vidal-Madjar and Lecavelier des Étangs (2003) after the dismembered Egyptian god; the name remains informal and has not been officially adopted by the IAU.<br><br>In 2004, the same team (Vidal-Madjar et al., ApJL 604, L69) detected oxygen and carbon carried along in this hydrodynamically escaping plume, confirming that the planet's upper atmosphere is being stripped away by stellar radiation. Two decades later, JWST (Xue et al. 2024, ApJL 963, L5) probed the planet's lower atmosphere in transmission and identified water vapor and CO2, with a super-solar metallicity and a surprisingly low C/O ratio — linking the pioneering early observations of Osiris to today's spectroscopic standards."
         }
@@ -1167,7 +1251,8 @@
         "st_rad": 0.2162,
         "sy_dist": 14.6427,
         "ra": 258.8314,
-        "dec": 4.9607
+        "dec": 4.9607,
+        "constellation": "Ophiucus"
       },
       "planets": [
         {
@@ -1189,7 +1274,10 @@
           "note": "Spectre de transmission JWST (2023) quasi plat jusqu'au moyen infrarouge, sans signature moléculaire individuelle nette : compatible avec une atmosphère secondaire à très haute métallicité (≥1000x solaire) masquée par une épaisse couche de brumes photochimiques très réfléchissante. Un spectre HST déjà plat avait été observé dès 2014.",
           "note_en": "JWST transmission spectrum (2023) is nearly flat out to the mid-infrared, with no confident individual molecular signature — consistent with a high-metallicity (≥1000x solar) secondary atmosphere hidden beneath a thick, highly reflective photochemical haze layer. An already-flat HST spectrum had been observed as early as 2014.",
           "spectrum_ref": "Kempton et al. 2023, Nature (JWST MIRI/LRS, courbe de phase thermique, atmosphère métal-riche très réfléchissante, albédo de Bond 0,51±0,06) ; Gao et al. 2023, ApJ (JWST NIRSpec+MIRI, spectre de transmission plat jusqu'au moyen infrarouge, métallicité ≥1000x solaire, brumes photochimiques) ; précédent : Kreidberg et al. 2014, Nature (HST WFC3, spectre de transmission déjà plat en proche infrarouge, excluant un scénario sans nuages)",
-          "planet_type": { "fr": "Mini-Neptune chaude brumeuse (haze-dominated), rayon 2,73 R⊕", "en": "Hot haze-dominated mini-Neptune, radius 2.73 R⊕" },
+          "planet_type": {
+            "fr": "Mini-Neptune chaude brumeuse (haze-dominated), rayon 2,73 R⊕",
+            "en": "Hot haze-dominated mini-Neptune, radius 2.73 R⊕"
+          },
           "learn_more": "GJ 1214 b a été découverte en 2009 par le relevé MEarth (Charbonneau et al. 2009), un réseau de petits télescopes au sol dédié à la recherche de planètes en transit autour de naines rouges proches. Il s'agissait alors de la première « super-Terre » en transit détectée depuis le sol, autour d'une naine M4.5 relativement proche (environ 14,6 pc) : sa petite taille stellaire rend le transit particulièrement profond et facile à observer, ce qui en a fait immédiatement une cible privilégiée pour la spectroscopie atmosphérique.<br><br>Cette attention s'est heurtée à une énigme persistante. Dès 2014, Kreidberg et al. (Nature) ont mesuré avec le Hubble Space Telescope (WFC3) un spectre de transmission en proche infrarouge totalement dépourvu de signatures moléculaires — un résultat qui excluait déjà les scénarios sans nuages, qu'ils soient de type enveloppe légère riche en hydrogène ou atmosphère lourde. Près de dix ans plus tard, deux études JWST publiées en 2023 ont prolongé ce constat : Kempton et al. (Nature) ont observé une courbe de phase thermique complète avec l'instrument MIRI/LRS, révélant une atmosphère très réfléchissante (albédo de Bond mesuré à 0,51) et compatible avec une métallicité élevée plutôt qu'une enveloppe H/He pure ; Gao et al. (ApJ), combinant spectroscopie de transmission proche et moyen infrarouge, ont confirmé un spectre plat jusque dans le moyen infrarouge, nécessitant une métallicité atmosphérique d'au moins 1000x solaire et une production de brumes photochimiques très efficace pour expliquer l'absence quasi totale de raies.<br><br>Ce résultat offre un contraste pédagogique frappant avec K2-18 b : là où K2-18 b présente un spectre JWST riche en signatures individuelles (CH4, CO2, et une détection contestée de DMS) alimentant l'hypothèse d'un monde « hycéen » à atmosphère relativement claire, GJ 1214 b illustre l'archétype inverse — celui de la mini-Neptune brumeuse, où une épaisse couche d'aérosols en haute altitude étouffe presque toutes les signatures moléculaires individuelles, même si l'atmosphère sous-jacente est bel et bien caractérisée comme dense et métal-riche.",
           "learn_more_en": "GJ 1214 b was discovered in 2009 by the MEarth survey (Charbonneau et al. 2009), a network of small ground-based telescopes dedicated to finding transiting planets around nearby red dwarfs. It was, at the time, the first ground-based transiting 'super-Earth' detection, orbiting a relatively nearby M4.5 dwarf (about 14.6 pc away): the star's small size makes the transit unusually deep and easy to observe, immediately making it a prime target for atmospheric spectroscopy.<br><br>That attention ran into a persistent puzzle. As early as 2014, Kreidberg et al. (Nature) measured a near-infrared transmission spectrum with the Hubble Space Telescope (WFC3) that was completely devoid of molecular features — a result that already ruled out cloud-free scenarios, whether a light hydrogen-rich envelope or a heavy atmosphere. Nearly a decade later, two 2023 JWST studies extended that finding: Kempton et al. (Nature) obtained a full thermal phase curve with the MIRI/LRS instrument, revealing a highly reflective atmosphere (measured Bond albedo of 0.51) consistent with a high metallicity rather than a pure H/He envelope; Gao et al. (ApJ), combining near- and mid-infrared transmission spectroscopy, confirmed a spectrum flat out into the mid-infrared, requiring an atmospheric metallicity of at least 1000x solar and highly efficient photochemical haze production to explain the near-total absence of spectral lines.<br><br>This result offers a striking pedagogical contrast with K2-18 b: where K2-18 b shows a JWST spectrum rich in individual detected signatures (CH4, CO2, and a disputed DMS detection) feeding the 'hycean world' hypothesis of a relatively clear atmosphere, GJ 1214 b illustrates the opposite archetype — the haze-dominated mini-Neptune, where a thick high-altitude aerosol layer smothers almost every individual molecular fingerprint, even though the underlying atmosphere is in fact characterized as dense and metal-rich."
         }
@@ -1202,10 +1290,11 @@
         "name": "TOI-270",
         "spectype": "M3 V",
         "st_teff": 3506.0,
-        "st_rad": 0.380,
+        "st_rad": 0.38,
         "sy_dist": 22.4793,
         "ra": 68.416,
-        "dec": -51.957
+        "dec": -51.957,
+        "constellation": "Pictor"
       },
       "planets": [
         {
@@ -1217,7 +1306,11 @@
           "discoverymethod": "Transit",
           "disc_year": 2019,
           "source": "jwst_spectroscopy",
-          "molecules": ["CH4", "CO2", "H2O"],
+          "molecules": [
+            "CH4",
+            "CO2",
+            "H2O"
+          ],
           "color": null,
           "texture": null,
           "rotation_hours": null,
@@ -1226,7 +1319,10 @@
           "ring": null,
           "note": "Spectre JWST (NIRISS + NIRSpec) révélant CH4, CO2 et de l'eau, mais aucune trace de NH3 ; deuxième sous-Neptune tempéré sérieusement discuté comme monde hycéen après K2-18 b, bien que Benneke et al. penchent plutôt pour une enveloppe « miscible » riche en métaux.",
           "note_en": "JWST spectrum (NIRISS + NIRSpec) revealing CH4, CO2 and water, but no trace of NH3; a second temperate sub-Neptune seriously discussed as a hycean world after K2-18 b, though Benneke et al. instead favor a metal-rich 'miscible' envelope.",
-          "planet_type": { "fr": "Sous-Neptune tempéré (candidate monde hycéen, débattu)", "en": "Temperate sub-Neptune (candidate hycean world, debated)" },
+          "planet_type": {
+            "fr": "Sous-Neptune tempéré (candidate monde hycéen, débattu)",
+            "en": "Temperate sub-Neptune (candidate hycean world, debated)"
+          },
           "spectrum_ref": "Benneke et al. 2024, Nature Astronomy (JWST NIRISS SOSS + NIRSpec G395H, 0,6-5,2 µm ; CH4/CO2/H2O détectés, NH3 absent ; enveloppe « miscible » à haute métallicité)",
           "learn_more": "TOI-270 d est la plus externe des trois planètes du système TOI-270, découvert par le satellite TESS en 2019 autour d'une naine rouge M3V calme et proche (environ 22,5 parsecs, soit ~73 années-lumière). L'article de découverte (Günther et al. 2019, Nature Astronomy) décrit un système compact formé d'une super-Terre interne (TOI-270 b) et de deux sous-Neptunes (c et d), TOI-270 d orbitant en 11,4 jours à environ 0,073 UA de son étoile, pour un rayon d'environ 2,1 rayons terrestres et une masse proche de 4,8 masses terrestres, avec une température d'équilibre de l'ordre de 387 K.<br><br>Une première étude au télescope spatial Hubble (Mikal-Evans et al. 2022) avait suggéré, avec une significativité modeste, la présence de vapeur d'eau dans une atmosphère riche en hydrogène. En 2024, Benneke et ses collaborateurs ont combiné deux transits observés par les instruments NIRISS et NIRSpec de JWST pour couvrir en continu la bande 0,6-5,2 µm : le spectre obtenu révèle nettement du méthane (CH4) et du CO2, avec une signature d'eau, mais aucune trace de NH3. Cette combinaison chimique, associée à un poids moléculaire moyen très supérieur à celui de Neptune ou Uranus, a conduit l'équipe à proposer que TOI-270 d soit une sous-Neptune à « enveloppe miscible » : une atmosphère et un intérieur riches en éléments lourds (eau, carbone) mélangés à l'hydrogène/hélium, plutôt qu'un simple monde océan sous atmosphère d'hydrogène pur.<br><br>D'autres équipes, à partir des mêmes données JWST, ont défendu au contraire des conditions compatibles avec un monde « hycéen » (océan liquide sous atmosphère riche en hydrogène), faisant de TOI-270 d l'un des candidats les plus discutés de cette catégorie après K2-18 b. Le débat sur la nature exacte de sa surface et de son intérieur — océan global, magma, ou intérieur essentiellement rocheux — reste ouvert et fait l'objet de plusieurs travaux de modélisation ultérieurs.",
           "learn_more_en": "TOI-270 d is the outermost of the three planets in the TOI-270 system, discovered by the TESS satellite in 2019 around a quiet, nearby M3V red dwarf (about 22.5 parsecs, or ~73 light-years away). The discovery paper (Gunther et al. 2019, Nature Astronomy) describes a compact system made of an inner super-Earth (TOI-270 b) and two sub-Neptunes (c and d), with TOI-270 d orbiting in 11.4 days at about 0.073 AU from its star, with a radius of about 2.1 Earth radii, a mass close to 4.8 Earth masses, and an equilibrium temperature around 387 K.<br><br>An earlier Hubble Space Telescope study (Mikal-Evans et al. 2022) suggested, at modest significance, the presence of water vapor in a hydrogen-rich atmosphere. In 2024, Benneke and collaborators combined two transits observed with JWST's NIRISS and NIRSpec instruments to continuously cover the 0.6-5.2 micron band: the resulting spectrum clearly reveals methane (CH4) and CO2, with a water signature, but no trace of NH3. This chemical combination, together with a mean molecular weight far higher than Neptune's or Uranus's, led the team to propose that TOI-270 d is a 'miscible-envelope' sub-Neptune: an atmosphere and interior rich in heavy elements (water, carbon) mixed with hydrogen/helium, rather than a simple ocean world under a pure hydrogen atmosphere.<br><br>Other teams, working from the same JWST data, have instead argued for conditions compatible with a 'hycean' world (a liquid ocean beneath a hydrogen-rich atmosphere), making TOI-270 d one of the most actively debated candidates in that category after K2-18 b. The debate over its exact surface and interior nature — global ocean, magma, or largely rocky interior — remains open and is the subject of several follow-up modeling studies."
@@ -1240,10 +1336,11 @@
         "name": "55 Cancri A",
         "spectype": "G8 V",
         "st_teff": 5198.0,
-        "st_rad": 0.980,
+        "st_rad": 0.98,
         "sy_dist": 12.5855,
         "ra": 133.1468333,
-        "dec": 28.3298167
+        "dec": 28.3298167,
+        "constellation": "Cancer"
       },
       "companionStar": {
         "name": "55 Cancri B",
@@ -1277,7 +1374,10 @@
           "ring": null,
           "note": "Géante gazeuse détectée en 1996 par vélocimétrie radiale — l'une des toutes premières exoplanètes jamais découvertes. En orbite à 0,118 UA (14,7 jours), elle ne transite pas devant son étoile : ni rayon ni composition atmosphérique n'ont donc pu être mesurés, seule sa masse (environ 276 masses terrestres, soit ~0,87 masse de Jupiter) est connue par vélocimétrie.",
           "note_en": "Gas giant detected in 1996 by radial velocity — one of the very first exoplanets ever discovered. Orbiting at 0.118 AU (14.7 days), it does not transit its star: neither radius nor atmospheric composition could be measured, only its mass (about 276 Earth masses, ~0.87 Jupiter mass) is known from radial velocity.",
-          "planet_type": { "fr": "Jupiter chaud", "en": "Hot Jupiter" },
+          "planet_type": {
+            "fr": "Jupiter chaud",
+            "en": "Hot Jupiter"
+          },
           "interpretation_override": {
             "skyColor": "#d8b877",
             "hazeColor": "#f0dcae",
@@ -1307,7 +1407,10 @@
           "ring": null,
           "note": "Planète de masse voisine de Neptune (environ 57 masses terrestres) sur une orbite de 44,5 jours à 0,247 UA. Non transitante : aucun rayon mesuré, aucune donnée atmosphérique disponible.",
           "note_en": "Neptune-mass planet (about 57 Earth masses) on a 44.5-day orbit at 0.247 AU. Non-transiting: no measured radius, no atmospheric data available.",
-          "planet_type": { "fr": "Neptune chaud", "en": "Hot Neptune" },
+          "planet_type": {
+            "fr": "Neptune chaud",
+            "en": "Hot Neptune"
+          },
           "interpretation_override": {
             "skyColor": "#4a90a4",
             "hazeColor": "#7fc4d6",
@@ -1337,7 +1440,10 @@
           "ring": null,
           "note": "La plus massive des planètes du système (environ 3,8 masses de Jupiter), sur une orbite lointaine et excentrique d'environ 14,3 ans à 5,6 UA — un analogue approximatif de Jupiter par sa distance à son étoile. Non transitante : aucun rayon mesuré, aucune donnée atmosphérique disponible.",
           "note_en": "The most massive planet in the system (about 3.8 Jupiter masses), on a distant, eccentric orbit of about 14.3 years at 5.6 AU — a rough analogue of Jupiter in terms of distance from its star. Non-transiting: no measured radius, no atmospheric data available.",
-          "planet_type": { "fr": "Jupiter froid", "en": "Cold Jupiter" },
+          "planet_type": {
+            "fr": "Jupiter froid",
+            "en": "Cold Jupiter"
+          },
           "interpretation_override": {
             "skyColor": "#c9a876",
             "hazeColor": "#e8d4a8",
@@ -1358,7 +1464,10 @@
           "discoverymethod": "Radial Velocity",
           "disc_year": 2004,
           "source": "jwst_spectroscopy",
-          "molecules": ["CO2", "CO"],
+          "molecules": [
+            "CO2",
+            "CO"
+          ],
           "color": null,
           "texture": null,
           "rotation_hours": null,
@@ -1368,7 +1477,10 @@
           "note": "Une atmosphère secondaire probablement riche en CO2 ou CO a été détectée par JWST (NIRCam + MIRI, 2024) sur ce monde de lave en orbite ultra-rapprochée, mais son flux thermique diurne varie fortement d'une éclipse secondaire à l'autre — signe possible d'un dégazage volcanique actif.",
           "note_en": "A secondary atmosphere likely rich in CO2 or CO was detected by JWST (NIRCam + MIRI, 2024) on this lava world in an ultra-short orbit, but its dayside thermal flux varies strongly from one secondary eclipse to the next — a possible sign of active volcanic outgassing.",
           "spectrum_ref": "Hu et al. 2024, Nature 630, 609–612 (JWST NIRCam+MIRI thermal emission spectrum 4–12 µm, secondary atmosphere riche en CO2 ou CO)",
-          "planet_type": { "fr": "Super-Terre ultra-chaude (monde de lave)", "en": "Ultra-hot Super-Earth (lava world)" },
+          "planet_type": {
+            "fr": "Super-Terre ultra-chaude (monde de lave)",
+            "en": "Ultra-hot Super-Earth (lava world)"
+          },
           "interpretation_override": {
             "skyColor": "#241109",
             "hazeColor": "#ff7a1a",
@@ -1400,7 +1512,10 @@
           "ring": null,
           "note": "Géante gazeuse (environ 48 masses terrestres, ~0,15 masse de Jupiter) sur une orbite de 260 jours à 0,802 UA — à l'annonce de sa découverte en 2007 (Fischer et al.), elle a été présentée comme la première planète connue à orbiter dans la zone habitable classique d'une étoile de type solaire, bien qu'étant elle-même une géante gazeuse inhabitable. Non transitante : aucun rayon mesuré, aucune donnée atmosphérique disponible.",
           "note_en": "Gas giant (about 48 Earth masses, ~0.15 Jupiter mass) on a 260-day orbit at 0.802 AU — upon its discovery announcement in 2007 (Fischer et al.), it was presented as the first known planet to orbit within the classical habitable zone of a Sun-like star, despite being itself an uninhabitable gas giant. Non-transiting: no measured radius, no atmospheric data available.",
-          "planet_type": { "fr": "Sous-Saturne tempérée (zone habitable classique)", "en": "Temperate sub-Saturn (classical habitable zone)" },
+          "planet_type": {
+            "fr": "Sous-Saturne tempérée (zone habitable classique)",
+            "en": "Temperate sub-Saturn (classical habitable zone)"
+          },
           "interpretation_override": {
             "skyColor": "#d4c49a",
             "hazeColor": "#ecdfc0",
@@ -1424,7 +1539,8 @@
         "st_rad": 0.189,
         "sy_dist": 14.88,
         "ra": 340.4922,
-        "dec": -69.169
+        "dec": -69.169,
+        "constellation": "Indus"
       },
       "planets": [
         {
@@ -1446,7 +1562,10 @@
           "note": "Aucune atmosphère significative détectée. La courbe de phase thermique complète mesurée par Spitzer (Kreidberg et al. 2019, Nature) montre une face diurne à 1040±40 K et une face nocturne indétectable : sans redistribution de chaleur, il ne peut y avoir d'atmosphère épaisse. Le spectre JWST MIRI (Zieba et al. 2026, Nature Astronomy) confirme une surface sombre et sans relief spectral, compatible avec du basalte ou une roche ultramafique riche en olivine, sans atmosphère résiduelle décelable.",
           "note_en": "No significant atmosphere detected. The full thermal phase curve measured by Spitzer (Kreidberg et al. 2019, Nature) shows a dayside at 1040±40 K and an undetectable nightside: without heat redistribution, no thick atmosphere can be present. The JWST MIRI spectrum (Zieba et al. 2026, Nature Astronomy) confirms a dark, spectrally featureless surface, consistent with basalt or an olivine-rich ultramafic rock, with no detectable residual atmosphere.",
           "spectrum_ref": "Kreidberg et al. 2019, Nature (Spitzer IRAC 4.5 µm phase curve — absence of a thick atmosphere) ; Zieba et al. 2026, Nature Astronomy (JWST MIRI/LRS — dark, featureless basaltic surface)",
-          "planet_type": { "fr": "Super-Terre chaude (probablement rocheuse nue, sans atmosphère significative)", "en": "Hot Super-Earth (probably bare rock, without a significant atmosphere)" },
+          "planet_type": {
+            "fr": "Super-Terre chaude (probablement rocheuse nue, sans atmosphère significative)",
+            "en": "Hot Super-Earth (probably bare rock, without a significant atmosphere)"
+          },
           "interpretation_override": {
             "skyColor": "#2b2a28",
             "hazeColor": "#3a3833",

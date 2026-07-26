@@ -17,6 +17,8 @@ from pathlib import Path
 from urllib.parse import quote
 
 import requests
+from astropy.coordinates import SkyCoord, get_constellation
+import astropy.units as u
 
 TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 
@@ -441,9 +443,21 @@ def fetch_exoplanet_systems() -> list[dict]:
     return list(systems_by_host.values())
 
 
+def constellation_for(ra, dec):
+    # Le Soleil (ra=dec=None, on est dedans) n'a pas de constellation.
+    if ra is None or dec is None:
+        return None
+    coord = SkyCoord(ra=ra * u.degree, dec=dec * u.degree, frame="icrs")
+    return get_constellation(coord)
+
+
 def main() -> None:
     exoplanet_systems = fetch_exoplanet_systems()
     systems = [SOLAR_SYSTEM] + exoplanet_systems
+
+    for system in systems:
+        star = system["star"]
+        star["constellation"] = constellation_for(star.get("ra"), star.get("dec"))
 
     payload = json.dumps({"systems": systems}, indent=2, ensure_ascii=False)
     root = Path(__file__).resolve().parent.parent

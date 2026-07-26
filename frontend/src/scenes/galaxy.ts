@@ -36,11 +36,31 @@ function starPosition(system: SystemData): THREE.Vector3 {
   );
 }
 
+// Vraie position 3D (parsecs, Soleil à l'origine) — contrairement à
+// starPosition() ci-dessus (distance compressée en racine carrée pour la
+// lisibilité de la vue galaxie), utilisée quand la vraie géométrie relative
+// entre systèmes compte réellement (cf. scenes/sky2d.ts::buildSky2dScene en
+// mode "observateur exoplanète" : direction + vraie distance vers le Soleil
+// et les autres systèmes vus depuis là-bas).
+export function realStarPosition(system: SystemData): THREE.Vector3 {
+  const { ra, dec, sy_dist } = system.star;
+  if (ra === null || dec === null || sy_dist === null || sy_dist === 0) {
+    return new THREE.Vector3(0, 0, 0);
+  }
+  const raRad = (ra * Math.PI) / 180;
+  const decRad = (dec * Math.PI) / 180;
+  return new THREE.Vector3(
+    Math.cos(decRad) * Math.cos(raRad) * sy_dist,
+    Math.sin(decRad) * sy_dist,
+    Math.cos(decRad) * Math.sin(raRad) * sy_dist,
+  );
+}
+
 // Fond étoilé décoratif, même principe que dans system.ts : positions
 // aléatoires sur une coquille lointaine, pas les vraies positions Gaia —
 // les seuls points représentant de vraies coordonnées ici sont les systèmes
 // du jeu de données (starPosition, RA/Dec réels).
-function makeStarfield(count: number, radius: number): THREE.Points {
+export function makeStarfield(count: number, radius: number): THREE.Points {
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count; i++) {
     const theta = Math.random() * Math.PI * 2;
@@ -63,14 +83,25 @@ function makeStarfield(count: number, radius: number): THREE.Points {
 // scène pixelise/floute la police.
 const LABEL_SUPERSAMPLE = 4;
 
-function makeLabelSprite(text: string, fontSize = 28, scale: [number, number] = [12, 3]): THREE.Sprite {
+export function makeLabelSprite(
+  text: string,
+  fontSize = 28,
+  scale: [number, number] = [12, 3],
+  opts?: { glow?: boolean },
+): THREE.Sprite {
   const canvas = document.createElement("canvas");
   canvas.width = 256 * LABEL_SUPERSAMPLE;
   canvas.height = 64 * LABEL_SUPERSAMPLE;
   const ctx = canvas.getContext("2d")!;
   ctx.font = `700 ${fontSize * LABEL_SUPERSAMPLE}px "Orbitron", "Segoe UI", system-ui, sans-serif`;
-  ctx.fillStyle = "#e6e6e6";
   ctx.textAlign = "center";
+  if (opts?.glow) {
+    // Halo doux (pas un contour dur) : convient à un texte discret sur fond
+    // étoilé, sans devenir aussi appuyé qu'un nom de système/planète.
+    ctx.shadowColor = "rgba(140, 180, 255, 0.9)";
+    ctx.shadowBlur = 10 * LABEL_SUPERSAMPLE;
+  }
+  ctx.fillStyle = "#e6e6e6";
   ctx.fillText(text, canvas.width / 2, 40 * LABEL_SUPERSAMPLE);
   const texture = new THREE.CanvasTexture(canvas);
   texture.anisotropy = 4;
@@ -105,7 +136,7 @@ function getStarDotTexture(): THREE.Texture {
   return starDotTexture;
 }
 
-function makeStarDot(color: string, size: number): THREE.Sprite {
+export function makeStarDot(color: string, size: number): THREE.Sprite {
   const material = new THREE.SpriteMaterial({
     map: getStarDotTexture(),
     color,

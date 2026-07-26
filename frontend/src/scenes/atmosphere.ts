@@ -1,8 +1,10 @@
 import * as THREE from "three";
-import type { PlanetData } from "../data/types";
+import type { PlanetData, StarData } from "../data/types";
 import { deriveAtmosphere, type AtmosphereVisual } from "../atmosphere/heuristic";
 import { loadTexture } from "../textureCache";
 import { makePlanetSurfaceTexture } from "../planetTexture";
+import { makeStarSurfaceTexture } from "../starTexture";
+import { addStarGlow } from "../starGlow";
 import type { Spinnable } from "../spin";
 import { buildMoons } from "./moons";
 import { buildRing } from "./rings";
@@ -22,6 +24,13 @@ export interface AtmosphereSceneResult {
 }
 
 const EARTH_UNIT_RADIUS = 3; // rayon affiché pour 1 rayon terrestre (mode comparaison)
+const SUN_RADIUS_KM = 695_700;
+const EARTH_RADIUS_KM = 6371;
+const SUN_RADIUS_IN_EARTH_RADII = SUN_RADIUS_KM / EARTH_RADIUS_KM; // ~109,2
+// Écart de taille aussi extrême que Terre-vs-Soleil dans star.ts : même
+// plancher, pour la même raison (sinon la planète devient un point invisible).
+const MIN_VISIBLE_PLANET_RADIUS = 0.05;
+const SUN_SPIN_SPEED = 0.0009; // identique à STAR_SPIN_SPEED de star.ts
 
 // Vitesse de rotation à l'écran, calibrée pour qu'une planète à la période
 // réelle de la Terre (23,93 h) boucle en ~20 s à 60 im/s — les autres corps
@@ -125,10 +134,11 @@ export function buildAtmosphereScene(
   showScientificInterpretation = true,
   realMoonScale = false,
   realMoonDistance = false,
+  compareWithSun: StarData | null = null,
 ): AtmosphereSceneResult {
   const group = new THREE.Group();
 
-  if (!compareWithEarth) {
+  if (!compareWithEarth && !compareWithSun) {
     const radius = 6;
     const { group: planetGroup, visual } = buildPlanetGroup(planet, radius, showScientificInterpretation);
     group.add(planetGroup);
@@ -157,30 +167,70 @@ export function buildAtmosphereScene(
     };
   }
 
-  // Mode comparaison : tailles réelles relatives, 1 rayon terrestre = EARTH_UNIT_RADIUS.
-  const planetRadius = EARTH_UNIT_RADIUS * (planet.pl_rade ?? 1);
-  const earthRadius = EARTH_UNIT_RADIUS;
-  const gap = Math.max(planetRadius, earthRadius) * 0.7;
+  if (compareWithEarth) {
+    // Mode comparaison : tailles réelles relatives, 1 rayon terrestre = EARTH_UNIT_RADIUS.
+    const planetRadius = EARTH_UNIT_RADIUS * (planet.pl_rade ?? 1);
+    const earthRadius = EARTH_UNIT_RADIUS;
+    const gap = Math.max(planetRadius, earthRadius) * 0.7;
+
+    const { group: planetGroup, visual } = buildPlanetGroup(planet, planetRadius, showScientificInterpretation);
+    planetGroup.position.x = -(planetRadius + gap / 2);
+
+    const { group: earthGroup } = buildPlanetGroup(compareWithEarth, earthRadius, showScientificInterpretation);
+    earthGroup.position.x = earthRadius + gap / 2;
+
+    group.add(planetGroup, earthGroup);
+
+    const halfWidthLeft = Math.abs(planetGroup.position.x) + planetRadius;
+    const halfWidthRight = earthGroup.position.x + earthRadius;
+    const camDist = Math.max(halfWidthLeft, halfWidthRight) * 3.2;
+
+    return {
+      group,
+      cameraPos: new THREE.Vector3(0, Math.max(planetRadius, earthRadius) * 0.5, camDist),
+      visual,
+      spinnables: [
+        { group: planetGroup, speed: spinSpeed(planet.rotation_hours) },
+        { group: earthGroup, speed: spinSpeed(compareWithEarth.rotation_hours) },
+      ],
+      clickable: new Map(),
+    };
+  }
+
+  // Mode comparaison planète vs Soleil : même principe que ci-dessus, mais le
+  // rayon solaire réel (st_rad, en rayons solaires) doit d'abord être converti
+  // en rayons terrestres (SUN_RADIUS_IN_EARTH_RADII ~109,2) pour rester dans
+  // l'unité EARTH_UNIT_RADIUS utilisée dans ce fichier — cf. star.ts pour le
+  // même principe appliqué à une comparaison étoile vs étoile/Terre.
+  const sun = compareWithSun as StarData;
+  const planetRadius = Math.max(EARTH_UNIT_RADIUS * (planet.pl_rade ?? 1), MIN_VISIBLE_PLANET_RADIUS);
+  const sunRadius = EARTH_UNIT_RADIUS * (sun.st_rad ?? 1) * SUN_RADIUS_IN_EARTH_RADII;
+  const gap = Math.max(planetRadius, sunRadius) * 0.6;
 
   const { group: planetGroup, visual } = buildPlanetGroup(planet, planetRadius, showScientificInterpretation);
   planetGroup.position.x = -(planetRadius + gap / 2);
 
-  const { group: earthGroup } = buildPlanetGroup(compareWithEarth, earthRadius, showScientificInterpretation);
-  earthGroup.position.x = earthRadius + gap / 2;
+  const sunColor = "#ffd97a";
+  const sunMaterial = sun.texture
+    ? new THREE.MeshBasicMaterial({ map: loadTexture(sun.texture) })
+    : new THREE.MeshBasicMaterial({ map: makeStarSurfaceTexture(sunColor) });
+  const sunMesh = new THREE.Mesh(new THREE.SphereGeometry(sunRadius, 48, 48), sunMaterial);
+  sunMesh.position.x = sunRadius + gap / 2;
 
-  group.add(planetGroup, earthGroup);
+  group.add(planetGroup, sunMesh);
+  addStarGlow(group, sunColor, sunRadius, sunMesh.position);
 
   const halfWidthLeft = Math.abs(planetGroup.position.x) + planetRadius;
-  const halfWidthRight = earthGroup.position.x + earthRadius;
+  const halfWidthRight = sunMesh.position.x + sunRadius;
   const camDist = Math.max(halfWidthLeft, halfWidthRight) * 3.2;
 
   return {
     group,
-    cameraPos: new THREE.Vector3(0, Math.max(planetRadius, earthRadius) * 0.5, camDist),
+    cameraPos: new THREE.Vector3(0, Math.max(planetRadius, sunRadius) * 0.5, camDist),
     visual,
     spinnables: [
       { group: planetGroup, speed: spinSpeed(planet.rotation_hours) },
-      { group: earthGroup, speed: spinSpeed(compareWithEarth.rotation_hours) },
+      { group: sunMesh, speed: SUN_SPIN_SPEED },
     ],
     clickable: new Map(),
   };

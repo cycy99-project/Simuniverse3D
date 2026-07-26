@@ -106,61 +106,64 @@ mais pas un vide de marché aussi béant que suggéré initialement.
 - Échelle : gérer la disproportion des distances (années-lumière) vs tailles
   des orbites → échelles non linéaires / mode "carte" vs mode "système".
 
-## Backlog & priorités (ordre de réalisation souhaité par Cyril, réordonné le 2026-07-21)
+## Backlog & priorités (ordre de réalisation souhaité par Cyril, réordonné le 2026-07-21 ; items traités retirés le 2026-07-26)
 
-1. **[Bug] Distance lune↔planète trop compressée visuellement** (ex. Lune vs
-   Terre, Charon vs Pluton dans `scenes/moons.ts`) : `naturalRadius` utilise
-   une échelle en racine carrée de `orbit_km` (`Math.sqrt(moon.orbit_km /
-   50_000) * opts.orbitScale`), puis est repoussée par le clamp anti-
-   chevauchement `Math.max(naturalRadius, previousOuterEdge + moonRadius *
-   1.5)` — pour des systèmes à une seule lune proche (Terre, Pluton), le
-   clamp ou la compression racine carrée dominent et rapprochent la lune
-   bien plus que sa distance réelle ne le justifierait. Signalé par Cyril
-   le 2026-07-20.
-2. **Boutons de comparaison toujours visibles** (Terre et Soleil) sur les
-   écrans de planète et d'étoile, au lieu de l'unique bouton cyclique
-   actuel (`#compare-toggle` dans `main.ts`, qui bascule entre les états via
-   `toggleCompare()`/`cycleStarCompare()`) : sur une fiche planète, avoir en
-   permanence "Comparer à la Terre" ET "Comparer au Soleil" ; sur une fiche
-   étoile/Soleil, la même paire. Étudier aussi la possibilité d'afficher les
-   3 côte à côte (l'astre affiché + Terre + Soleil) plutôt que de choisir
-   entre les deux. Demandé par Cyril le 2026-07-21.
-3. **Vue des constellations connues** dans la vue 3D (probablement la vue
-   galaxie/voisinage stellaire) + indiquer, pour chaque système d'étoile du
-   jeu de données, dans quelle constellation il se trouve (nouveau champ de
-   donnée par système, ex. `constellation` sur `StarData`). Si une vraie vue
-   3D des constellations n'est pas réalisable, envisager en repli une vue 2D
-   du ciel terrestre avec les constellations. Demandé par Cyril le
-   2026-07-20.
-4. **Vue "Groupe Local" (multi-galaxies)** : niveau de zoom au-dessus de la
-   vue "Voie Lactée" actuelle (qui n'affiche en réalité qu'un petit
-   voisinage stellaire proche, pas la galaxie entière). Positionner les
-   galaxies voisines avec de vraies données connues (Andromède M31 à
-   ~2,5 millions d'a.l., Triangulum M33, Grand/Petit Nuage de Magellan) —
-   nécessite une nouvelle scène, un nouvel état dans la state machine et une
-   nouvelle échelle (mégaparsecs), pas un simple ajustement. Demandé par
-   Cyril le 2026-07-12.
-5. **Ciel nocturne vu depuis une exoplanète** : option, pour chaque
-   exoplanète, permettant d'afficher son ciel de nuit et d'y repérer notre
-   Soleil (vu depuis cette exoplanète), et pourquoi pas des constellations
-   ou d'autres systèmes visibles depuis là-bas. Demandé par Cyril le
-   2026-07-21.
-6. **Date de découverte + méthode de détection + anecdote "événement
+✅ **Ciel nocturne vu depuis une exoplanète** (validé par Cyril le 2026-07-26) :
+option, pour chaque exoplanète, permettant d'afficher son ciel de nuit et d'y
+repérer notre Soleil (vu depuis cette exoplanète), avec constellations et
+autres systèmes visibles depuis là-bas. Voie lactée texturée avec contours,
+halo solaire scintillant + flèche + label — itéré suite retours visuels de
+Cyril (bug de recentrage caméra corrigé, rendu de la bande galactique
+retravaillé).
+
+1. **Date de découverte + méthode de détection + anecdote "événement
    historique observable"** : ajouter comme paramètres affichés pour chaque
    exoplanète sa date de découverte et sa méthode de détection ; anecdote
    ludique complémentaire — si on observait la Terre depuis cette
    exoplanète (délai lumière = distance en années-lumière), quel événement
    historique de l'humanité serait théoriquement visible cette année-là.
-   Demandé par Cyril le 2026-07-21.
-7. **Comparaison exoplanète vs Terre** : pour chaque exoplanète, une fiche
+   Demandé par Cyril le 2026-07-21. **En cours (2026-07-26).**
+2. **Comparaison exoplanète vs Terre** : pour chaque exoplanète, une fiche
    de comparaison directe avec la Terre (taille, masse, température, type
    de planète...). Demandé par Cyril le 2026-07-21.
-8. **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
+3. **Losange de sélection + bouton "Explorer"** pour les satellites, comme
+   c'est déjà le cas pour les étoiles/systèmes et les planètes (indicateur
+   visuel en losange autour de l'objet sélectionné + carte du bas avec nom,
+   type et bouton "Explorer →") : actuellement absent pour les lunes
+   sélectionnées en vue système/planète. Demandé par Cyril le 2026-07-26.
+4. **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
    clavier — uniquement à l'intérieur d'un système solaire donné (pas en vue
    galaxie) : remplacerait ponctuellement OrbitControls par un déplacement
    libre caméra (avance/recul/rotation) dans la scène `system.ts` déjà
    chargée. Demandé par Cyril le 2026-07-21 (non inclus dans le
    réordonnancement explicite du même jour, conservé en fin de liste).
+5. **Dézoomer et voir notre galaxie de l'extérieur, avec ses voisines**
+   (Groupe Local). Concrètement : aujourd'hui la vue "galaxie" du site ne
+   montre qu'un petit voisinage stellaire proche (le Soleil + une poignée de
+   systèmes exoplanétaires réels) — pas du tout la Voie Lactée entière, et
+   encore moins l'univers. Ce point ajouterait un niveau de zoom
+   supplémentaire *au-dessus* de la vue actuelle, où l'on dézoomerait jusqu'à
+   voir la Voie Lactée comme un simple point parmi ses galaxies voisines
+   réelles (Andromède M31, Triangulum M33, Grand/Petit Nuage de Magellan), à
+   leurs vraies distances (échelle en mégaparsecs, donc une toute nouvelle
+   échelle en plus de celle déjà utilisée). Nécessite une nouvelle scène 3D
+   et un nouvel état dans la navigation — un chantier non négligeable.
+   Priorité basse (repoussé en fin de liste le 2026-07-26) : jugé purement
+   cosmétique — aucune exoplanète ni spectre JWST à afficher à cette échelle,
+   ça ne sert pas l'axe différenciant du projet (atmosphères simulées à
+   partir de spectres réels), contrairement aux autres points ci-dessus.
+   Demandé par Cyril le 2026-07-12.
+6. **Textures imaginées pour les exoplanètes — aller plus loin que
+   l'existant** : `planetTexture.ts` a déjà un rendu procédural (styles
+   rocky/cloudy/icyCracks/gasBands/lava, déduit de `cloudDensity` ou calibré
+   via `interpretation_override.textureStyle` pour certaines exoplanètes
+   précises) — donc la brique de base existe déjà. Le point ici est
+   d'enrichir/diversifier ce rendu pour qu'il soit visuellement plus
+   distinctif et "habité" par corps (ex. reliefs, variations de teinte plus
+   organiques, motifs moins répétitifs d'une exoplanète à l'autre), tout en
+   gardant explicitement le cadre "simulation/impression d'artiste" déjà en
+   place (jamais présenté comme une photo réelle). Demandé par Cyril le
+   2026-07-26.
 
 ## Prochaines étapes
 

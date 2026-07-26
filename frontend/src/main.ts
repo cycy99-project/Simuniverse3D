@@ -1,8 +1,24 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { loadSeedData } from "./data/loader";
-import type { SeedData, SystemData, PlanetData, MoonData, AtmosphereSource } from "./data/types";
-import { buildGalaxyScene, applyGalaxyReveal, type RevealableSystem, type SunLine } from "./scenes/galaxy";
+import { loadSeedData, loadConstellationData, loadConstellationInfo } from "./data/loader";
+import { playSelectSound } from "./sound";
+import type {
+  SeedData,
+  SystemData,
+  PlanetData,
+  MoonData,
+  ConstellationSkyData,
+  ConstellationInfoMap,
+} from "./data/types";
+import { buildGalaxyScene, applyGalaxyReveal, makeStarfield, type RevealableSystem, type SunLine } from "./scenes/galaxy";
+import {
+  buildSky2dScene,
+  formatConstellationName,
+  findNearestZone,
+  applyZoneSelection,
+  SKY_ZONE_HIT_ID,
+  type ConstellationZone,
+} from "./scenes/sky2d";
 import { buildSystemScene, STAR_CLICK_ID } from "./scenes/system";
 import { buildAtmosphereScene } from "./scenes/atmosphere";
 import { buildMoonFocusScene } from "./scenes/moonFocus";
@@ -10,7 +26,7 @@ import { buildMoonSurfaceScene } from "./scenes/moonSurface";
 import { buildStarScene, type StarCompareTarget } from "./scenes/star";
 import { VOYAGER_1, VOYAGER_2, currentDistanceAU, currentDistanceKm, type VoyagerInfo } from "./voyager";
 import type { Spinnable } from "./spin";
-import { computeEarthDistance, computeGalaxyViewDistance } from "./distance";
+import { computeEarthDistance, computeGalaxyViewDistance, computeHistoricalAnecdote } from "./distance";
 import { t, getLang, setLang, onLangChange, type Lang } from "./i18n";
 import { formatTemp, getTempUnit, setTempUnit, onTempUnitChange, type TempUnit } from "./units";
 import { localizeName } from "./nameTranslations";
@@ -22,10 +38,13 @@ import { classifyStar } from "./starClassification";
 import { createSelectionMarker, fitSelectionMarker } from "./selectionMarker";
 
 type AppState =
+  | { view: "home" }
   | { view: "galaxy" }
+  | { view: "sky2d" }
   | { view: "system"; systemId: string }
   | { view: "star"; systemId: string }
-  | { view: "atmosphere"; systemId: string; planetName: string };
+  | { view: "atmosphere"; systemId: string; planetName: string }
+  | { view: "exoSky"; systemId: string; planetName: string };
 
 // Cible d'une sélection en attente de confirmation ("Nouvelle Navigation") :
 // un clic sur un système/une étoile/une planète ne fait plus basculer l'état
@@ -46,33 +65,42 @@ interface PendingSelection {
   id: string;
 }
 
-const SOURCE_LABEL_KEYS: Record<AtmosphereSource, Parameters<typeof t>[0]> = {
-  known: "sourceKnown",
-  jwst_spectroscopy: "sourceJwst",
-  no_detection: "sourceNoDetection",
-  no_data: "sourceNoData",
-};
-
 const canvas = document.getElementById("scene-canvas") as HTMLCanvasElement;
+const homeBtnEl = document.getElementById("home-btn") as HTMLButtonElement;
+const homeScreenEl = document.getElementById("home-screen")!;
+const homeTitleEl = document.getElementById("home-title")!;
+const homeSubtitleEl = document.getElementById("home-subtitle")!;
+const homeChoiceGalaxyEl = document.getElementById("home-choice-galaxy") as HTMLButtonElement;
+const homeChoiceGalaxyLabelEl = document.getElementById("home-choice-galaxy-label")!;
+const homeChoiceGalaxyDescEl = document.getElementById("home-choice-galaxy-desc")!;
+const homeChoiceSky2dEl = document.getElementById("home-choice-sky2d") as HTMLButtonElement;
+const homeChoiceSky2dLabelEl = document.getElementById("home-choice-sky2d-label")!;
+const homeChoiceSky2dDescEl = document.getElementById("home-choice-sky2d-desc")!;
 const breadcrumbEl = document.getElementById("breadcrumb")!;
 const infoPanelEl = document.getElementById("info-panel")!;
 const hintEl = document.getElementById("hint")!;
 const langToggleEl = document.getElementById("lang-toggle")!;
 const unitToggleEl = document.getElementById("unit-toggle")!;
-const compareToggleEl = document.getElementById("compare-toggle")!;
+const compareToggleGroupEl = document.getElementById("compare-toggle-group")!;
+const compareEarthToggleEl = document.getElementById("compare-earth-toggle") as HTMLButtonElement;
+const compareSunToggleEl = document.getElementById("compare-sun-toggle") as HTMLButtonElement;
 const orbitPlaneToggleEl = document.getElementById("orbit-plane-toggle") as HTMLButtonElement;
 const habitableZoneToggleEl = document.getElementById("habitable-zone-toggle") as HTMLButtonElement;
 const moonScaleToggleEl = document.getElementById("moon-scale-toggle") as HTMLButtonElement;
 const moonDistanceToggleEl = document.getElementById("moon-distance-toggle") as HTMLButtonElement;
 const moonSurfaceToggleEl = document.getElementById("moon-surface-toggle") as HTMLButtonElement;
+const exoSkyToggleEl = document.getElementById("exo-sky-toggle") as HTMLButtonElement;
+const sunLocatorToggleEl = document.getElementById("sun-locator-toggle") as HTMLButtonElement;
 const dayNightToggleEl = document.getElementById("day-night-toggle") as HTMLButtonElement;
 const sciInterpToggleEl = document.getElementById("sci-interp-toggle") as HTMLButtonElement;
-const studentModeToggleEl = document.getElementById("student-mode-toggle") as HTMLButtonElement;
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
 const pauseToggleEl = document.getElementById("pause-toggle") as HTMLButtonElement;
 const bgMusicEl = document.getElementById("bg-music") as HTMLAudioElement;
 const creditsMusicTitleEl = document.getElementById("credits-music-title")!;
 const creditsMusicAuthorEl = document.getElementById("credits-music-author")!;
+const creditsTexturesLabelEl = document.getElementById("credits-textures-label")!;
+const creditsConstellationsLabelEl = document.getElementById("credits-constellations-label")!;
+const creditsMusicLabelEl = document.getElementById("credits-music-label")!;
 const searchInputEl = document.getElementById("search-input") as HTMLInputElement;
 const searchDatalistEl = document.getElementById("search-datalist") as HTMLDataListElement;
 const lightboxEl = document.getElementById("lightbox")!;
@@ -96,7 +124,7 @@ bgMusicEl.muted = musicMuted;
 bgMusicEl.loop = false;
 
 function renderMusicToggle() {
-  musicToggleEl.textContent = musicMuted ? "🔇 Musique" : "🔊 Musique";
+  musicToggleEl.textContent = musicMuted ? `🔇 ${t("musicToggleLabel")}` : `🔊 ${t("musicToggleLabel")}`;
   musicToggleEl.classList.toggle("muted", musicMuted);
 }
 renderMusicToggle();
@@ -155,10 +183,43 @@ function renderLangToggle() {
   });
 }
 renderLangToggle();
+
+function renderHomeTexts() {
+  homeBtnEl.textContent = t("homeButton");
+  homeTitleEl.textContent = t("homeTitle");
+  homeSubtitleEl.textContent = t("homeSubtitle");
+  homeChoiceGalaxyLabelEl.textContent = t("homeChoiceGalaxyLabel");
+  homeChoiceGalaxyDescEl.textContent = t("homeChoiceGalaxyDesc");
+  homeChoiceSky2dLabelEl.textContent = t("homeChoiceSky2dLabel");
+  homeChoiceSky2dDescEl.textContent = t("homeChoiceSky2dDesc");
+}
+renderHomeTexts();
+homeBtnEl.onclick = () => setState({ view: "home" });
+homeChoiceGalaxyEl.onclick = () => {
+  if (!musicMuted) playSelectSound();
+  setState({ view: "galaxy" });
+};
+homeChoiceSky2dEl.onclick = () => {
+  if (!musicMuted) playSelectSound();
+  setState({ view: "sky2d" });
+};
+
+function renderCreditsAndA11yTexts() {
+  creditsTexturesLabelEl.textContent = t("creditsTextures");
+  creditsConstellationsLabelEl.textContent = t("creditsConstellations");
+  creditsMusicLabelEl.textContent = t("creditsMusic");
+  lightboxCloseEl.setAttribute("aria-label", t("lightboxClose"));
+  lightboxPrevEl.setAttribute("aria-label", t("lightboxPrev"));
+  lightboxNextEl.setAttribute("aria-label", t("lightboxNext"));
+}
+renderCreditsAndA11yTexts();
+
 onLangChange(() => {
   renderLangToggle();
   renderSciInterpToggle();
-  renderStudentModeToggle();
+  renderHomeTexts();
+  renderCreditsAndA11yTexts();
+  renderMusicToggle();
   render();
 });
 
@@ -204,6 +265,16 @@ let lookDragLastPos: { x: number; y: number } | null = null;
 const LOOK_SENSITIVITY = 0.0025;
 const LOOK_MAX_PITCH = Math.PI / 2 - 0.05;
 
+// Zoom molette en vue "regarder autour de soi" (sky2d, surface de lune) :
+// caméra fixe au point d'observation, donc pas de dolly possible — on change
+// le champ de vision (comme un zoom optique) plutôt que la position. Remis à
+// DEFAULT_FOV à chaque render() pour repartir sur une base connue à chaque
+// changement de vue.
+const DEFAULT_FOV = 60;
+const LOOK_FOV_MIN = 22;
+const LOOK_FOV_MAX = 100;
+let lookFov = DEFAULT_FOV;
+
 function applyLookRotation() {
   camera.rotation.order = "YXZ";
   camera.rotation.set(lookPitch, lookYaw, 0);
@@ -212,21 +283,66 @@ function applyLookRotation() {
 function setLookDirection(from: THREE.Vector3, to: THREE.Vector3) {
   const dir = to.clone().sub(from).normalize();
   lookPitch = Math.asin(THREE.MathUtils.clamp(dir.y, -1, 1));
-  lookYaw = Math.atan2(dir.x, -dir.z);
+  // atan2(-dir.x, -dir.z), pas atan2(dir.x, -dir.z) : avec l'ordre d'Euler
+  // "YXZ" utilisé par applyLookRotation, la composante X de la direction
+  // caméra->cible est l'opposée de dir.x — sans ce signe, le cap calculé est
+  // inversé (image en miroir gauche/droite) dès que dir.x est significatif,
+  // ce qui pouvait faire complètement sortir la cible du champ de vision
+  // (ex. bouton "Repérer le Soleil" qui ne recentrait pas réellement dessus).
+  lookYaw = Math.atan2(-dir.x, -dir.z);
   applyLookRotation();
 }
 
 let scene = new THREE.Scene();
 let clickable = new Map<THREE.Object3D, string>();
 let seed: SeedData;
-let state: AppState = { view: "galaxy" };
+let constellationSky: ConstellationSkyData;
+let constellationInfo: ConstellationInfoMap;
+let state: AppState = { view: "home" };
 let compareWithEarth = false;
 let moonSurfaceView = false;
 let dayMode = true;
 let starCompareMode: StarCompareTarget = null;
+// Distinct de compareWithEarth ci-dessus (utilisé par la vue lune) : la fiche
+// planète a son propre état, mutuellement exclusif entre Terre et Soleil.
+let planetCompareMode: StarCompareTarget = null;
 let selectedMoon: string | null = null;
 let selectedVoyager: VoyagerInfo | null = null;
 let pendingSelection: PendingSelection | null = null;
+// Sélection "par zone" en vue sky2d (cf. buildSky2dScene::zones) : le nom
+// (brut, pas formaté) de la constellation actuellement mise en surbrillance,
+// ou null si aucune. Contrairement à pendingSelection, il n'y a pas de
+// confirmation "Explorer" — le panneau d'info s'affiche directement au clic.
+let selectedConstellationName: string | null = null;
+let sky2dZones: ConstellationZone[] = [];
+let sky2dHighlightSprite: THREE.Sprite | null = null;
+let sky2dNameSprite: THREE.Sprite | null = null;
+
+// Distance réelle Soleil (années-lumière) telle que vue depuis l'exoplanète
+// observée en mode "exoSky" — recalculée à chaque render(), utilisée par le
+// clic de désélection (void-click) pour redessiner le panneau d'info sans
+// reconstruire toute la scène.
+let exoSkySunDistanceLy: number | undefined;
+
+// Direction (dans le repère de la vue exoSky) vers le Soleil — permet au
+// bouton "Repérer le Soleil" de recentrer le regard même après que
+// l'utilisateur ait fait pivoter la caméra ailleurs dans le ciel.
+let exoSkySunDirection: THREE.Vector3 | null = null;
+
+// Halo du Soleil (mode exoSky) à faire scintiller frame après frame dans
+// animate() — null en dehors de cette vue, pour ne pas laisser un pulse
+// tourner dans le vide une fois la scène détruite.
+let exoSkySunGlowSprite: THREE.Sprite | null = null;
+
+// Nom localisé d'une constellation (FR/EN) tel qu'affiché en grand dans la
+// zone (sky2d) et en tête du panneau d'info — nameFr/nameEn viennent du
+// contenu documentaire du subagent (constellation_info.json) ; repli sur le
+// nom brut espacé si une constellation n'y figurait pas.
+function constellationDisplayName(rawName: string): string {
+  const info = constellationInfo[rawName];
+  if (!info) return formatConstellationName(rawName);
+  return getLang() === "fr" ? info.nameFr : info.nameEn;
+}
 let selectionMarkerSprite: THREE.Sprite | null = null;
 // Photos actuellement affichées dans le panneau d'info (mis à jour à chaque
 // rendu de galerie) : permet à la lightbox de naviguer précédent/suivant sans
@@ -267,27 +383,6 @@ sciInterpToggleEl.onclick = () => {
   showScientificInterpretation = !showScientificInterpretation;
   localStorage.setItem(SCI_INTERP_KEY, String(showScientificInterpretation));
   renderSciInterpToggle();
-  render();
-};
-
-// Universel (toutes vues), persisté comme showScientificInterpretation :
-// simplifie les cartouches et ajoute des anecdotes ludiques pour un public
-// plus jeune, sans dupliquer les données (mêmes valeurs, présentation
-// différente).
-const STUDENT_MODE_KEY = "universe3d.studentMode";
-let studentMode = localStorage.getItem(STUDENT_MODE_KEY) === "true";
-
-function renderStudentModeToggle() {
-  studentModeToggleEl.classList.toggle("active", studentMode);
-  studentModeToggleEl.textContent = studentMode ? t("studentModeOn") : t("studentModeOff");
-  studentModeToggleEl.title = t("studentModeNote");
-}
-renderStudentModeToggle();
-
-studentModeToggleEl.onclick = () => {
-  studentMode = !studentMode;
-  localStorage.setItem(STUDENT_MODE_KEY, String(studentMode));
-  renderStudentModeToggle();
   render();
 };
 
@@ -463,6 +558,7 @@ function setState(next: AppState) {
   state = next;
   compareWithEarth = false;
   starCompareMode = null;
+  planetCompareMode = null;
   selectedMoon = null;
   selectedVoyager = null;
   pendingSelection = null;
@@ -480,11 +576,112 @@ function render() {
   scene = new THREE.Scene();
   clickable = new Map();
 
+  lookFov = DEFAULT_FOV;
+  camera.fov = DEFAULT_FOV;
+  camera.updateProjectionMatrix();
+
   spinGroups = [];
   galaxyRevealables = [];
   galaxySunLines = [];
 
-  if (state.view === "galaxy") {
+  homeBtnEl.classList.toggle("visible", state.view !== "home");
+  homeScreenEl.classList.toggle("visible", state.view === "home");
+
+  if (state.view === "home") {
+    // Fond étoilé discret en rotation lente (même helper que galaxy.ts),
+    // caméra fixe — seul l'écran d'accueil (DOM, cf. #home-screen) est
+    // interactif, aucun astre n'est cliquable ici.
+    const starfield = makeStarfield(2000, 300);
+    scene.add(starfield);
+    spinGroups = [{ group: starfield, speed: 0.0002 }];
+    camera.position.set(0, 0, 1);
+    controls.target.set(0, 0, 0);
+    controls.enabled = false;
+    lookAroundActive = false;
+    breadcrumbEl.innerHTML = "";
+    infoPanelEl.classList.remove("visible");
+    hideCompareToggles();
+    orbitPlaneToggleEl.style.display = "none";
+    habitableZoneToggleEl.style.display = "none";
+    moonScaleToggleEl.style.display = "none";
+    moonDistanceToggleEl.style.display = "none";
+    moonSurfaceToggleEl.style.display = "none";
+    exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
+    dayNightToggleEl.style.display = "none";
+    renderPauseToggle(false);
+    hintEl.textContent = "";
+  } else if (state.view === "sky2d") {
+    const result = buildSky2dScene(seed, constellationSky);
+    scene.add(result.group);
+    clickable = result.clickable;
+    sky2dZones = result.zones;
+    sky2dHighlightSprite = result.highlightSprite;
+    sky2dNameSprite = result.nameSprite;
+    selectedConstellationName = null;
+    camera.position.set(0, 0, 0);
+    controls.enabled = false;
+    lookAroundActive = true;
+    setLookDirection(new THREE.Vector3(0, 0, 0), result.initialLookTarget);
+    breadcrumbEl.innerHTML = "";
+    const sky2dLabel = document.createElement("span");
+    sky2dLabel.textContent = t("breadcrumbSky2d");
+    breadcrumbEl.appendChild(sky2dLabel);
+    if (selectedVoyager) {
+      renderVoyagerInfoPanel(selectedVoyager);
+    } else {
+      renderInfoPanel(null);
+    }
+    hideCompareToggles();
+    orbitPlaneToggleEl.style.display = "none";
+    habitableZoneToggleEl.style.display = "none";
+    moonScaleToggleEl.style.display = "none";
+    moonDistanceToggleEl.style.display = "none";
+    moonSurfaceToggleEl.style.display = "none";
+    exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
+    dayNightToggleEl.style.display = "none";
+    renderPauseToggle(false);
+    hintEl.textContent = t("hintSky2d");
+  } else if (state.view === "exoSky") {
+    const system = findSystem(state.systemId);
+    const planet = findPlanet(system, state.planetName);
+    const result = buildSky2dScene(seed, constellationSky, system.id);
+    scene.add(result.group);
+    clickable = result.clickable;
+    sky2dZones = result.zones;
+    sky2dHighlightSprite = result.highlightSprite;
+    sky2dNameSprite = result.nameSprite;
+    selectedConstellationName = null;
+    exoSkySunDistanceLy = result.sunDistanceLy;
+    exoSkySunDirection = result.initialLookTarget.clone();
+    exoSkySunGlowSprite = result.sunGlowSprite ?? null;
+    camera.position.set(0, 0, 0);
+    controls.enabled = false;
+    lookAroundActive = true;
+    setLookDirection(new THREE.Vector3(0, 0, 0), result.initialLookTarget);
+    renderBreadcrumb(system, planet, undefined, undefined, true);
+    if (selectedVoyager) {
+      renderVoyagerInfoPanel(selectedVoyager);
+    } else {
+      renderExoSkyInfoPanel(planet, exoSkySunDistanceLy);
+    }
+    hideCompareToggles();
+    orbitPlaneToggleEl.style.display = "none";
+    habitableZoneToggleEl.style.display = "none";
+    moonScaleToggleEl.style.display = "none";
+    moonDistanceToggleEl.style.display = "none";
+    moonSurfaceToggleEl.style.display = "none";
+    exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "block";
+    sunLocatorToggleEl.textContent = t("sunLocatorLabel");
+    sunLocatorToggleEl.onclick = () => {
+      if (exoSkySunDirection) setLookDirection(new THREE.Vector3(0, 0, 0), exoSkySunDirection);
+    };
+    dayNightToggleEl.style.display = "none";
+    renderPauseToggle(false);
+    hintEl.textContent = t("hintExoSky");
+  } else if (state.view === "galaxy") {
     const result = buildGalaxyScene(seed);
     scene.add(result.group);
     clickable = result.clickable;
@@ -498,12 +695,14 @@ function render() {
     } else {
       renderInfoPanel(null);
     }
-    renderCompareToggle(null, false);
+    hideCompareToggles();
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
     moonScaleToggleEl.style.display = "none";
     moonDistanceToggleEl.style.display = "none";
     moonSurfaceToggleEl.style.display = "none";
+    exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
     dayNightToggleEl.style.display = "none";
     lookAroundActive = false;
     controls.enabled = true;
@@ -530,7 +729,7 @@ function render() {
     } else {
       renderInfoPanel(system);
     }
-    renderCompareToggle(null, false);
+    hideCompareToggles();
     renderOrbitPlaneToggle(hasRealInclinations);
     if (system.id === "sol") {
       habitableZoneToggleEl.style.display = "none";
@@ -540,6 +739,8 @@ function render() {
     moonScaleToggleEl.style.display = "none";
     renderMoonDistanceToggle(system.planets.flatMap((p) => p.moons));
     moonSurfaceToggleEl.style.display = "none";
+    exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
     dayNightToggleEl.style.display = "none";
     lookAroundActive = false;
     controls.enabled = true;
@@ -556,12 +757,14 @@ function render() {
     controls.target.set(0, 0, 0);
     renderBreadcrumb(system, undefined, true);
     renderStarInfoPanel(system, isSun);
-    renderStarCompareToggle(isSun);
+    renderStarCompareToggles(isSun);
     orbitPlaneToggleEl.style.display = "none";
     habitableZoneToggleEl.style.display = "none";
     moonScaleToggleEl.style.display = "none";
     moonDistanceToggleEl.style.display = "none";
     moonSurfaceToggleEl.style.display = "none";
+    exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
     dayNightToggleEl.style.display = "none";
     lookAroundActive = false;
     controls.enabled = true;
@@ -587,11 +790,13 @@ function render() {
       setLookDirection(surfaceResult.cameraPos, surfaceResult.cameraTarget);
       renderBreadcrumb(system, planet, undefined, moon);
       renderMoonInfoPanel(moon, true);
-      compareToggleEl.style.display = "none";
+      hideCompareToggles();
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
       moonScaleToggleEl.style.display = "none";
       moonDistanceToggleEl.style.display = "none";
+      exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
       renderMoonSurfaceToggle(planet, true);
       renderDayNightToggle();
       renderPauseToggle(false);
@@ -611,25 +816,27 @@ function render() {
       lookAroundActive = false;
       renderBreadcrumb(system, planet, undefined, moon);
       renderMoonInfoPanel(moon);
-      compareToggleEl.style.display = "block";
-      compareToggleEl.textContent = compareWithEarth ? t("compareHide") : t("compareShow");
-      compareToggleEl.onclick = () => toggleCompare();
+      renderMoonCompareToggle();
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
       moonScaleToggleEl.style.display = "none";
       moonDistanceToggleEl.style.display = "none";
       dayNightToggleEl.style.display = "none";
+      exoSkyToggleEl.style.display = "none";
+    sunLocatorToggleEl.style.display = "none";
       renderMoonSurfaceToggle(planet, false);
       renderPauseToggle(false);
       hintEl.textContent = t("hintMoon");
     } else {
-      const compareTarget = compareWithEarth && !isEarth ? findEarthPlanet(seed) : null;
+      const compareTarget = planetCompareMode === "earth" && !isEarth ? findEarthPlanet(seed) : null;
+      const compareWithSunTarget = planetCompareMode === "sun" ? findSystem("sol").star : null;
       const result = buildAtmosphereScene(
         planet,
         compareTarget,
         showScientificInterpretation,
         realMoonScale,
         realMoonDistance,
+        compareWithSunTarget,
       );
       scene.add(result.group);
       clickable = result.clickable;
@@ -639,15 +846,17 @@ function render() {
       controls.enabled = true;
       lookAroundActive = false;
       renderBreadcrumb(system, planet);
-      renderInfoPanel(system, planet, showScientificInterpretation ? result.visual.description[getLang()] : undefined);
-      renderCompareToggle(planet, isEarth);
+      renderInfoPanel(system, planet);
+      renderPlanetCompareToggles(planet, isEarth);
       orbitPlaneToggleEl.style.display = "none";
       habitableZoneToggleEl.style.display = "none";
       moonSurfaceToggleEl.style.display = "none";
       dayNightToggleEl.style.display = "none";
       // Pas de sens en mode comparaison (les lunes n'y sont pas affichées).
-      renderMoonScaleToggle(compareTarget ? [] : planet.moons);
-      renderMoonDistanceToggle(compareTarget ? [] : planet.moons);
+      const anyCompareActive = planetCompareMode !== null;
+      renderMoonScaleToggle(anyCompareActive ? [] : planet.moons);
+      renderMoonDistanceToggle(anyCompareActive ? [] : planet.moons);
+      renderExoSkyToggle(system, planet);
       renderPauseToggle(planet.moons.length > 0);
       hintEl.textContent = t("hintAtmosphere");
     }
@@ -726,6 +935,7 @@ function updateSelectionCard() {
   selectionCardTypeEl.textContent = typeLabel;
   selectionCardExploreEl.textContent = t("selectionExplore");
   selectionCardExploreEl.onclick = () => {
+    if (!musicMuted) playSelectSound();
     pendingSelection = null;
     if (target.kind === "system") setState({ view: "system", systemId: target.systemId });
     else if (target.kind === "star") setState({ view: "star", systemId: target.systemId });
@@ -759,15 +969,50 @@ function toggleCompare() {
   render();
 }
 
-function renderCompareToggle(planet: PlanetData | null, isEarth: boolean) {
-  if (!planet || isEarth || planet.pl_rade == null) {
-    compareToggleEl.style.display = "none";
-    compareToggleEl.onclick = null;
+// Cache les deux boutons de comparaison (galaxie, système, surface de lune :
+// aucun sens dans ces vues).
+function hideCompareToggles() {
+  compareToggleGroupEl.style.display = "none";
+  compareEarthToggleEl.onclick = null;
+  compareSunToggleEl.onclick = null;
+}
+
+// Vue lune dédiée : un seul bouton (Terre), comportement inchangé d'avant le
+// passage aux boutons persistants — comparer une lune au Soleil n'aurait pas
+// de sens (écart de taille bien trop extrême pour être lisible).
+function renderMoonCompareToggle() {
+  compareToggleGroupEl.style.display = "flex";
+  compareEarthToggleEl.style.display = "block";
+  compareEarthToggleEl.classList.toggle("active", compareWithEarth);
+  compareEarthToggleEl.textContent = t("compareEarthButton");
+  compareEarthToggleEl.onclick = () => toggleCompare();
+  compareSunToggleEl.style.display = "none";
+  compareSunToggleEl.onclick = null;
+}
+
+// Fiche planète : deux boutons persistants Terre/Soleil, un seul comparatif
+// actif à la fois (cliquer l'un désactive l'autre implicitement puisque
+// planetCompareMode ne peut valoir qu'une chose à la fois).
+function renderPlanetCompareToggles(planet: PlanetData, isEarth: boolean) {
+  if (isEarth || planet.pl_rade == null) {
+    hideCompareToggles();
     return;
   }
-  compareToggleEl.style.display = "block";
-  compareToggleEl.textContent = compareWithEarth ? t("compareHide") : t("compareShow");
-  compareToggleEl.onclick = () => toggleCompare();
+  compareToggleGroupEl.style.display = "flex";
+  compareEarthToggleEl.style.display = "block";
+  compareEarthToggleEl.classList.toggle("active", planetCompareMode === "earth");
+  compareEarthToggleEl.textContent = t("compareEarthButton");
+  compareEarthToggleEl.onclick = () => {
+    planetCompareMode = planetCompareMode === "earth" ? null : "earth";
+    render();
+  };
+  compareSunToggleEl.style.display = "block";
+  compareSunToggleEl.classList.toggle("active", planetCompareMode === "sun");
+  compareSunToggleEl.textContent = t("compareSunButton");
+  compareSunToggleEl.onclick = () => {
+    planetCompareMode = planetCompareMode === "sun" ? null : "sun";
+    render();
+  };
 }
 
 function renderOrbitPlaneToggle(hasRealInclinations: boolean) {
@@ -824,7 +1069,7 @@ function renderMoonDistanceToggle(moons: MoonData[]) {
   moonDistanceToggleEl.style.display = "block";
   moonDistanceToggleEl.classList.toggle("active", realMoonDistance);
   moonDistanceToggleEl.textContent = realMoonDistance ? t("moonDistanceHide") : t("moonDistanceShow");
-  moonDistanceToggleEl.title = realMoonDistance ? t("moonDistanceRealHint") : "";
+  moonDistanceToggleEl.title = realMoonDistance ? t("moonDistanceRealHint") : t("moonDistanceStylizedHint");
   moonDistanceToggleEl.onclick = () => {
     realMoonDistance = !realMoonDistance;
     localStorage.setItem(REAL_MOON_DISTANCE_KEY, String(realMoonDistance));
@@ -841,6 +1086,14 @@ function renderMoonSurfaceToggle(planet: PlanetData, active: boolean) {
   moonSurfaceToggleEl.onclick = () => {
     moonSurfaceView = !moonSurfaceView;
     render();
+  };
+}
+
+function renderExoSkyToggle(system: SystemData, planet: PlanetData) {
+  exoSkyToggleEl.style.display = "block";
+  exoSkyToggleEl.textContent = t("exoSkyToggleShow");
+  exoSkyToggleEl.onclick = () => {
+    setState({ view: "exoSky", systemId: system.id, planetName: planet.name });
   };
 }
 
@@ -869,31 +1122,30 @@ function renderPauseToggle(show: boolean) {
   };
 }
 
-function cycleStarCompare(isSun: boolean) {
-  // Le Soleil ne peut se comparer qu'à la Terre ; les autres étoiles cyclent
-  // aussi via une comparaison au Soleil.
-  if (isSun) {
+// Fiche étoile : deux boutons persistants Terre/Soleil, comme pour la fiche
+// planète. Le Soleil ne peut pas se comparer à lui-même : bouton Soleil
+// masqué dans ce cas (seule la comparaison à la Terre reste possible).
+function renderStarCompareToggles(isSun: boolean) {
+  compareToggleGroupEl.style.display = "flex";
+  compareEarthToggleEl.style.display = "block";
+  compareEarthToggleEl.classList.toggle("active", starCompareMode === "earth");
+  compareEarthToggleEl.textContent = t("compareEarthButton");
+  compareEarthToggleEl.onclick = () => {
     starCompareMode = starCompareMode === "earth" ? null : "earth";
-  } else if (starCompareMode === null) {
-    starCompareMode = "sun";
-  } else if (starCompareMode === "sun") {
-    starCompareMode = "earth";
+    render();
+  };
+  if (isSun) {
+    compareSunToggleEl.style.display = "none";
+    compareSunToggleEl.onclick = null;
   } else {
-    starCompareMode = null;
+    compareSunToggleEl.style.display = "block";
+    compareSunToggleEl.classList.toggle("active", starCompareMode === "sun");
+    compareSunToggleEl.textContent = t("compareSunButton");
+    compareSunToggleEl.onclick = () => {
+      starCompareMode = starCompareMode === "sun" ? null : "sun";
+      render();
+    };
   }
-  render();
-}
-
-function renderStarCompareToggle(isSun: boolean) {
-  compareToggleEl.style.display = "block";
-  if (starCompareMode === null) {
-    compareToggleEl.textContent = isSun ? t("compareShowEarthStar") : t("compareShowSun");
-  } else if (starCompareMode === "sun") {
-    compareToggleEl.textContent = t("compareShowEarthStar");
-  } else {
-    compareToggleEl.textContent = t("compareHide");
-  }
-  compareToggleEl.onclick = () => cycleStarCompare(isSun);
 }
 
 function renderStarInfoPanel(system: SystemData, isSun: boolean) {
@@ -911,6 +1163,7 @@ function renderStarInfoPanel(system: SystemData, isSun: boolean) {
     <p>${t("temperature")} : ${formatTemp(star.st_teff)}</p>
     <p>${t("starRadius")} : ${star.st_rad ?? "?"} R☉ (${radiusKm} km)</p>
     <p>${t("distance")} : ${star.sy_dist ?? 0} pc</p>
+    ${star.constellation ? `<p>${t("constellation")} : ${star.constellation}</p>` : ""}
     <p><strong>${t("starComposition")} :</strong> ${t("starCompositionText")}</p>
     <p><em style="font-size: 11px; opacity: 0.7;">${note}</em></p>
     ${learnMoreHtml(lang === "fr" ? star.learn_more : star.learn_more_en)}
@@ -936,10 +1189,80 @@ function renderVoyagerInfoPanel(v: VoyagerInfo) {
   `;
 }
 
+// Panneau d'info par défaut de la vue "exoSky" (ciel nocturne vu depuis une
+// exoplanète) : distance du Soleil vu de là-bas (cf. sky2d.ts::sunDistanceLy)
+// + rappel explicite que le fond d'étoiles/constellations reste approximatif
+// (cf. commentaire buildSky2dScene). Réaffiché après une désélection de
+// constellation (clic dans le vide), cf. le click handler du canvas.
+function renderExoSkyInfoPanel(planet: PlanetData, sunDistanceLy?: number) {
+  infoPanelEl.classList.add("visible");
+  infoPanelEl.innerHTML = `
+    <h2>${t("exoSkyTitle")}</h2>
+    <p>${t("exoSkyViewedFrom")} ${escapeHtml(localizeName(planet.name))}</p>
+    ${sunDistanceLy !== undefined ? `<p>${t("exoSkySunDistance")} ${sunDistanceLy.toFixed(1)} ${t("exoSkyLightYears")}</p>` : ""}
+    <p><em style="font-size: 11px; opacity: 0.7;">${t("exoSkyApproxHint")}</em></p>
+  `;
+}
+
+// Vue "regarder le ciel" uniquement (pas d'"Explorer" pour une constellation :
+// ce n'est pas un astre, juste un regroupement visuel) — panneau d'info
+// direct au clic, sur le même modèle que renderStarInfoPanel/
+// renderVoyagerInfoPanel, avec la liste des systèmes du jeu de données qui en
+// font partie (correspondance sur star.constellation, cf. seed_systems.json).
+function renderConstellationInfoPanel(rawName: string) {
+  infoPanelEl.classList.add("visible");
+  const lang = getLang();
+  // star.constellation (astropy get_constellation()) renvoie toujours le nom
+  // IAU anglais espacé — distinct du nom affiché, qui doit suivre la langue
+  // de l'UI (cf. retour utilisateur : FR en français, EN en anglais).
+  const matchName = formatConstellationName(rawName);
+  const displayName = constellationDisplayName(rawName);
+  const info = constellationInfo[rawName];
+  const matches = seed.systems.filter(
+    (s) => s.star.constellation?.toLowerCase() === matchName.toLowerCase(),
+  );
+
+  const systemsHtml =
+    matches.length > 0
+      ? `<ul class="constellation-systems">${matches
+          .map((s) => `<li><button class="link-button" data-system-id="${escapeHtml(s.id)}">${escapeHtml(localizeName(s.name))}</button></li>`)
+          .join("")}</ul>`
+      : `<p><em style="font-size: 11px; opacity: 0.7;">${t("constellationNoSystems")}</em></p>`;
+
+  const infoHtml = info
+    ? `
+      <p>${escapeHtml(info.meaning[lang])}</p>
+      <p>${escapeHtml(info.description[lang])}</p>
+      <p>${t("constellationBrightestStar")} : ${escapeHtml(info.brightestStar.name)} (${t("magnitudeAbbr")} ${info.brightestStar.magnitude})</p>
+      ${
+        info.deepSkyObjects.length > 0
+          ? `<p><strong>${t("constellationDeepSkyObjects")} :</strong> ${info.deepSkyObjects
+              .map((o) => escapeHtml(`${o.name} (${o.type})`))
+              .join(", ")}</p>`
+          : ""
+      }
+      ${info.factoid ? `<p><em style="font-size: 12px; opacity: 0.85;">💡 ${escapeHtml(info.factoid[lang])}</em></p>` : ""}
+    `
+    : "";
+
+  infoPanelEl.innerHTML = `
+    <h2>${escapeHtml(displayName)}</h2>
+    ${infoHtml}
+    ${matches.length > 0 ? `<p>${t("constellationSystemsHere")}</p>` : ""}
+    ${systemsHtml}
+  `;
+
+  infoPanelEl.querySelectorAll<HTMLButtonElement>("button[data-system-id]").forEach((btn) => {
+    btn.onclick = () => setState({ view: "system", systemId: btn.dataset.systemId! });
+  });
+}
+
 function goBack() {
-  if (state.view === "atmosphere") setState({ view: "system", systemId: state.systemId });
+  if (state.view === "exoSky") setState({ view: "atmosphere", systemId: state.systemId, planetName: state.planetName });
+  else if (state.view === "atmosphere") setState({ view: "system", systemId: state.systemId });
   else if (state.view === "star") setState({ view: "system", systemId: state.systemId });
   else if (state.view === "system") setState({ view: "galaxy" });
+  else if (state.view === "galaxy" || state.view === "sky2d") setState({ view: "home" });
 }
 
 window.addEventListener("keydown", (event) => {
@@ -952,7 +1275,13 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") goBack();
 });
 
-function renderBreadcrumb(system?: SystemData, planet?: PlanetData, isStar?: boolean, moon?: MoonData) {
+function renderBreadcrumb(
+  system?: SystemData,
+  planet?: PlanetData,
+  isStar?: boolean,
+  moon?: MoonData,
+  exoSky?: boolean,
+) {
   breadcrumbEl.innerHTML = "";
   const galaxyBtn = document.createElement("button");
   galaxyBtn.textContent = t("breadcrumbGalaxy");
@@ -968,10 +1297,11 @@ function renderBreadcrumb(system?: SystemData, planet?: PlanetData, isStar?: boo
   }
   if (planet && system) {
     breadcrumbEl.append(" › ");
-    if (moon) {
-      // Depuis une lune, le nom de la planète doit permettre d'y revenir
-      // directement (sans repasser par la vue système) — sinon le seul
-      // chemin de retour visible est "Système Solaire".
+    if (moon || exoSky) {
+      // Depuis une lune (ou le ciel nocturne), le nom de la planète doit
+      // permettre d'y revenir directement (sans repasser par la vue
+      // système) — sinon le seul chemin de retour visible est "Système
+      // Solaire".
       const planetBtn = document.createElement("button");
       planetBtn.textContent = localizeName(planet.name);
       planetBtn.onclick = () => setState({ view: "atmosphere", systemId: system.id, planetName: planet.name });
@@ -994,9 +1324,49 @@ function renderBreadcrumb(system?: SystemData, planet?: PlanetData, isStar?: boo
     span.textContent = localizeName(moon.name);
     breadcrumbEl.appendChild(span);
   }
+  if (exoSky) {
+    breadcrumbEl.append(" › ");
+    const span = document.createElement("span");
+    span.textContent = t("breadcrumbExoSky");
+    breadcrumbEl.appendChild(span);
+  }
 }
 
-function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heuristicDescription?: string) {
+// Méthodes de détection telles que renvoyées par la NASA Exoplanet Archive
+// (colonne discoverymethod) — traduction FR ; repli sur la valeur brute EN
+// pour toute méthode plus rare non listée ici.
+const DISCOVERY_METHOD_FR: Record<string, string> = {
+  Transit: "transit (baisse de luminosité de l'étoile)",
+  "Radial Velocity": "vitesse radiale (oscillation de l'étoile)",
+  Imaging: "imagerie directe",
+  Microlensing: "microlentille gravitationnelle",
+  Astrometry: "astrométrie",
+  "Transit Timing Variations": "variations du temps de transit",
+};
+
+function discoveryHtml(planet: PlanetData, lang: Lang): string {
+  if (!planet.disc_year) return "";
+  const method = planet.discoverymethod;
+  const methodLabel = method ? (lang === "fr" ? (DISCOVERY_METHOD_FR[method] ?? method) : method) : t("unknown");
+  return `<p><strong>${t("discoveryLabel")} :</strong> ${planet.disc_year} — ${methodLabel}</p>`;
+}
+
+// Anecdote "délai lumière" (cf. distance.ts::computeHistoricalAnecdote) :
+// non applicable au Système Solaire (pas de distance réelle Terre↔Soleil
+// vue depuis le Soleil lui-même), d'où le null renvoyé pour system.id==="sol".
+function historicalAnecdoteHtml(system: SystemData, lang: Lang): string {
+  const anecdote = computeHistoricalAnecdote(system);
+  if (!anecdote) return "";
+  const { yearSeen, event } = anecdote;
+  const yearLabel = yearSeen < 0 ? `${Math.abs(yearSeen)} ${t("historicalAnecdoteBce")}` : `${yearSeen}`;
+  const answer =
+    lang === "fr"
+      ? `On y verrait la Terre telle qu'elle était en ${yearLabel} : ${event.fr}.`
+      : `We would see Earth as it was in ${yearLabel}: ${event.en}.`;
+  return `<details class="learn-more"><summary>${t("historicalAnecdoteQuestion")}</summary><p>${answer}</p></details>`;
+}
+
+function renderInfoPanel(system: SystemData | null, planet?: PlanetData) {
   if (!system) {
     infoPanelEl.classList.remove("visible");
     infoPanelEl.innerHTML = "";
@@ -1013,12 +1383,12 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
       <p>${t("spectralType")} : ${system.star.spectype ?? t("unknown")}</p>
       <p>${t("temperature")} : ${formatTemp(system.star.st_teff)}</p>
       <p>${t("distance")} : ${system.star.sy_dist ?? 0} pc</p>
+      ${system.star.constellation ? `<p>${t("constellation")} : ${system.star.constellation}</p>` : ""}
       <p>${system.planets.length} ${t("knownPlanetsCount")}</p>
     `;
     return;
   }
 
-  const badgeClass = planet.source;
   const lang = getLang();
   const note = lang === "fr" ? planet.note : planet.note_en;
   const molecules = planet.molecules.length
@@ -1027,7 +1397,6 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
   const earthInfo = computeEarthDistance(system, planet);
   const rotationLine = formatRotationPeriod(planet.rotation_hours);
   const shownMoons = planet.moons.length;
-  const knownMoons = planet.moons_count_known ?? shownMoons;
   const moonsLine = shownMoons
     ? `${planet.moons.map((m) => localizeName(m.name)).join(", ")}`
     : t("noSatellite");
@@ -1036,16 +1405,15 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
 
   infoPanelEl.innerHTML = `
     <h2>${localizeName(planet.name)}</h2>
-    ${studentMode ? "" : `<span class="badge ${badgeClass}">${t(SOURCE_LABEL_KEYS[planet.source])}</span>`}
     ${planet.dwarf ? `<span class="badge dwarf">${t("dwarfPlanetBadge")}</span>` : ""}
     <p>${t("orbitRadiusMass")} : ${planet.pl_orbsmax ?? "?"} UA — ${t("radius")} : ${planet.pl_rade ?? "?"} R⊕ — ${t("mass")} : ${planet.pl_bmasse ?? "?"} M⊕</p>
     <p>${t("equilibriumTemp")} : ${formatTemp(planet.pl_eqt)}</p>
     ${planet.planet_type ? `<p><strong>${t("planetType")} :</strong> ${lang === "fr" ? planet.planet_type.fr : planet.planet_type.en}</p>` : ""}
     ${gravityLineHtml(gravityMs2)}
-    ${studentMode ? gravityAnecdoteHtml(planet.name, gravityMs2) : ""}
+    ${gravityAnecdoteHtml(planet.name, gravityMs2)}
+    ${discoveryHtml(planet, lang)}
     <p><strong>${t("molecules")} :</strong> ${molecules}</p>
     <p>${note}</p>
-    ${!studentMode && planet.spectrum_ref ? `<p><em>${t("reference")} : ${planet.spectrum_ref}</em></p>` : ""}
     ${
       planet.extra_refs?.length
         ? `<p>${planet.extra_refs
@@ -1053,12 +1421,11 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData, heurist
             .join(" · ")}</p>`
         : ""
     }
-    ${!studentMode && heuristicDescription ? `<p><strong>${t("visualRendering")} :</strong> ${heuristicDescription}</p>` : ""}
     ${rotationLine ? `<p>${t("rotationPeriod")} : ${rotationLine}</p>` : ""}
     <p><strong>${t("satellitesShown")} :</strong> ${shownMoons}${shownMoons ? ` (${moonsLine})` : ""}</p>
-    ${studentMode ? "" : `<p><strong>${t("satellitesKnown")} :</strong> ${knownMoons}</p>`}
     <p><strong>${t("distanceFromEarth")} :</strong> ${earthInfo.distance[lang]}</p>
-    <p><strong>${t("travelTime")} :</strong> ${earthInfo.travelTime[lang]}${studentMode ? "" : `<br><em style="font-size: 11px; opacity: 0.7;">${t("travelTimeCaption")}</em>`}</p>
+    <p><strong>${t("travelTime")} :</strong> ${earthInfo.travelTime[lang]}</p>
+    ${historicalAnecdoteHtml(system, lang)}
     ${learnMoreHtml(lang === "fr" ? planet.learn_more : planet.learn_more_en)}
     ${photoLinksHtml(planet.name)}
   `;
@@ -1088,7 +1455,7 @@ function renderMoonInfoPanel(moon: MoonData, inSurfaceView = false) {
     <p>${t("moonOrbit")} : ${moon.orbit_km.toLocaleString(getLang())} km</p>
     <p>${t("moonPeriod")} : ${periodLine}</p>
     ${gravityLineHtml(moon.gravity_ms2 ?? null)}
-    ${studentMode ? gravityAnecdoteHtml(moon.name, moon.gravity_ms2 ?? null) : ""}
+    ${gravityAnecdoteHtml(moon.name, moon.gravity_ms2 ?? null)}
     <p><em style="font-size: 11px; opacity: 0.7;">${sourceNote}</em></p>
     ${inSurfaceView ? skyAnecdoteHtml(moon) : ""}
     ${learnMoreHtml(lang === "fr" ? moon.learn_more : moon.learn_more_en)}
@@ -1129,6 +1496,21 @@ canvas.addEventListener("pointerup", () => {
 canvas.addEventListener("pointercancel", () => {
   lookDragLastPos = null;
 });
+
+// Zoom molette (vues "regarder autour de soi" uniquement — cf. lookFov) :
+// { passive: false } + preventDefault pour empêcher le scroll de la page
+// pendant qu'on zoome dans la scène 3D.
+canvas.addEventListener(
+  "wheel",
+  (event) => {
+    if (!lookAroundActive) return;
+    event.preventDefault();
+    lookFov = THREE.MathUtils.clamp(lookFov + event.deltaY * 0.05, LOOK_FOV_MIN, LOOK_FOV_MAX);
+    camera.fov = lookFov;
+    camera.updateProjectionMatrix();
+  },
+  { passive: false },
+);
 
 canvas.addEventListener("click", (event) => {
   const down = pointerDownPos;
@@ -1183,6 +1565,20 @@ canvas.addEventListener("click", (event) => {
       render();
     } else if (pendingSelection) {
       clearPendingSelection();
+    } else if ((state.view === "sky2d" || state.view === "exoSky") && selectedConstellationName) {
+      // En pratique inatteignable tant que la sphère de picking des zones
+      // couvre tout le ciel (cf. SKY_ZONE_HIT_ID) — gardé par cohérence si
+      // cette couverture venait à changer.
+      selectedConstellationName = null;
+      if (sky2dHighlightSprite && sky2dNameSprite) applyZoneSelection(sky2dZones, sky2dHighlightSprite, sky2dNameSprite, null);
+      if (state.view === "exoSky") {
+        const system = findSystem(state.systemId);
+        const planet = findPlanet(system, state.planetName);
+        renderExoSkyInfoPanel(planet, exoSkySunDistanceLy);
+      } else {
+        infoPanelEl.classList.remove("visible");
+        infoPanelEl.innerHTML = "";
+      }
     }
     return;
   }
@@ -1195,6 +1591,32 @@ canvas.addEventListener("click", (event) => {
     if (id === VOYAGER_1.id || id === VOYAGER_2.id) {
       selectedVoyager = id === VOYAGER_1.id ? VOYAGER_1 : VOYAGER_2;
       render();
+    } else {
+      selectPending({ kind: "system", systemId: id }, id);
+    }
+  } else if (state.view === "sky2d" || state.view === "exoSky") {
+    if (id === SKY_ZONE_HIT_ID) {
+      // Sélection "par zone" : la sphère de picking couvre tout le ciel sans
+      // trou (cf. findNearestZone), donc un clic qui ne touche aucune étoile/
+      // aucun système précis retombe forcément ici — on déduit la
+      // constellation la plus proche du point cliqué plutôt que d'exiger un
+      // clic pixel-parfait sur le nom (à peine visible).
+      const zone = findNearestZone(sky2dZones, intersects[0].point);
+      if (zone) {
+        // Une constellation n'est pas un astre "explorable" : pas de losange
+        // ni d'encart "Explorer", juste le panneau d'info + la surbrillance
+        // directs — on referme d'abord une sélection en attente éventuelle
+        // pour éviter que les deux UI ne s'affichent en même temps.
+        if (pendingSelection) clearPendingSelection();
+        selectedConstellationName = zone.name;
+        if (sky2dHighlightSprite && sky2dNameSprite) {
+          applyZoneSelection(sky2dZones, sky2dHighlightSprite, sky2dNameSprite, {
+            rawName: zone.name,
+            displayName: constellationDisplayName(zone.name),
+          });
+        }
+        renderConstellationInfoPanel(zone.name);
+      }
     } else {
       selectPending({ kind: "system", systemId: id }, id);
     }
@@ -1230,6 +1652,15 @@ function animate() {
   // (pas seulement à chaque render()) car la caméra bouge en continu via
   // OrbitControls (zoom/rotation) sans qu'aucun render() ne soit déclenché.
   if (state.view === "galaxy") updateDistanceHud();
+  // Scintillement du halo solaire (vue exoSky) : pulse de taille + opacité,
+  // demandé explicitement ("faire scintiller le soleil en force") pour que
+  // l'astre attire l'œil au lieu de se fondre dans le champ d'étoiles fixe.
+  if (state.view === "exoSky" && exoSkySunGlowSprite) {
+    const nowSec = performance.now() / 1000;
+    const pulse = 0.85 + 0.3 * Math.sin(nowSec * 3.2) + 0.1 * Math.sin(nowSec * 7.7);
+    exoSkySunGlowSprite.scale.set(150 * pulse, 150 * pulse, 1);
+    (exoSkySunGlowSprite.material as THREE.SpriteMaterial).opacity = 0.75 + 0.25 * Math.sin(nowSec * 3.2 + 1.2);
+  }
   if (!lookAroundActive) controls.update();
   renderer.render(scene, camera);
 }
@@ -1314,9 +1745,18 @@ loadPhotoManifest();
 // chargée au moment du premier dessin, le fallback système reste figé dans
 // la texture pour de bon (pas de redessin automatique comme du texte DOM).
 // On attend donc explicitement son chargement avant le premier render().
-Promise.all([document.fonts.load('700 32px "Orbitron"'), loadSeedData()]).then(([, data]) => {
-  seed = data;
-  refreshSearchIndex();
-  render();
-  animate();
-});
+Promise.all([
+  document.fonts.load('700 32px "Orbitron"'),
+  loadSeedData(),
+  loadConstellationData(),
+  loadConstellationInfo(),
+]).then(
+  ([, data, sky, info]) => {
+    seed = data;
+    constellationSky = sky;
+    constellationInfo = info;
+    refreshSearchIndex();
+    render();
+    animate();
+  },
+);

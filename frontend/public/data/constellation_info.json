@@ -1,0 +1,1657 @@
+{
+  "Andromeda": {
+    "nameFr": "Andromède",
+    "nameEn": "Andromeda",
+    "meaning": {
+      "fr": "Nommée d'après Andromède, princesse éthiopienne de la mythologie grecque, fille de Cassiopée et Céphée, enchaînée à un rocher puis sauvée par Persée.",
+      "en": "Named after Andromeda, the Ethiopian princess of Greek mythology, daughter of Cassiopeia and Cepheus, chained to a rock and rescued by Perseus."
+    },
+    "description": {
+      "fr": "Constellation de taille moyenne de l'hémisphère nord, bien placée à l'automne. Elle est célèbre pour abriter la galaxie d'Andromède (M31), l'un des rares objets extragalactiques visibles à l'œil nu.",
+      "en": "A mid-sized northern constellation, well placed in autumn evenings. It is famous for hosting the Andromeda Galaxy (M31), one of the few extragalactic objects visible to the naked eye."
+    },
+    "brightestStar": { "name": "Alpheratz", "magnitude": 2.06 },
+    "deepSkyObjects": [
+      { "name": "M31 (galaxie d'Andromède)", "type": "galaxie" },
+      { "name": "M32", "type": "galaxie naine satellite" }
+    ],
+    "factoid": {
+      "fr": "La galaxie d'Andromède (M31), visible à l'œil nu sous un bon ciel, est l'objet le plus lointain observable sans instrument, à environ 2,5 millions d'années-lumière.",
+      "en": "The Andromeda Galaxy (M31), visible to the naked eye under dark skies, is the most distant object observable without a telescope, roughly 2.5 million light-years away."
+    }
+  },
+  "Antlia": {
+    "nameFr": "la Machine pneumatique",
+    "nameEn": "Air Pump",
+    "meaning": {
+      "fr": "Créée au XVIIIe siècle par l'astronome français Nicolas-Louis de Lacaille, en hommage à la pompe à air (pompe à vide), sans lien mythologique.",
+      "en": "Created in the 18th century by French astronomer Nicolas-Louis de Lacaille, honoring the air pump (vacuum pump); it has no mythological origin."
+    },
+    "description": {
+      "fr": "Petite constellation australe et discrète, l'une des quatorze constellations d'instruments scientifiques créées par Lacaille. Visible surtout depuis l'hémisphère sud, meilleure observation au printemps austral (mars-avril).",
+      "en": "A small, faint southern constellation, one of Lacaille's fourteen instrument constellations. Best seen mostly from the southern hemisphere, in March-April."
+    },
+    "brightestStar": { "name": "Alpha Antliae", "magnitude": 4.25 },
+    "deepSkyObjects": [
+      { "name": "NGC 2997", "type": "galaxie spirale" }
+    ]
+  },
+  "Apus": {
+    "nameFr": "l'Oiseau de paradis",
+    "nameEn": "Bird of Paradise",
+    "meaning": {
+      "fr": "Créée à la fin du XVIe siècle par les navigateurs néerlandais Pieter Dirkszoon Keyser et Frederick de Houtman, d'après l'oiseau de paradis des Indes orientales.",
+      "en": "Created in the late 16th century by Dutch navigators Pieter Dirkszoon Keyser and Frederick de Houtman, after the bird-of-paradise of the East Indies."
+    },
+    "description": {
+      "fr": "Petite constellation australe et faible, proche du pôle céleste sud, circumpolaire depuis les latitudes sud. Visible uniquement depuis l'hémisphère sud, meilleure observation en juin.",
+      "en": "A small, faint southern constellation near the south celestial pole, circumpolar from southern latitudes. Visible only from the southern hemisphere, best seen in June."
+    },
+    "brightestStar": { "name": "Alpha Apodis", "magnitude": 3.83 },
+    "deepSkyObjects": []
+  },
+  "Aquarius": {
+    "nameFr": "le Verseau",
+    "nameEn": "Water Bearer",
+    "meaning": {
+      "fr": "Constellation antique associée à Ganymède, l'échanson des dieux grecs versant de l'eau depuis une jarre ; l'un des douze signes du zodiaque.",
+      "en": "An ancient constellation associated with Ganymede, cupbearer of the Greek gods, pouring water from a jar; one of the twelve zodiac constellations."
+    },
+    "description": {
+      "fr": "Grande constellation zodiacale à cheval sur l'équateur céleste, visible des deux hémisphères, meilleure observation à l'automne (octobre) dans l'hémisphère nord.",
+      "en": "A large zodiac constellation straddling the celestial equator, visible from both hemispheres, best seen in the northern autumn (October)."
+    },
+    "brightestStar": { "name": "Sadalsuud", "magnitude": 2.87 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de l'Hélice (NGC 7293)", "type": "nébuleuse planétaire" },
+      { "name": "M2", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "Le système TRAPPIST-1, célèbre pour ses sept planètes rocheuses potentiellement habitables, se trouve dans la constellation du Verseau.",
+      "en": "The TRAPPIST-1 system, famous for its seven potentially habitable rocky planets, is located in the constellation Aquarius."
+    }
+  },
+  "Aquila": {
+    "nameFr": "l'Aigle",
+    "nameEn": "Eagle",
+    "meaning": {
+      "fr": "Constellation grecque antique représentant l'aigle de Zeus, souvent associé au mythe de Ganymède enlevé pour servir les dieux.",
+      "en": "An ancient Greek constellation representing the eagle of Zeus, often linked to the myth of Ganymede being carried off to serve the gods."
+    },
+    "description": {
+      "fr": "Constellation équatoriale traversée par la Voie lactée, dont l'étoile Altaïr forme l'un des sommets du Triangle d'été. Visible des deux hémisphères, meilleure observation en été (juillet-août).",
+      "en": "An equatorial constellation crossed by the Milky Way, whose star Altair forms one corner of the Summer Triangle. Visible from both hemispheres, best seen in July-August."
+    },
+    "brightestStar": { "name": "Altaïr", "magnitude": 0.77 },
+    "deepSkyObjects": [
+      { "name": "NGC 6751 (nébuleuse de l'Œil Ardent)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "Altaïr, l'une des étoiles les plus proches visibles à l'œil nu (environ 17 années-lumière), tourne si vite sur elle-même qu'elle est nettement aplatie aux pôles.",
+      "en": "Altair, one of the closest naked-eye stars (about 17 light-years away), spins so fast that it is noticeably flattened at its poles."
+    }
+  },
+  "Ara": {
+    "nameFr": "l'Autel",
+    "nameEn": "Altar",
+    "meaning": {
+      "fr": "Constellation grecque antique représentant l'autel sur lequel les dieux de l'Olympe auraient juré alliance avant leur combat contre les Titans.",
+      "en": "An ancient Greek constellation representing the altar on which the Olympian gods are said to have sworn allegiance before their battle against the Titans."
+    },
+    "description": {
+      "fr": "Petite constellation australe faisant partie des 48 constellations de Ptolémée. Visible depuis l'hémisphère sud, meilleure observation en juillet.",
+      "en": "A small southern constellation, one of Ptolemy's original 48. Visible from the southern hemisphere, best seen in July."
+    },
+    "brightestStar": { "name": "Beta Arae", "magnitude": 2.85 },
+    "deepSkyObjects": [
+      { "name": "NGC 6397", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "NGC 6397 est, avec M4 dans le Scorpion, l'un des deux amas globulaires les plus proches de la Terre, à environ 7800 années-lumière.",
+      "en": "NGC 6397 is, along with M4 in Scorpius, one of the two closest globular clusters to Earth, about 7,800 light-years away."
+    }
+  },
+  "Aries": {
+    "nameFr": "le Bélier",
+    "nameEn": "Ram",
+    "meaning": {
+      "fr": "Le bélier à la toison d'or de la mythologie grecque, qui sauva Phrixos et Hellé, à l'origine de la légende de la Toison d'or.",
+      "en": "The golden-fleeced ram of Greek mythology, which saved Phrixus and Helle, at the origin of the legend of the Golden Fleece."
+    },
+    "description": {
+      "fr": "Constellation zodiacale de taille modeste et assez discrète, meilleure observation en fin d'automne-hiver (décembre). Elle marquait autrefois le point vernal (équinoxe de printemps).",
+      "en": "A modestly sized, fairly faint zodiac constellation, best seen in late autumn/winter (December). It once marked the vernal equinox point."
+    },
+    "brightestStar": { "name": "Hamal", "magnitude": 2.00 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Le point vernal (« premier point du Bélier »), origine des coordonnées célestes, se trouvait dans le Bélier il y a environ 2000 ans ; du fait de la précession des équinoxes, il se situe aujourd'hui dans les Poissons.",
+      "en": "The vernal equinox point (the 'First Point of Aries'), the origin of celestial coordinates, was located in Aries about 2,000 years ago; due to the precession of the equinoxes, it now lies in Pisces."
+    }
+  },
+  "Auriga": {
+    "nameFr": "le Cocher",
+    "nameEn": "Charioteer",
+    "meaning": {
+      "fr": "Constellation associée à un conducteur de char mythologique, parfois identifié à Érichthonios d'Athènes, inventeur du quadrige.",
+      "en": "Associated with a mythological charioteer, sometimes identified as Erichthonius of Athens, inventor of the four-horse chariot."
+    },
+    "description": {
+      "fr": "Constellation boréale bien visible en hiver, reconnaissable à son pentagone d'étoiles et à sa brillante étoile Capella. Meilleure observation en janvier.",
+      "en": "A northern constellation prominent in winter, recognizable by its pentagon shape and bright star Capella. Best seen in January."
+    },
+    "brightestStar": { "name": "Capella", "magnitude": 0.08 },
+    "deepSkyObjects": [
+      { "name": "M36, M37, M38", "type": "amas ouverts" }
+    ],
+    "factoid": {
+      "fr": "Capella, sixième étoile la plus brillante du ciel, est en réalité un système de deux paires d'étoiles binaires, soit quatre étoiles au total.",
+      "en": "Capella, the sixth-brightest star in the sky, is actually a system of two binary star pairs — four stars in total."
+    }
+  },
+  "Bootes": {
+    "nameFr": "le Bouvier",
+    "nameEn": "Herdsman",
+    "meaning": {
+      "fr": "Constellation antique représentant un bouvier ou gardien de bœufs, parfois associé à Arcas ou à Icarios dans la mythologie grecque.",
+      "en": "An ancient constellation representing a herdsman or ox-driver, sometimes associated with Arcas or Icarius in Greek mythology."
+    },
+    "description": {
+      "fr": "Grande constellation boréale en forme de cerf-volant, contenant l'étoile Arcturus. Meilleure observation au printemps et en été (juin).",
+      "en": "A large, kite-shaped northern constellation containing the star Arcturus. Best seen in spring and summer (June)."
+    },
+    "brightestStar": { "name": "Arcturus", "magnitude": -0.05 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Arcturus, quatrième étoile la plus brillante du ciel nocturne, fut utilisée en 1933 pour déclencher symboliquement l'ouverture de l'Exposition universelle de Chicago via un signal photoélectrique.",
+      "en": "Arcturus, the fourth-brightest star in the night sky, was famously used in 1933 to symbolically trigger the opening of the Chicago World's Fair via a photoelectric signal."
+    }
+  },
+  "Caelum": {
+    "nameFr": "le Burin",
+    "nameEn": "Chisel",
+    "meaning": {
+      "fr": "Créée par Lacaille au XVIIIe siècle, en référence au burin de graveur, sans lien mythologique.",
+      "en": "Created by Lacaille in the 18th century, representing an engraver's chisel; it has no mythological origin."
+    },
+    "description": {
+      "fr": "L'une des plus petites et plus faibles constellations du ciel, visible depuis l'hémisphère sud, meilleure observation en décembre-janvier.",
+      "en": "One of the smallest and faintest constellations in the sky, visible from the southern hemisphere, best seen in December-January."
+    },
+    "brightestStar": { "name": "Alpha Caeli", "magnitude": 4.45 },
+    "deepSkyObjects": []
+  },
+  "Camelopardalis": {
+    "nameFr": "la Girafe",
+    "nameEn": "Giraffe",
+    "meaning": {
+      "fr": "Créée par l'astronome néerlandais Petrus Plancius en 1613, représentant une girafe.",
+      "en": "Created by Dutch astronomer Petrus Plancius in 1613, representing a giraffe."
+    },
+    "description": {
+      "fr": "Grande constellation boréale mais très faible, dépourvue d'étoiles brillantes, circumpolaire depuis les latitudes nord. Meilleure observation en hiver.",
+      "en": "A large but very faint northern constellation with no bright stars, circumpolar from northern latitudes. Best seen in winter."
+    },
+    "brightestStar": { "name": "Beta Camelopardalis", "magnitude": 4.03 },
+    "deepSkyObjects": [
+      { "name": "NGC 1502", "type": "amas ouvert" },
+      { "name": "NGC 2403", "type": "galaxie" }
+    ]
+  },
+  "Cancer": {
+    "nameFr": "le Cancer",
+    "nameEn": "Crab",
+    "meaning": {
+      "fr": "Le crabe envoyé par Héra pour distraire Héraclès lors de son combat contre l'Hydre de Lerne, l'un des douze travaux.",
+      "en": "The crab sent by Hera to distract Heracles during his battle with the Lernaean Hydra, one of the Twelve Labors."
+    },
+    "description": {
+      "fr": "Constellation zodiacale la plus faible des douze, sans étoile brillante. Meilleure observation en hiver-printemps (février-mars).",
+      "en": "The faintest of the twelve zodiac constellations, with no bright star. Best seen in winter-spring (February-March)."
+    },
+    "brightestStar": { "name": "Beta Cancri (Tarf)", "magnitude": 3.52 },
+    "deepSkyObjects": [
+      { "name": "M44 (amas de la Crèche / Ruche)", "type": "amas ouvert" },
+      { "name": "M67", "type": "amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "L'amas de la Ruche (M44), connu depuis l'Antiquité, est l'un des amas ouverts les plus proches de la Terre.",
+      "en": "The Beehive Cluster (M44), known since antiquity, is one of the closest open clusters to Earth."
+    }
+  },
+  "CanesVenatici": {
+    "nameFr": "les Chiens de chasse",
+    "nameEn": "Hunting Dogs",
+    "meaning": {
+      "fr": "Créée par l'astronome polonais Johannes Hevelius en 1687, représentant les chiens de chasse (Astérion et Chara) du Bouvier.",
+      "en": "Created by Polish astronomer Johannes Hevelius in 1687, representing the hunting dogs (Asterion and Chara) of Boötes."
+    },
+    "description": {
+      "fr": "Petite constellation boréale faible, meilleure observation au printemps (mai). Elle contient plusieurs galaxies remarquables.",
+      "en": "A small, faint northern constellation, best seen in spring (May). It contains several notable galaxies."
+    },
+    "brightestStar": { "name": "Cor Caroli", "magnitude": 2.90 },
+    "deepSkyObjects": [
+      { "name": "M51 (galaxie du Tourbillon)", "type": "galaxie spirale" },
+      { "name": "M3", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "La galaxie du Tourbillon (M51) fut la première galaxie dans laquelle une structure spirale fut identifiée, par Lord Rosse en 1845.",
+      "en": "The Whirlpool Galaxy (M51) was the first galaxy in which spiral structure was recognized, by Lord Rosse in 1845."
+    }
+  },
+  "CanisMajor": {
+    "nameFr": "le Grand Chien",
+    "nameEn": "Great Dog",
+    "meaning": {
+      "fr": "L'un des deux chiens de chasse d'Orion dans la mythologie grecque.",
+      "en": "One of Orion's two hunting dogs in Greek mythology."
+    },
+    "description": {
+      "fr": "Constellation hivernale contenant Sirius, l'étoile la plus brillante du ciel nocturne. Meilleure observation en janvier-février.",
+      "en": "A winter constellation containing Sirius, the brightest star in the night sky. Best seen in January-February."
+    },
+    "brightestStar": { "name": "Sirius", "magnitude": -1.46 },
+    "deepSkyObjects": [
+      { "name": "M41", "type": "amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "Sirius est un système binaire ; sa compagne Sirius B fut la première naine blanche jamais découverte.",
+      "en": "Sirius is a binary system; its companion Sirius B was the first white dwarf ever discovered."
+    }
+  },
+  "CanisMinor": {
+    "nameFr": "le Petit Chien",
+    "nameEn": "Little Dog",
+    "meaning": {
+      "fr": "Le plus petit des deux chiens de chasse d'Orion dans la mythologie grecque.",
+      "en": "The smaller of Orion's two hunting dogs in Greek mythology."
+    },
+    "description": {
+      "fr": "Petite constellation ne comptant que deux étoiles principales, contenant Procyon. Meilleure observation en hiver.",
+      "en": "A small constellation with only two main stars, containing Procyon. Best seen in winter."
+    },
+    "brightestStar": { "name": "Procyon", "magnitude": 0.34 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Procyon possède, comme Sirius, une naine blanche compagne (Procyon B), en orbite autour d'elle.",
+      "en": "Like Sirius, Procyon has a white dwarf companion (Procyon B) orbiting it."
+    }
+  },
+  "Capricornus": {
+    "nameFr": "le Capricorne",
+    "nameEn": "Sea Goat",
+    "meaning": {
+      "fr": "Chèvre-poisson mythologique, parfois associée au dieu Pan ou à la chèvre Amalthée.",
+      "en": "A mythological goat-fish, sometimes associated with the god Pan or the goat Amalthea."
+    },
+    "description": {
+      "fr": "La plus petite constellation zodiacale, faible en éclat, meilleure observation en fin d'été (septembre).",
+      "en": "The smallest zodiac constellation, faint in brightness, best seen in late summer (September)."
+    },
+    "brightestStar": { "name": "Deneb Algedi", "magnitude": 2.85 },
+    "deepSkyObjects": [
+      { "name": "M30", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "Le Capricorne est la plus petite des douze constellations du zodiaque par sa superficie.",
+      "en": "Capricornus is the smallest of the twelve zodiac constellations by area."
+    }
+  },
+  "Carina": {
+    "nameFr": "la Carène",
+    "nameEn": "Keel",
+    "meaning": {
+      "fr": "Ancienne partie du navire Argo (Argo Navis) des Argonautes, scindée en 1752 par Lacaille en Carène, Poupe et Voiles.",
+      "en": "A former part of the ship Argo (Argo Navis) of the Argonauts, split in 1752 by Lacaille into Carina, Puppis and Vela."
+    },
+    "description": {
+      "fr": "Grande constellation australe contenant Canopus, la deuxième étoile la plus brillante du ciel. Meilleure observation en février-mars.",
+      "en": "A large southern constellation containing Canopus, the second-brightest star in the sky. Best seen in February-March."
+    },
+    "brightestStar": { "name": "Canopus", "magnitude": -0.74 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de la Carène (NGC 3372)", "type": "nébuleuse" },
+      { "name": "NGC 3532", "type": "amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "Éta Carinae, étoile hypergéante instable de cette nébuleuse, connut une éruption spectaculaire au XIXe siècle et devrait exploser en supernova (ou hypernova) dans un futur astronomiquement proche.",
+      "en": "Eta Carinae, an unstable hypergiant star within this nebula, underwent a spectacular 19th-century outburst and is expected to explode as a supernova (or hypernova) in the astronomically near future."
+    }
+  },
+  "Cassiopeia": {
+    "nameFr": "Cassiopée",
+    "nameEn": "Cassiopeia",
+    "meaning": {
+      "fr": "Reine vaniteuse d'Éthiopie dans la mythologie grecque, mère d'Andromède, punie en étant placée dans le ciel.",
+      "en": "The vain queen of Ethiopia in Greek mythology, mother of Andromeda, punished by being placed in the sky."
+    },
+    "description": {
+      "fr": "Constellation en forme de W très reconnaissable, circumpolaire depuis les latitudes nord. Meilleure observation à l'automne (novembre).",
+      "en": "A highly recognizable W-shaped constellation, circumpolar from northern latitudes. Best seen in autumn (November)."
+    },
+    "brightestStar": { "name": "Schedar", "magnitude": 2.24 },
+    "deepSkyObjects": [
+      { "name": "M52", "type": "amas ouvert" },
+      { "name": "NGC 457 (amas de la Chouette/E.T.)", "type": "amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "La supernova observée par Tycho Brahe en 1572 (SN 1572), visible à l'œil nu, apparut dans cette constellation.",
+      "en": "The supernova observed by Tycho Brahe in 1572 (SN 1572), visible to the naked eye, appeared in this constellation."
+    }
+  },
+  "Centaurus": {
+    "nameFr": "le Centaure",
+    "nameEn": "Centaur",
+    "meaning": {
+      "fr": "Créature mi-homme mi-cheval de la mythologie grecque, souvent identifiée au centaure Chiron.",
+      "en": "The half-man, half-horse creature of Greek mythology, often identified with the centaur Chiron."
+    },
+    "description": {
+      "fr": "Grande constellation australe contenant Alpha du Centaure, le système stellaire le plus proche du Soleil. Meilleure observation en mai.",
+      "en": "A large southern constellation containing Alpha Centauri, the closest star system to the Sun. Best seen in May."
+    },
+    "brightestStar": { "name": "Alpha Centauri (Rigil Kentaurus)", "magnitude": -0.27 },
+    "deepSkyObjects": [
+      { "name": "Oméga du Centaure (NGC 5139)", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "Proxima du Centaure, membre du système Alpha du Centaure, est l'étoile connue la plus proche du Soleil et héberge une exoplanète (Proxima b) dans sa zone habitable.",
+      "en": "Proxima Centauri, part of the Alpha Centauri system, is the closest known star to the Sun and hosts an exoplanet (Proxima b) in its habitable zone."
+    }
+  },
+  "Cepheus": {
+    "nameFr": "Céphée",
+    "nameEn": "Cepheus",
+    "meaning": {
+      "fr": "Roi d'Éthiopie dans la mythologie grecque, époux de Cassiopée et père d'Andromède.",
+      "en": "The king of Ethiopia in Greek mythology, husband of Cassiopeia and father of Andromeda."
+    },
+    "description": {
+      "fr": "Constellation boréale circumpolaire, en forme de maison, meilleure observation à l'automne.",
+      "en": "A house-shaped, circumpolar northern constellation, best seen in autumn."
+    },
+    "brightestStar": { "name": "Alderamin", "magnitude": 2.45 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de l'Iris (NGC 7023)", "type": "nébuleuse par réflexion" }
+    ],
+    "factoid": {
+      "fr": "Delta Cephei, dans cette constellation, est l'étoile prototype des céphéides, des étoiles variables utilisées comme « chandelles standards » pour mesurer les distances cosmiques.",
+      "en": "Delta Cephei, in this constellation, is the prototype Cepheid variable star, used as a 'standard candle' to measure cosmic distances."
+    }
+  },
+  "Cetus": {
+    "nameFr": "la Baleine",
+    "nameEn": "Whale",
+    "meaning": {
+      "fr": "Le monstre marin envoyé par Poséidon dans le mythe de Persée et Andromède.",
+      "en": "The sea monster sent by Poseidon in the myth of Perseus and Andromeda."
+    },
+    "description": {
+      "fr": "Grande constellation à cheval sur l'équateur céleste, l'une des plus vastes des 88. Visible des deux hémisphères, meilleure observation en fin d'automne (novembre).",
+      "en": "A large constellation straddling the celestial equator, one of the largest of the 88. Visible from both hemispheres, best seen in late autumn (November)."
+    },
+    "brightestStar": { "name": "Diphda", "magnitude": 2.04 },
+    "deepSkyObjects": [
+      { "name": "M77", "type": "galaxie spirale (Seyfert)" }
+    ],
+    "factoid": {
+      "fr": "Mira (Omicron Ceti), dans cette constellation, fut la première étoile variable découverte (1596) et reste le prototype des variables à longue période, oscillant entre magnitude 3 et 10 sur environ 332 jours.",
+      "en": "Mira (Omicron Ceti), in this constellation, was the first variable star discovered (1596) and remains the prototype of long-period variables, ranging between magnitude 3 and 10 over about 332 days."
+    }
+  },
+  "Chamaeleon": {
+    "nameFr": "le Caméléon",
+    "nameEn": "Chameleon",
+    "meaning": {
+      "fr": "Créée à la fin du XVIe siècle par Keyser et de Houtman, représentant un caméléon.",
+      "en": "Created in the late 16th century by Keyser and de Houtman, representing a chameleon."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible, proche du pôle céleste sud, circumpolaire depuis les hautes latitudes sud.",
+      "en": "A small, faint southern constellation near the south celestial pole, circumpolar from high southern latitudes."
+    },
+    "brightestStar": { "name": "Alpha Chamaeleontis", "magnitude": 4.05 },
+    "deepSkyObjects": []
+  },
+  "Circinus": {
+    "nameFr": "le Compas",
+    "nameEn": "Compass",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant le compas de dessinateur/géomètre.",
+      "en": "Created by Lacaille, representing a drafting/geometric compass."
+    },
+    "description": {
+      "fr": "Très petite constellation australe faible, voisine d'Alpha du Centaure. Meilleure observation en mai-juin.",
+      "en": "A very small, faint southern constellation next to Alpha Centauri. Best seen in May-June."
+    },
+    "brightestStar": { "name": "Alpha Circini", "magnitude": 3.19 },
+    "deepSkyObjects": []
+  },
+  "Columba": {
+    "nameFr": "la Colombe",
+    "nameEn": "Dove",
+    "meaning": {
+      "fr": "Créée par Plancius, représentant la colombe de Noé ou celle du récit du navire Argo.",
+      "en": "Created by Plancius, representing Noah's dove, or the dove from the story of the ship Argo."
+    },
+    "description": {
+      "fr": "Petite constellation australe au sud du Grand Chien et du Lièvre. Meilleure observation en janvier.",
+      "en": "A small southern constellation south of Canis Major and Lepus. Best seen in January."
+    },
+    "brightestStar": { "name": "Phact", "magnitude": 2.65 },
+    "deepSkyObjects": []
+  },
+  "ComaBerenices": {
+    "nameFr": "la Chevelure de Bérénice",
+    "nameEn": "Berenice's Hair",
+    "meaning": {
+      "fr": "Nommée d'après la reine Bérénice II d'Égypte, qui aurait offert sa chevelure en sacrifice ; unique parmi les constellations pour être nommée d'après un personnage historique réel.",
+      "en": "Named after Queen Berenice II of Egypt, who is said to have offered her hair as a sacrifice; unique among constellations in being named after a real historical figure."
+    },
+    "description": {
+      "fr": "Constellation boréale faible contenant une partie de l'amas de la Vierge de galaxies. Meilleure observation au printemps (mai).",
+      "en": "A faint northern constellation containing part of the Virgo Cluster of galaxies. Best seen in spring (May)."
+    },
+    "brightestStar": { "name": "Beta Comae Berenices", "magnitude": 4.26 },
+    "deepSkyObjects": [
+      { "name": "M64 (galaxie de l'Œil Noir)", "type": "galaxie" },
+      { "name": "M53", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "La Chevelure de Bérénice est la seule constellation nommée d'après un personnage historique réellement attesté.",
+      "en": "Coma Berenices is the only constellation named after a genuinely attested historical person."
+    }
+  },
+  "CoronaAustralis": {
+    "nameFr": "la Couronne australe",
+    "nameEn": "Southern Crown",
+    "meaning": {
+      "fr": "Constellation grecque antique représentant une couronne, pendant austral de la Couronne boréale.",
+      "en": "An ancient Greek constellation representing a wreath, the southern counterpart to Corona Borealis."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible, proche du Sagittaire. Meilleure observation en août.",
+      "en": "A small, faint southern constellation near Sagittarius. Best seen in August."
+    },
+    "brightestStar": { "name": "Alpha Coronae Australis", "magnitude": 4.10 },
+    "deepSkyObjects": [
+      { "name": "NGC 6541", "type": "amas globulaire" }
+    ]
+  },
+  "CoronaBorealis": {
+    "nameFr": "la Couronne boréale",
+    "nameEn": "Northern Crown",
+    "meaning": {
+      "fr": "La couronne d'Ariane dans la mythologie grecque, offerte par Dionysos.",
+      "en": "The crown of Ariadne in Greek mythology, given to her by Dionysus."
+    },
+    "description": {
+      "fr": "Petit arc distinctif d'étoiles en demi-cercle, dans l'hémisphère nord. Meilleure observation en été (juillet).",
+      "en": "A small, distinctive semicircular arc of stars in the northern hemisphere. Best seen in summer (July)."
+    },
+    "brightestStar": { "name": "Alphecca (Gemma)", "magnitude": 2.23 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "T Coronae Borealis (« l'Étoile flamboyante ») est une nova récurrente qui explose environ tous les 80 ans (dernières éruptions en 1866 et 1946) et dont un nouveau sursaut visible à l'œil nu est attendu.",
+      "en": "T Coronae Borealis (the 'Blaze Star') is a recurrent nova that erupts roughly every 80 years (last eruptions in 1866 and 1946), with a new naked-eye-visible outburst anticipated."
+    }
+  },
+  "Corvus": {
+    "nameFr": "le Corbeau",
+    "nameEn": "Crow",
+    "meaning": {
+      "fr": "Le corbeau envoyé par Apollon chercher de l'eau dans une coupe (la constellation voisine du Cratère), lié au mythe du serpent d'eau (l'Hydre).",
+      "en": "The crow sent by Apollo to fetch water in a cup (the neighboring constellation Crater), linked to the myth of the water snake (Hydra)."
+    },
+    "description": {
+      "fr": "Petite constellation distinctive en forme de quadrilatère, au sud de l'équateur céleste. Meilleure observation au printemps.",
+      "en": "A small, distinctive quadrilateral-shaped constellation, south of the celestial equator. Best seen in spring."
+    },
+    "brightestStar": { "name": "Gienah", "magnitude": 2.59 },
+    "deepSkyObjects": [
+      { "name": "Galaxies des Antennes (NGC 4038/4039)", "type": "galaxies en interaction" }
+    ],
+    "factoid": {
+      "fr": "Les galaxies des Antennes, près de la frontière avec le Cratère, sont un exemple emblématique et très étudié de galaxies en collision.",
+      "en": "The Antennae Galaxies, near the border with Crater, are a well-studied, iconic example of colliding galaxies."
+    }
+  },
+  "Crater": {
+    "nameFr": "la Coupe",
+    "nameEn": "Cup",
+    "meaning": {
+      "fr": "La coupe d'Apollon dans le mythe grec lié au Corbeau et à l'Hydre.",
+      "en": "Apollo's cup in the Greek myth tied to Corvus and Hydra."
+    },
+    "description": {
+      "fr": "Constellation faible posée sur le dos de l'Hydre. Meilleure observation en avril.",
+      "en": "A faint constellation sitting atop Hydra. Best seen in April."
+    },
+    "brightestStar": { "name": "Delta Crateris", "magnitude": 3.56 },
+    "deepSkyObjects": []
+  },
+  "Crux": {
+    "nameFr": "la Croix du Sud",
+    "nameEn": "Southern Cross",
+    "meaning": {
+      "fr": "Formalisée comme constellation distincte au XVIe siècle par les navigateurs européens ; symbole emblématique de l'hémisphère sud.",
+      "en": "Formalized as a distinct constellation in the 16th century by European navigators; an iconic symbol of the southern hemisphere."
+    },
+    "description": {
+      "fr": "La plus petite des 88 constellations par sa superficie. Astérisme austral très reconnaissable, circumpolaire pour la plupart des latitudes sud, meilleure observation en mai.",
+      "en": "The smallest of the 88 constellations by area. A highly recognizable southern asterism, circumpolar for most southern latitudes, best seen in May."
+    },
+    "brightestStar": { "name": "Acrux", "magnitude": 0.77 },
+    "deepSkyObjects": [
+      { "name": "Amas de la Bijoutière (NGC 4755)", "type": "amas ouvert" },
+      { "name": "Le Sac de Charbon", "type": "nébuleuse obscure" }
+    ],
+    "factoid": {
+      "fr": "La Croix du Sud, plus petite constellation du ciel, figure sur les drapeaux de l'Australie, de la Nouvelle-Zélande, du Brésil, de la Papouasie-Nouvelle-Guinée et du Samoa.",
+      "en": "The Southern Cross, the smallest constellation in the sky, appears on the flags of Australia, New Zealand, Brazil, Papua New Guinea and Samoa."
+    }
+  },
+  "Cygnus": {
+    "nameFr": "le Cygne",
+    "nameEn": "Swan",
+    "meaning": {
+      "fr": "Associé dans la mythologie grecque à Zeus métamorphosé en cygne, ou parfois à Orphée transformé en cygne après sa mort.",
+      "en": "Associated in Greek mythology with Zeus transformed into a swan, or sometimes with Orpheus turned into a swan after his death."
+    },
+    "description": {
+      "fr": "Grande constellation boréale le long de la Voie lactée, formant l'astérisme de la Croix du Nord ; Deneb en marque un sommet du Triangle d'été. Meilleure observation en été.",
+      "en": "A large northern constellation along the Milky Way, forming the Northern Cross asterism; Deneb marks a corner of the Summer Triangle. Best seen in summer."
+    },
+    "brightestStar": { "name": "Deneb", "magnitude": 1.25 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse Amérique du Nord (NGC 7000)", "type": "nébuleuse" },
+      { "name": "Nébuleuse du Voile", "type": "rémanent de supernova" }
+    ],
+    "factoid": {
+      "fr": "Cygnus X-1, dans cette constellation, fut l'un des premiers candidats sérieux identifiés comme trou noir stellaire ; le télescope spatial Kepler a également ciblé cette région pour rechercher des exoplanètes.",
+      "en": "Cygnus X-1, in this constellation, was one of the first strong candidates identified as a stellar black hole; the Kepler space telescope also targeted this region in its search for exoplanets."
+    }
+  },
+  "Delphinus": {
+    "nameFr": "le Dauphin",
+    "nameEn": "Dolphin",
+    "meaning": {
+      "fr": "Le dauphin qui, dans la mythologie grecque, convainquit Amphitrite d'épouser Poséidon.",
+      "en": "The dolphin who, in Greek mythology, persuaded Amphitrite to marry Poseidon."
+    },
+    "description": {
+      "fr": "Petite constellation distinctive près de l'Aigle et du Cygne. Meilleure observation en fin d'été.",
+      "en": "A small, distinctive constellation near Aquila and Cygnus. Best seen in late summer."
+    },
+    "brightestStar": { "name": "Rotanev", "magnitude": 3.64 },
+    "deepSkyObjects": [
+      { "name": "NGC 6934", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "Les noms de ses deux étoiles principales, Sualocin et Rotanev, forment à l'envers « Nicolaus Venator », clin d'œil d'un assistant d'observatoire au XIXe siècle.",
+      "en": "The names of its two main stars, Sualocin and Rotanev, spell 'Nicolaus Venator' backwards — a 19th-century observatory assistant's playful signature."
+    }
+  },
+  "Dorado": {
+    "nameFr": "la Dorade",
+    "nameEn": "Dolphinfish",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant la dorade coryphène (mahi-mahi) ou l'espadon.",
+      "en": "Created by Keyser and de Houtman, representing the dolphinfish (mahi-mahi) or swordfish."
+    },
+    "description": {
+      "fr": "Petite constellation australe abritant une partie du Grand Nuage de Magellan. Meilleure observation en décembre-janvier.",
+      "en": "A small southern constellation hosting part of the Large Magellanic Cloud. Best seen in December-January."
+    },
+    "brightestStar": { "name": "Alpha Doradus", "magnitude": 3.27 },
+    "deepSkyObjects": [
+      { "name": "Grand Nuage de Magellan", "type": "galaxie naine satellite" },
+      { "name": "Nébuleuse de la Tarentule (NGC 2070)", "type": "nébuleuse" }
+    ],
+    "factoid": {
+      "fr": "La nébuleuse de la Tarentule, dans le Grand Nuage de Magellan, est la région de formation d'étoiles la plus active connue du Groupe local ; elle a aussi été le site de la supernova SN 1987A, la plus proche observée depuis celle de Kepler en 1604.",
+      "en": "The Tarantula Nebula, in the Large Magellanic Cloud, is the most active star-forming region known in the Local Group; it was also the site of supernova SN 1987A, the closest observed since Kepler's supernova of 1604."
+    }
+  },
+  "Draco": {
+    "nameFr": "le Dragon",
+    "nameEn": "Dragon",
+    "meaning": {
+      "fr": "Ladon, le dragon de la mythologie grecque gardant les pommes d'or des Hespérides, tué par Héraclès.",
+      "en": "Ladon, the dragon of Greek mythology guarding the golden apples of the Hesperides, slain by Heracles."
+    },
+    "description": {
+      "fr": "Grande constellation boréale circumpolaire qui serpente entre les deux Ourses. Meilleure observation en été (juillet).",
+      "en": "A large, circumpolar northern constellation winding between the two Bears. Best seen in summer (July)."
+    },
+    "brightestStar": { "name": "Eltanin", "magnitude": 2.23 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de l'Œil de Chat (NGC 6543)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "Thuban (Alpha Draconis) était l'étoile polaire vers 3000 av. J.-C., utilisée notamment pour l'alignement des pyramides égyptiennes.",
+      "en": "Thuban (Alpha Draconis) was the pole star around 3000 BCE, used notably in the alignment of the Egyptian pyramids."
+    }
+  },
+  "Equuleus": {
+    "nameFr": "le Petit Cheval",
+    "nameEn": "Little Horse",
+    "meaning": {
+      "fr": "Constellation grecque antique représentant un jeune cheval ou poulain.",
+      "en": "An ancient Greek constellation representing a young horse or foal."
+    },
+    "description": {
+      "fr": "Deuxième plus petite constellation du ciel après la Croix du Sud, très faible, près de Pégase. Meilleure observation en septembre.",
+      "en": "The second-smallest constellation in the sky after the Southern Cross, very faint, near Pegasus. Best seen in September."
+    },
+    "brightestStar": { "name": "Kitalpha", "magnitude": 3.92 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Equuleus est la deuxième plus petite des 88 constellations, juste derrière la Croix du Sud.",
+      "en": "Equuleus is the second-smallest of the 88 constellations, just behind the Southern Cross."
+    }
+  },
+  "Eridanus": {
+    "nameFr": "l'Éridan",
+    "nameEn": "River Eridanus",
+    "meaning": {
+      "fr": "Fleuve mythologique grec, parfois identifié au Pô ou au Nil.",
+      "en": "A mythological Greek river, sometimes identified with the Po or the Nile."
+    },
+    "description": {
+      "fr": "Très longue constellation s'étendant loin vers le sud, sixième plus grande des 88. Meilleure observation en hiver (décembre).",
+      "en": "A very long constellation stretching far to the south, the sixth-largest of the 88. Best seen in winter (December)."
+    },
+    "brightestStar": { "name": "Achernar", "magnitude": 0.46 },
+    "deepSkyObjects": [
+      { "name": "NGC 1300", "type": "galaxie spirale barrée" }
+    ],
+    "factoid": {
+      "fr": "Achernar, neuvième étoile la plus brillante du ciel, tourne si vite qu'elle est l'une des étoiles les plus aplaties connues ; Epsilon Eridani est l'une des étoiles proches de type solaire dotée d'un système planétaire connu.",
+      "en": "Achernar, the ninth-brightest star in the sky, spins so fast that it is one of the most oblate (flattened) stars known; Epsilon Eridani is one of the nearby Sun-like stars with a known planetary system."
+    }
+  },
+  "Fornax": {
+    "nameFr": "le Fourneau",
+    "nameEn": "Furnace",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant un fourneau de laboratoire de chimie.",
+      "en": "Created by Lacaille, representing a chemistry laboratory furnace."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible contenant l'amas de galaxies du Fourneau. Meilleure observation en décembre.",
+      "en": "A small, faint southern constellation containing the Fornax Cluster of galaxies. Best seen in December."
+    },
+    "brightestStar": { "name": "Alpha Fornacis", "magnitude": 3.87 },
+    "deepSkyObjects": [
+      { "name": "Amas du Fourneau", "type": "amas de galaxies" },
+      { "name": "Galaxie naine du Fourneau", "type": "galaxie naine sphéroïdale satellite" }
+    ],
+    "factoid": {
+      "fr": "La galaxie naine du Fourneau est l'une des galaxies satellites sphéroïdales naines de la Voie lactée.",
+      "en": "The Fornax Dwarf Galaxy is one of the Milky Way's dwarf spheroidal satellite galaxies."
+    }
+  },
+  "Gemini": {
+    "nameFr": "les Gémeaux",
+    "nameEn": "Twins",
+    "meaning": {
+      "fr": "Castor et Pollux, les jumeaux Dioscures de la mythologie grecque.",
+      "en": "Castor and Pollux, the twin Dioscuri of Greek mythology."
+    },
+    "description": {
+      "fr": "Constellation zodiacale bien visible en hiver. Meilleure observation en février.",
+      "en": "A zodiac constellation prominent in winter. Best seen in February."
+    },
+    "brightestStar": { "name": "Pollux", "magnitude": 1.14 },
+    "deepSkyObjects": [
+      { "name": "M35", "type": "amas ouvert" },
+      { "name": "Nébuleuse de l'Esquimau (NGC 2392)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "Bien que nommée Bêta, Pollux est plus brillante qu'Alpha (Castor) et fut la première étoile à l'œil nu confirmée à héberger une exoplanète (Pollux b) ; Castor est quant à elle un système sextuple de six étoiles.",
+      "en": "Despite being labeled Beta, Pollux is brighter than Alpha (Castor) and was among the first naked-eye stars confirmed to host an exoplanet (Pollux b); Castor itself is a sextuple system of six stars."
+    }
+  },
+  "Grus": {
+    "nameFr": "la Grue",
+    "nameEn": "Crane",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant l'oiseau grue.",
+      "en": "Created by Keyser and de Houtman, representing the crane bird."
+    },
+    "description": {
+      "fr": "Petite constellation australe. Meilleure observation en octobre.",
+      "en": "A small southern constellation. Best seen in October."
+    },
+    "brightestStar": { "name": "Alnair", "magnitude": 1.74 },
+    "deepSkyObjects": [
+      { "name": "Quatuor de la Grue", "type": "groupe de galaxies en interaction" }
+    ]
+  },
+  "Hercules": {
+    "nameFr": "Hercule",
+    "nameEn": "Hercules",
+    "meaning": {
+      "fr": "Héraclès, le héros grec aux douze travaux.",
+      "en": "Heracles, the Greek hero of the Twelve Labors."
+    },
+    "description": {
+      "fr": "Cinquième plus grande constellation des 88, mais dépourvue d'étoiles brillantes malgré sa taille. Meilleure observation en été (juillet).",
+      "en": "The fifth-largest of the 88 constellations, yet lacking bright stars despite its size. Best seen in summer (July)."
+    },
+    "brightestStar": { "name": "Kornephoros", "magnitude": 2.78 },
+    "deepSkyObjects": [
+      { "name": "Grand amas d'Hercule (M13)", "type": "amas globulaire" },
+      { "name": "M92", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "M13, le grand amas globulaire d'Hercule, fut la cible du message d'Arecibo envoyé en 1974, une démonstration radio destinée à une éventuelle civilisation extraterrestre.",
+      "en": "M13, the Great Hercules Cluster, was the target of the 1974 Arecibo message, a radio transmission demonstrating technology, aimed hypothetically at extraterrestrial civilizations."
+    }
+  },
+  "Horologium": {
+    "nameFr": "l'Horloge",
+    "nameEn": "Clock",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant une horloge à pendule.",
+      "en": "Created by Lacaille, representing a pendulum clock."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible. Meilleure observation en décembre.",
+      "en": "A small, faint southern constellation. Best seen in December."
+    },
+    "brightestStar": { "name": "Alpha Horologii", "magnitude": 3.85 },
+    "deepSkyObjects": [
+      { "name": "NGC 1261", "type": "amas globulaire" }
+    ]
+  },
+  "Hydra": {
+    "nameFr": "l'Hydre",
+    "nameEn": "Water Snake",
+    "meaning": {
+      "fr": "Le serpent d'eau lié au mythe du Corbeau et de la Coupe ; à ne pas confondre avec l'Hydre de Lerne aux nombreuses têtes vaincue par Héraclès, qui est une figure mythologique distincte.",
+      "en": "The water snake linked to the myth of Corvus and Crater; not to be confused with the multi-headed Lernaean Hydra defeated by Heracles, which is a distinct mythological figure."
+    },
+    "description": {
+      "fr": "La plus grande des 88 constellations par sa superficie, très longue et faible, à cheval sur l'équateur céleste. Meilleure observation au printemps (avril).",
+      "en": "The largest of the 88 constellations by area, very long and faint, straddling the celestial equator. Best seen in spring (April)."
+    },
+    "brightestStar": { "name": "Alphard", "magnitude": 1.98 },
+    "deepSkyObjects": [
+      { "name": "M83 (galaxie du Moulinet austral)", "type": "galaxie spirale" },
+      { "name": "Nébuleuse du Fantôme de Jupiter (NGC 3242)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "L'Hydre est la plus grande des 88 constellations modernes, s'étendant sur plus de 100 degrés d'ascension droite.",
+      "en": "Hydra is the largest of the 88 modern constellations, spanning over 100 degrees of right ascension."
+    }
+  },
+  "Hydrus": {
+    "nameFr": "l'Hydre mâle",
+    "nameEn": "Male Water Snake",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, distincte de l'Hydre (Hydra), représentant un serpent d'eau austral plus petit.",
+      "en": "Created by Keyser and de Houtman, distinct from Hydra, representing a smaller southern water snake."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible et circumpolaire, entre les deux Nuages de Magellan. Meilleure observation en novembre-décembre.",
+      "en": "A small, faint, circumpolar southern constellation between the two Magellanic Clouds. Best seen in November-December."
+    },
+    "brightestStar": { "name": "Beta Hydri", "magnitude": 2.80 },
+    "deepSkyObjects": []
+  },
+  "Indus": {
+    "nameFr": "l'Indien",
+    "nameEn": "Indian",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant un habitant indigène rencontré par les explorateurs néerlandais.",
+      "en": "Created by Keyser and de Houtman, representing an indigenous inhabitant encountered by Dutch explorers."
+    },
+    "description": {
+      "fr": "Constellation australe faible. Meilleure observation en septembre.",
+      "en": "A faint southern constellation. Best seen in September."
+    },
+    "brightestStar": { "name": "Alpha Indi", "magnitude": 3.11 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Epsilon Indi est l'une des étoiles proches (environ 11,8 années-lumière) semblables au Soleil, accompagnée d'une paire de naines brunes en orbite.",
+      "en": "Epsilon Indi is one of the nearby Sun-like stars (about 11.8 light-years away), orbited by a pair of brown dwarfs."
+    }
+  },
+  "Lacerta": {
+    "nameFr": "le Lézard",
+    "nameEn": "Lizard",
+    "meaning": {
+      "fr": "Créée par Hevelius en 1687, représentant un lézard.",
+      "en": "Created by Hevelius in 1687, representing a lizard."
+    },
+    "description": {
+      "fr": "Petite constellation faible entre le Cygne et Andromède. Meilleure observation en automne.",
+      "en": "A small, faint constellation between Cygnus and Andromeda. Best seen in autumn."
+    },
+    "brightestStar": { "name": "Alpha Lacertae", "magnitude": 3.76 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "BL Lacertae, situé dans cette constellation, est l'objet prototype des « blazars BL Lac », une classe de noyaux actifs de galaxies.",
+      "en": "BL Lacertae, located in this constellation, is the prototype object of 'BL Lac' blazars, a class of active galactic nuclei."
+    }
+  },
+  "Leo": {
+    "nameFr": "le Lion",
+    "nameEn": "Lion",
+    "meaning": {
+      "fr": "Le lion de Némée tué par Héraclès lors de son premier travail.",
+      "en": "The Nemean Lion slain by Heracles during his first labor."
+    },
+    "description": {
+      "fr": "Constellation zodiacale reconnaissable à son astérisme en forme de faucille. Meilleure observation au printemps (avril).",
+      "en": "A zodiac constellation recognizable by its sickle-shaped asterism. Best seen in spring (April)."
+    },
+    "brightestStar": { "name": "Régulus", "magnitude": 1.35 },
+    "deepSkyObjects": [
+      { "name": "Triplet du Lion (M65, M66, NGC 3628)", "type": "galaxies" }
+    ],
+    "factoid": {
+      "fr": "L'essaim des Léonides, associé à la comète Tempel-Tuttle et rayonnant depuis le Lion, a produit de spectaculaires pluies d'étoiles filantes (1833, 1966).",
+      "en": "The Leonid meteor shower, associated with Comet Tempel-Tuttle and radiating from Leo, has produced spectacular meteor storms (1833, 1966)."
+    }
+  },
+  "LeoMinor": {
+    "nameFr": "le Petit Lion",
+    "nameEn": "Little Lion",
+    "meaning": {
+      "fr": "Créée par Hevelius en 1687.",
+      "en": "Created by Hevelius in 1687."
+    },
+    "description": {
+      "fr": "Petite constellation faible entre le Lion et la Grande Ourse. Meilleure observation au printemps.",
+      "en": "A small, faint constellation between Leo and Ursa Major. Best seen in spring."
+    },
+    "brightestStar": { "name": "46 Leonis Minoris (Praecipua)", "magnitude": 3.83 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Le Petit Lion est l'une des rares constellations à ne pas posséder officiellement d'étoile nommée Alpha.",
+      "en": "Leo Minor is one of the few constellations without an officially designated 'Alpha' star."
+    }
+  },
+  "Lepus": {
+    "nameFr": "le Lièvre",
+    "nameEn": "Hare",
+    "meaning": {
+      "fr": "Constellation grecque antique représentant un lièvre pourchassé par Orion et ses chiens.",
+      "en": "An ancient Greek constellation representing a hare hunted by Orion and his dogs."
+    },
+    "description": {
+      "fr": "Petite constellation au sud d'Orion. Meilleure observation en hiver (janvier).",
+      "en": "A small constellation south of Orion. Best seen in winter (January)."
+    },
+    "brightestStar": { "name": "Arneb", "magnitude": 2.58 },
+    "deepSkyObjects": [
+      { "name": "M79", "type": "amas globulaire" }
+    ]
+  },
+  "Libra": {
+    "nameFr": "la Balance",
+    "nameEn": "Scales",
+    "meaning": {
+      "fr": "Unique constellation zodiacale représentant un objet inanimé, la balance de la justice, associée à la déesse Astrée/Thémis.",
+      "en": "The only zodiac constellation representing an inanimate object, the scales of justice, associated with the goddess Astraea/Themis."
+    },
+    "description": {
+      "fr": "Constellation zodiacale faible, dont les étoiles principales étaient autrefois considérées comme les pinces du Scorpion voisin. Meilleure observation en juin.",
+      "en": "A faint zodiac constellation whose main stars were once considered the claws of the neighboring Scorpius. Best seen in June."
+    },
+    "brightestStar": { "name": "Zubeneschamali", "magnitude": 2.61 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Les noms de ses étoiles principales, Zubenelgenubi et Zubeneschamali, signifient respectivement « pince sud » et « pince nord » en arabe, souvenir de l'époque où elles appartenaient au Scorpion.",
+      "en": "The names of its main stars, Zubenelgenubi and Zubeneschamali, mean 'southern claw' and 'northern claw' in Arabic, a legacy of when they belonged to Scorpius."
+    }
+  },
+  "Lupus": {
+    "nameFr": "le Loup",
+    "nameEn": "Wolf",
+    "meaning": {
+      "fr": "Constellation antique représentant à l'origine une bête sauvage générique transpercée par le Centaure, devenue plus tard « le Loup ».",
+      "en": "An ancient constellation originally depicting a generic wild beast speared by Centaurus, later becoming 'the Wolf.'"
+    },
+    "description": {
+      "fr": "Constellation australe entre la Balance et le Centaure. Meilleure observation en juin.",
+      "en": "A southern constellation between Libra and Centaurus. Best seen in June."
+    },
+    "brightestStar": { "name": "Alpha Lupi", "magnitude": 2.30 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "SN 1006, la supernova la plus brillante jamais consignée dans l'histoire, apparut dans cette région du ciel en l'an 1006.",
+      "en": "SN 1006, the brightest supernova ever recorded in history, appeared in this region of the sky in the year 1006."
+    }
+  },
+  "Lynx": {
+    "nameFr": "le Lynx",
+    "nameEn": "Lynx",
+    "meaning": {
+      "fr": "Créée par Hevelius, nommée ainsi car il faudrait, selon lui, des yeux de lynx pour distinguer ses étoiles très faibles.",
+      "en": "Created by Hevelius, named because, in his words, one would need the eyes of a lynx to make out its very faint stars."
+    },
+    "description": {
+      "fr": "Grande constellation faible entre la Grande Ourse et le Cocher. Meilleure observation en hiver.",
+      "en": "A large, faint constellation between Ursa Major and Auriga. Best seen in winter."
+    },
+    "brightestStar": { "name": "Alpha Lyncis", "magnitude": 3.13 },
+    "deepSkyObjects": [
+      { "name": "NGC 2419 (le « Vagabond intergalactique »)", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "Hevelius nomma cette constellation Lynx car il faudrait, selon lui, la vue perçante d'un lynx pour la repérer.",
+      "en": "Hevelius named this constellation Lynx because, he said, one would need the keen eyesight of a lynx to spot it."
+    }
+  },
+  "Lyra": {
+    "nameFr": "la Lyre",
+    "nameEn": "Lyre",
+    "meaning": {
+      "fr": "La lyre d'Orphée dans la mythologie grecque.",
+      "en": "The lyre of Orpheus in Greek mythology."
+    },
+    "description": {
+      "fr": "Petite constellation boréale contenant Véga, sommet du Triangle d'été. Meilleure observation en été.",
+      "en": "A small northern constellation containing Vega, a corner of the Summer Triangle. Best seen in summer."
+    },
+    "brightestStar": { "name": "Véga", "magnitude": 0.03 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de la Lyre (M57, nébuleuse de l'Anneau)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "Véga, cinquième étoile la plus brillante du ciel, fut la première étoile autre que le Soleil à être photographiée (1850) et servit longtemps de référence au système des magnitudes.",
+      "en": "Vega, the fifth-brightest star in the sky, was the first star other than the Sun to be photographed (1850) and long served as the reference point for the magnitude system."
+    }
+  },
+  "Mensa": {
+    "nameFr": "la Table",
+    "nameEn": "Table Mountain",
+    "meaning": {
+      "fr": "Créée par Lacaille, nommée d'après la montagne de la Table à Cape Town, où il observait ; seule constellation nommée d'après un lieu terrestre précis.",
+      "en": "Created by Lacaille, named after Table Mountain in Cape Town, where he observed; the only constellation named after a specific place on Earth."
+    },
+    "description": {
+      "fr": "La constellation la plus faible du ciel, sans aucune étoile plus brillante que la magnitude 5, contenant une partie du Grand Nuage de Magellan. Meilleure observation en janvier.",
+      "en": "The faintest constellation in the sky, with no star brighter than magnitude 5, containing part of the Large Magellanic Cloud. Best seen in January."
+    },
+    "brightestStar": { "name": "Alpha Mensae", "magnitude": 5.09 },
+    "deepSkyObjects": [
+      { "name": "Partie du Grand Nuage de Magellan", "type": "galaxie naine satellite (bordure)" }
+    ],
+    "factoid": {
+      "fr": "La Table est la seule constellation nommée d'après un site terrestre (la montagne de la Table) et la plus faible des 88, sans aucune étoile dépassant la magnitude 5.",
+      "en": "Mensa is the only constellation named after a place on Earth (Table Mountain) and the faintest of the 88, with no star brighter than magnitude 5."
+    }
+  },
+  "Microscopium": {
+    "nameFr": "le Microscope",
+    "nameEn": "Microscope",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant le microscope.",
+      "en": "Created by Lacaille, representing the microscope."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible. Meilleure observation en août-septembre.",
+      "en": "A small, faint southern constellation. Best seen in August-September."
+    },
+    "brightestStar": { "name": "Gamma Microscopii", "magnitude": 4.68 },
+    "deepSkyObjects": []
+  },
+  "Monoceros": {
+    "nameFr": "la Licorne",
+    "nameEn": "Unicorn",
+    "meaning": {
+      "fr": "Créée par Plancius au début du XVIIe siècle, représentant la licorne.",
+      "en": "Created by Plancius in the early 17th century, representing the unicorn."
+    },
+    "description": {
+      "fr": "Constellation faible sur l'équateur céleste, dans une riche région de la Voie lactée hivernale, entre Orion, le Grand Chien et le Petit Chien. Meilleure observation en hiver.",
+      "en": "A faint constellation on the celestial equator, in a rich region of the winter Milky Way, between Orion, Canis Major and Canis Minor. Best seen in winter."
+    },
+    "brightestStar": { "name": "Beta Monocerotis", "magnitude": 3.76 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de la Rosette (NGC 2237)", "type": "nébuleuse" },
+      { "name": "Amas de l'Arbre de Noël / Nébuleuse du Cône (NGC 2264)", "type": "amas ouvert et nébuleuse" }
+    ]
+  },
+  "Musca": {
+    "nameFr": "la Mouche",
+    "nameEn": "Fly",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman ; l'une des rares constellations représentant un insecte, initialement nommée « Apis » (l'Abeille) avant de devenir la Mouche.",
+      "en": "Created by Keyser and de Houtman; one of the few constellations representing an insect, originally named 'Apis' (the Bee) before becoming the Fly."
+    },
+    "description": {
+      "fr": "Petite constellation australe circumpolaire proche de la Croix du Sud. Meilleure observation en mai.",
+      "en": "A small, circumpolar southern constellation near the Southern Cross. Best seen in May."
+    },
+    "brightestStar": { "name": "Alpha Muscae", "magnitude": 2.69 },
+    "deepSkyObjects": [
+      { "name": "NGC 4372", "type": "amas globulaire" }
+    ]
+  },
+  "Norma": {
+    "nameFr": "le Niveau",
+    "nameEn": "Level (Square)",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant l'équerre et le niveau de charpentier/maçon.",
+      "en": "Created by Lacaille, representing a carpenter's or mason's square and level."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible. Meilleure observation en juillet.",
+      "en": "A small, faint southern constellation. Best seen in July."
+    },
+    "brightestStar": { "name": "Gamma-2 Normae", "magnitude": 4.02 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Le Niveau est inhabituel en ce que ses étoiles initialement désignées Alpha et Bêta furent ensuite réattribuées au Scorpion voisin, si bien que la constellation ne possède ni Alpha ni Bêta officiels.",
+      "en": "Norma is unusual in that its originally designated Alpha and Beta stars were later reassigned to neighboring Scorpius, leaving the constellation without official Alpha or Beta stars."
+    }
+  },
+  "Octans": {
+    "nameFr": "l'Octant",
+    "nameEn": "Octant",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant l'octant, instrument de navigation.",
+      "en": "Created by Lacaille, representing the octant, a navigational instrument."
+    },
+    "description": {
+      "fr": "Constellation contenant le pôle céleste sud, faible, circumpolaire par définition depuis l'hémisphère sud.",
+      "en": "A faint constellation containing the south celestial pole, circumpolar by definition from the southern hemisphere."
+    },
+    "brightestStar": { "name": "Nu Octantis", "magnitude": 3.76 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Contrairement à l'hémisphère nord et son étoile Polaire, il n'existe pas d'étoile brillante marquant précisément le pôle céleste sud ; Sigma Octantis, l'« étoile polaire australe », n'est que de magnitude 5,4, à peine visible à l'œil nu.",
+      "en": "Unlike the northern hemisphere with Polaris, there is no bright star precisely marking the south celestial pole; Sigma Octantis, the 'south pole star,' is only magnitude 5.4, barely visible to the naked eye."
+    }
+  },
+  "Ophiuchus": {
+    "nameFr": "le Serpentaire",
+    "nameEn": "Serpent Bearer",
+    "meaning": {
+      "fr": "Associé à Asclépios, dieu grec de la médecine, représenté tenant le Serpent (Serpens).",
+      "en": "Associated with Asclepius, the Greek god of medicine, depicted holding the Serpent (Serpens)."
+    },
+    "description": {
+      "fr": "Grande constellation à cheval sur l'équateur céleste, traversée par l'écliptique entre le Scorpion et le Sagittaire. Meilleure observation en été.",
+      "en": "A large constellation straddling the celestial equator, crossed by the ecliptic between Scorpius and Sagittarius. Best seen in summer."
+    },
+    "brightestStar": { "name": "Rasalhague", "magnitude": 2.08 },
+    "deepSkyObjects": [
+      { "name": "M10, M12, M9, M14, M62, M19", "type": "amas globulaires" }
+    ],
+    "factoid": {
+      "fr": "Parce que le Soleil traverse le Serpentaire, il est parfois présenté comme un « 13e signe du zodiaque », bien qu'il ne fasse pas partie du zodiaque traditionnel occidental ; l'étoile de Barnard, qui possède le plus grand mouvement propre connu, se trouve dans cette constellation.",
+      "en": "Because the Sun crosses Ophiuchus, it is sometimes popularly called a '13th zodiac sign,' though it is not part of traditional Western astrology; Barnard's Star, which has the largest known proper motion, is located in this constellation."
+    }
+  },
+  "Orion": {
+    "nameFr": "Orion",
+    "nameEn": "Orion",
+    "meaning": {
+      "fr": "Le chasseur de la mythologie grecque.",
+      "en": "The hunter of Greek mythology."
+    },
+    "description": {
+      "fr": "L'une des constellations les plus reconnaissables du ciel, à cheval sur l'équateur céleste. Meilleure observation en hiver.",
+      "en": "One of the most recognizable constellations in the sky, straddling the celestial equator. Best seen in winter."
+    },
+    "brightestStar": { "name": "Rigel", "magnitude": 0.13 },
+    "deepSkyObjects": [
+      { "name": "Grande nébuleuse d'Orion (M42)", "type": "nébuleuse" },
+      { "name": "Nébuleuse de la Tête de Cheval", "type": "nébuleuse obscure" }
+    ],
+    "factoid": {
+      "fr": "Bételgeuse, supergéante rouge d'Orion en fin de vie, devrait exploser en supernova dans les prochaines dizaines à centaines de milliers d'années ; sa baisse d'éclat inhabituelle en 2019-2020 avait relancé les spéculations sur une explosion imminente.",
+      "en": "Betelgeuse, Orion's red supergiant nearing the end of its life, is expected to explode as a supernova within the next tens to hundreds of thousands of years; its unusual dimming in 2019-2020 sparked speculation about an imminent explosion."
+    }
+  },
+  "Pavo": {
+    "nameFr": "le Paon",
+    "nameEn": "Peacock",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant le paon.",
+      "en": "Created by Keyser and de Houtman, representing the peacock."
+    },
+    "description": {
+      "fr": "Constellation australe. Meilleure observation en août-septembre.",
+      "en": "A southern constellation. Best seen in August-September."
+    },
+    "brightestStar": { "name": "Peacock", "magnitude": 1.94 },
+    "deepSkyObjects": [
+      { "name": "NGC 6752", "type": "amas globulaire" }
+    ]
+  },
+  "Pegasus": {
+    "nameFr": "Pégase",
+    "nameEn": "Pegasus",
+    "meaning": {
+      "fr": "Le cheval ailé né du sang de Méduse dans la mythologie grecque.",
+      "en": "The winged horse born from Medusa's blood in Greek mythology."
+    },
+    "description": {
+      "fr": "Grande constellation boréale célèbre pour son astérisme du Grand Carré de Pégase. Meilleure observation à l'automne.",
+      "en": "A large northern constellation famous for the Great Square of Pegasus asterism. Best seen in autumn."
+    },
+    "brightestStar": { "name": "Enif", "magnitude": 2.39 },
+    "deepSkyObjects": [
+      { "name": "M15", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "51 Pegasi b, découverte en 1995 autour de l'étoile 51 Pegasi dans cette constellation, fut la première exoplanète détectée en orbite autour d'une étoile de la séquence principale semblable au Soleil, valant à ses découvreurs le prix Nobel de physique 2019.",
+      "en": "51 Pegasi b, discovered in 1995 orbiting the star 51 Pegasi in this constellation, was the first exoplanet detected around a Sun-like main-sequence star, earning its discoverers the 2019 Nobel Prize in Physics."
+    }
+  },
+  "Perseus": {
+    "nameFr": "Persée",
+    "nameEn": "Perseus",
+    "meaning": {
+      "fr": "Le héros grec qui décapita Méduse et sauva Andromède.",
+      "en": "The Greek hero who beheaded Medusa and rescued Andromeda."
+    },
+    "description": {
+      "fr": "Constellation boréale dans la Voie lactée, contenant l'étoile variable Algol. Meilleure observation en automne-hiver.",
+      "en": "A northern constellation in the Milky Way, containing the variable star Algol. Best seen in autumn-winter."
+    },
+    "brightestStar": { "name": "Mirfak", "magnitude": 1.79 },
+    "deepSkyObjects": [
+      { "name": "Amas double de Persée (NGC 869/884)", "type": "amas ouverts" },
+      { "name": "Nébuleuse de Californie (NGC 1499)", "type": "nébuleuse" }
+    ],
+    "factoid": {
+      "fr": "Algol (Bêta Persei), représentant l'œil de Méduse dans le mythe, est l'étoile prototype des binaires à éclipses, surnommée « l'Étoile Démon » depuis l'Antiquité pour ses variations d'éclat régulières.",
+      "en": "Algol (Beta Persei), representing Medusa's eye in the myth, is the prototype eclipsing binary star, nicknamed the 'Demon Star' since antiquity for its regular brightness variations."
+    }
+  },
+  "Phoenix": {
+    "nameFr": "le Phénix",
+    "nameEn": "Phoenix",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant l'oiseau mythique renaissant de ses cendres.",
+      "en": "Created by Keyser and de Houtman, representing the mythical firebird reborn from its ashes."
+    },
+    "description": {
+      "fr": "Constellation australe. Meilleure observation en novembre.",
+      "en": "A southern constellation. Best seen in November."
+    },
+    "brightestStar": { "name": "Ankaa", "magnitude": 2.40 },
+    "deepSkyObjects": [
+      { "name": "Quatuor de Robert", "type": "groupe de galaxies en interaction" }
+    ]
+  },
+  "Pictor": {
+    "nameFr": "le Peintre",
+    "nameEn": "Painter's Easel",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant le chevalet du peintre.",
+      "en": "Created by Lacaille, representing a painter's easel."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible près de Canopus. Meilleure observation en janvier.",
+      "en": "A small, faint southern constellation near Canopus. Best seen in January."
+    },
+    "brightestStar": { "name": "Alpha Pictoris", "magnitude": 3.27 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Bêta Pictoris héberge l'un des premiers systèmes planétaires en formation directement imagés, avec un disque de débris circumstellaire et l'exoplanète Bêta Pictoris b, l'un des systèmes les plus étudiés pour comprendre la formation des planètes.",
+      "en": "Beta Pictoris hosts one of the first directly imaged planetary systems still in formation, with a circumstellar debris disk and the exoplanet Beta Pictoris b — one of the most studied systems for understanding planet formation."
+    }
+  },
+  "Pisces": {
+    "nameFr": "les Poissons",
+    "nameEn": "Fish",
+    "meaning": {
+      "fr": "Aphrodite et Éros métamorphosés en poissons liés par une corde pour échapper au monstre Typhon.",
+      "en": "Aphrodite and Eros transformed into fish tied together by a cord to escape the monster Typhon."
+    },
+    "description": {
+      "fr": "Grande constellation zodiacale faible, qui contient aujourd'hui le point vernal du fait de la précession des équinoxes. Meilleure observation à l'automne.",
+      "en": "A large, faint zodiac constellation which now contains the vernal equinox point due to the precession of the equinoxes. Best seen in autumn."
+    },
+    "brightestStar": { "name": "Alpherg (Eta Piscium)", "magnitude": 3.62 },
+    "deepSkyObjects": [
+      { "name": "M74", "type": "galaxie spirale" }
+    ],
+    "factoid": {
+      "fr": "Le point vernal (équinoxe de printemps), autrefois situé dans le Bélier il y a environ 2000 ans, se trouve aujourd'hui dans les Poissons en raison de la précession des équinoxes.",
+      "en": "The vernal equinox point, located in Aries about 2,000 years ago, now lies in Pisces due to the precession of the equinoxes."
+    }
+  },
+  "PiscisAustrinus": {
+    "nameFr": "le Poisson austral",
+    "nameEn": "Southern Fish",
+    "meaning": {
+      "fr": "Constellation antique représentant un poisson buvant l'eau versée par le Verseau.",
+      "en": "An ancient constellation representing a fish drinking the water poured by Aquarius."
+    },
+    "description": {
+      "fr": "Petite constellation australe contenant Fomalhaut. Meilleure observation en septembre-octobre.",
+      "en": "A small southern constellation containing Fomalhaut. Best seen in September-October."
+    },
+    "brightestStar": { "name": "Fomalhaut", "magnitude": 1.16 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Fomalhaut fut l'une des premières étoiles autour de laquelle une exoplanète (Fomalhaut b) fut directement imagée (2008), même si la nature exacte de cet objet reste débattue par les astronomes.",
+      "en": "Fomalhaut was one of the first stars around which an exoplanet (Fomalhaut b) was directly imaged (2008), although the exact nature of this object remains debated among astronomers."
+    }
+  },
+  "Puppis": {
+    "nameFr": "la Poupe",
+    "nameEn": "Stern",
+    "meaning": {
+      "fr": "Ancienne partie du navire Argo (Argo Navis), scindée par Lacaille en Carène, Poupe et Voiles.",
+      "en": "A former part of the ship Argo (Argo Navis), split by Lacaille into Carina, Puppis and Vela."
+    },
+    "description": {
+      "fr": "Grande constellation australe dans la Voie lactée. Meilleure observation en janvier-février.",
+      "en": "A large southern constellation in the Milky Way. Best seen in January-February."
+    },
+    "brightestStar": { "name": "Naos", "magnitude": 2.21 },
+    "deepSkyObjects": [
+      { "name": "M46, M47", "type": "amas ouverts" }
+    ],
+    "factoid": {
+      "fr": "Naos (Zêta Puppis) est l'une des étoiles visibles à l'œil nu les plus chaudes et les plus lumineuses, une supergéante bleue à la surface dépassant 40 000 K.",
+      "en": "Naos (Zeta Puppis) is one of the hottest and most luminous naked-eye stars, a blue supergiant with a surface temperature exceeding 40,000 K."
+    }
+  },
+  "Pyxis": {
+    "nameFr": "la Boussole",
+    "nameEn": "Compass",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant la boussole de marine ; à l'origine partie du mât du navire Argo.",
+      "en": "Created by Lacaille, representing a mariner's compass; originally part of the mast of the ship Argo."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible. Meilleure observation en février-mars.",
+      "en": "A small, faint southern constellation. Best seen in February-March."
+    },
+    "brightestStar": { "name": "Alpha Pyxidis", "magnitude": 3.68 },
+    "deepSkyObjects": []
+  },
+  "Reticulum": {
+    "nameFr": "le Réticule",
+    "nameEn": "Reticle",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant le réticule (grille de mesure) utilisé dans l'oculaire de ses instruments d'observation.",
+      "en": "Created by Lacaille, representing the reticle (measuring grid) used in the eyepiece of his observing instruments."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible. Meilleure observation en décembre.",
+      "en": "A small, faint southern constellation. Best seen in December."
+    },
+    "brightestStar": { "name": "Alpha Reticuli", "magnitude": 3.35 },
+    "deepSkyObjects": []
+  },
+  "Sagitta": {
+    "nameFr": "la Flèche",
+    "nameEn": "Arrow",
+    "meaning": {
+      "fr": "Constellation antique représentant une flèche, associée selon les sources à Apollon, Éros ou Héraclès.",
+      "en": "An ancient constellation representing an arrow, variously associated with Apollo, Eros or Heracles."
+    },
+    "description": {
+      "fr": "Troisième plus petite constellation du ciel, faible mais de forme distinctive. Meilleure observation en été.",
+      "en": "The third-smallest constellation in the sky, faint but distinctively shaped. Best seen in summer."
+    },
+    "brightestStar": { "name": "Gamma Sagittae", "magnitude": 3.47 },
+    "deepSkyObjects": [
+      { "name": "M71", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "La Flèche est la troisième plus petite des 88 constellations.",
+      "en": "Sagitta is the third-smallest of the 88 constellations."
+    }
+  },
+  "Sagittarius": {
+    "nameFr": "le Sagittaire",
+    "nameEn": "Archer",
+    "meaning": {
+      "fr": "Généralement représenté comme un centaure archer dans la mythologie grecque.",
+      "en": "Generally depicted as a centaur archer in Greek mythology."
+    },
+    "description": {
+      "fr": "Constellation zodiacale située dans la région la plus riche de la Voie lactée, en direction du centre galactique. Meilleure observation en été.",
+      "en": "A zodiac constellation located in the richest region of the Milky Way, in the direction of the Galactic Center. Best seen in summer."
+    },
+    "brightestStar": { "name": "Kaus Australis", "magnitude": 1.85 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de la Lagune (M8)", "type": "nébuleuse" },
+      { "name": "Nébuleuse Trifide (M20)", "type": "nébuleuse" }
+    ],
+    "factoid": {
+      "fr": "Sagittarius A*, le trou noir supermassif situé au centre de la Voie lactée, se trouve dans la direction de cette constellation, à environ 26 000 années-lumière, bien au-delà des étoiles visibles.",
+      "en": "Sagittarius A*, the supermassive black hole at the center of the Milky Way, lies in the direction of this constellation, about 26,000 light-years away, far beyond its visible stars."
+    }
+  },
+  "Scorpius": {
+    "nameFr": "le Scorpion",
+    "nameEn": "Scorpion",
+    "meaning": {
+      "fr": "Le scorpion qui, dans la mythologie grecque, tua Orion ; les deux constellations sont placées aux extrémités opposées du ciel pour qu'elles ne se lèvent jamais ensemble.",
+      "en": "The scorpion that, in Greek mythology, killed Orion; the two constellations are placed at opposite ends of the sky so they never rise together."
+    },
+    "description": {
+      "fr": "Constellation zodiacale à la silhouette incurvée bien reconnaissable, le long de la Voie lactée. Majoritairement australe, meilleure observation en été.",
+      "en": "A zodiac constellation with a recognizable curved silhouette, along the Milky Way. Mostly southern, best seen in summer."
+    },
+    "brightestStar": { "name": "Antarès", "magnitude": 0.96 },
+    "deepSkyObjects": [
+      { "name": "M4", "type": "amas globulaire" },
+      { "name": "M7 (amas de Ptolémée)", "type": "amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "Le nom Antarès signifie « rivale d'Arès (Mars) », en référence à sa couleur rouge intense rappelant celle de la planète Mars.",
+      "en": "The name Antares means 'rival of Ares (Mars),' referring to its intense red color reminiscent of the planet Mars."
+    }
+  },
+  "Sculptor": {
+    "nameFr": "le Sculpteur",
+    "nameEn": "Sculptor",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant l'atelier du sculpteur.",
+      "en": "Created by Lacaille, representing a sculptor's studio."
+    },
+    "description": {
+      "fr": "Constellation australe faible contenant le pôle galactique sud. Meilleure observation en octobre-novembre.",
+      "en": "A faint southern constellation containing the south galactic pole. Best seen in October-November."
+    },
+    "brightestStar": { "name": "Alpha Sculptoris", "magnitude": 4.30 },
+    "deepSkyObjects": [
+      { "name": "Galaxie du Sculpteur (NGC 253)", "type": "galaxie spirale" }
+    ]
+  },
+  "Scutum": {
+    "nameFr": "l'Écu",
+    "nameEn": "Shield",
+    "meaning": {
+      "fr": "Créée par Hevelius en 1684 sous le nom « Scutum Sobiescianum », en l'honneur du roi Jean III Sobieski de Pologne.",
+      "en": "Created by Hevelius in 1684 as 'Scutum Sobiescianum,' honoring King John III Sobieski of Poland."
+    },
+    "description": {
+      "fr": "Petite constellation faible dans une région très riche de la Voie lactée. Meilleure observation en été.",
+      "en": "A small, faint constellation in a very rich region of the Milky Way. Best seen in summer."
+    },
+    "brightestStar": { "name": "Alpha Scuti", "magnitude": 3.85 },
+    "deepSkyObjects": [
+      { "name": "Amas du Canard Sauvage (M11)", "type": "amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "L'Écu est la seule constellation moderne nommée en l'honneur d'un monarque réel, le roi Jean III Sobieski.",
+      "en": "Scutum is the only modern constellation named to honor a real monarch, King John III Sobieski."
+    }
+  },
+  "SerpensA": {
+    "nameFr": "le Serpent (queue)",
+    "nameEn": "Serpent (Tail)",
+    "meaning": {
+      "fr": "Correspond à Serpens Cauda, la partie orientale (la queue) du Serpent tenu par le Serpentaire (Ophiuchus) dans la mythologie grecque.",
+      "en": "Corresponds to Serpens Cauda, the eastern part (the tail) of the Serpent held by the Serpent Bearer (Ophiuchus) in Greek mythology."
+    },
+    "description": {
+      "fr": "Moitié orientale (la queue) de l'unique constellation scindée en deux parties non contiguës. Contient la nébuleuse de l'Aigle. Meilleure observation en été.",
+      "en": "The eastern half (the tail) of the only constellation split into two non-contiguous parts. Contains the Eagle Nebula. Best seen in summer."
+    },
+    "brightestStar": { "name": "Eta Serpentis", "magnitude": 3.26 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de l'Aigle (M16)", "type": "nébuleuse et amas ouvert" }
+    ],
+    "factoid": {
+      "fr": "Les « Piliers de la Création », l'une des images les plus célèbres du télescope spatial Hubble (1995), montrent des colonnes de gaz en formation d'étoiles au sein de la nébuleuse de l'Aigle (M16), dans Serpens Cauda.",
+      "en": "The 'Pillars of Creation,' one of the most iconic Hubble Space Telescope images (1995), depict star-forming gas columns within the Eagle Nebula (M16), in Serpens Cauda."
+    }
+  },
+  "SerpensB": {
+    "nameFr": "le Serpent (tête)",
+    "nameEn": "Serpent (Head)",
+    "meaning": {
+      "fr": "Correspond à Serpens Caput, la partie occidentale (la tête) du Serpent tenu par le Serpentaire (Ophiuchus) dans la mythologie grecque.",
+      "en": "Corresponds to Serpens Caput, the western part (the head) of the Serpent held by the Serpent Bearer (Ophiuchus) in Greek mythology."
+    },
+    "description": {
+      "fr": "Moitié occidentale (la tête) de l'unique constellation scindée en deux parties non contiguës par le Serpentaire. Meilleure observation en été.",
+      "en": "The western half (the head) of the only constellation split into two non-contiguous parts by Ophiuchus. Best seen in summer."
+    },
+    "brightestStar": { "name": "Unukalhai", "magnitude": 2.63 },
+    "deepSkyObjects": [
+      { "name": "M5", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "Le Serpent est la seule des 88 constellations à être divisée en deux parties distinctes et non contiguës, Caput (tête) et Cauda (queue), séparées par le Serpentaire.",
+      "en": "Serpens is the only one of the 88 constellations split into two separate, non-contiguous parts, Caput (head) and Cauda (tail), divided by Ophiuchus."
+    }
+  },
+  "Sextans": {
+    "nameFr": "le Sextant",
+    "nameEn": "Sextant",
+    "meaning": {
+      "fr": "Créée par Hevelius en 1687, représentant le sextant, l'instrument qu'il utilisait pour mesurer les positions stellaires à l'œil nu, en souvenir de celui perdu dans l'incendie de son observatoire.",
+      "en": "Created by Hevelius in 1687, representing the sextant, the instrument he used for naked-eye stellar position measurements, commemorating the one lost in the fire that destroyed his observatory."
+    },
+    "description": {
+      "fr": "Constellation faible sur l'équateur céleste, près du Lion. Meilleure observation au printemps.",
+      "en": "A faint constellation on the celestial equator, near Leo. Best seen in spring."
+    },
+    "brightestStar": { "name": "Alpha Sextantis", "magnitude": 4.49 },
+    "deepSkyObjects": [
+      { "name": "Galaxie du Fuseau (NGC 3115)", "type": "galaxie lenticulaire" }
+    ],
+    "factoid": {
+      "fr": "Hevelius nomma cette constellation d'après le sextant qu'il utilisait pour ses observations, après la destruction de son observatoire et de ses instruments dans un incendie en 1679.",
+      "en": "Hevelius named this constellation after the sextant he used for his observations, following the destruction of his observatory and instruments in a fire in 1679."
+    }
+  },
+  "Taurus": {
+    "nameFr": "le Taureau",
+    "nameEn": "Bull",
+    "meaning": {
+      "fr": "Zeus métamorphosé en taureau pour enlever Europe, dans la mythologie grecque.",
+      "en": "Zeus transformed into a bull to abduct Europa, in Greek mythology."
+    },
+    "description": {
+      "fr": "Constellation zodiacale bien visible en hiver, contenant les amas des Hyades et des Pléiades. Meilleure observation en hiver.",
+      "en": "A zodiac constellation prominent in winter, containing the Hyades and Pleiades star clusters. Best seen in winter."
+    },
+    "brightestStar": { "name": "Aldébaran", "magnitude": 0.85 },
+    "deepSkyObjects": [
+      { "name": "Les Pléiades (M45)", "type": "amas ouvert" },
+      { "name": "Nébuleuse du Crabe (M1)", "type": "rémanent de supernova" }
+    ],
+    "factoid": {
+      "fr": "La nébuleuse du Crabe (M1) est le rémanent d'une supernova consignée par les astronomes chinois et arabes en 1054 ; elle abrite en son centre le pulsar du Crabe.",
+      "en": "The Crab Nebula (M1) is the remnant of a supernova recorded by Chinese and Arab astronomers in 1054; it hosts the Crab Pulsar at its center."
+    }
+  },
+  "Telescopium": {
+    "nameFr": "le Télescope",
+    "nameEn": "Telescope",
+    "meaning": {
+      "fr": "Créée par Lacaille, représentant le télescope.",
+      "en": "Created by Lacaille, representing the telescope."
+    },
+    "description": {
+      "fr": "Petite constellation australe faible. Meilleure observation en août.",
+      "en": "A small, faint southern constellation. Best seen in August."
+    },
+    "brightestStar": { "name": "Alpha Telescopii", "magnitude": 3.51 },
+    "deepSkyObjects": []
+  },
+  "Triangulum": {
+    "nameFr": "le Triangle",
+    "nameEn": "Triangle",
+    "meaning": {
+      "fr": "Constellation grecque antique en forme de triangle simple, parfois associée au delta du Nil ou à la Sicile.",
+      "en": "An ancient Greek constellation in the shape of a simple triangle, sometimes associated with the Nile Delta or Sicily."
+    },
+    "description": {
+      "fr": "Petite constellation boréale. Meilleure observation à l'automne.",
+      "en": "A small northern constellation. Best seen in autumn."
+    },
+    "brightestStar": { "name": "Beta Trianguli", "magnitude": 3.00 },
+    "deepSkyObjects": [
+      { "name": "Galaxie du Triangle (M33)", "type": "galaxie spirale" }
+    ],
+    "factoid": {
+      "fr": "La galaxie du Triangle (M33), troisième plus grand membre du Groupe local, figure parmi les objets les plus lointains parfois visibles à l'œil nu sous un ciel très sombre.",
+      "en": "The Triangulum Galaxy (M33), the third-largest member of the Local Group, is among the most distant objects sometimes visible to the naked eye under very dark skies."
+    }
+  },
+  "TriangulumAustrale": {
+    "nameFr": "le Triangle austral",
+    "nameEn": "Southern Triangle",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, pendant austral du Triangle boréal.",
+      "en": "Created by Keyser and de Houtman, the southern counterpart to Triangulum."
+    },
+    "description": {
+      "fr": "Petite constellation australe distinctive. Meilleure observation en juillet.",
+      "en": "A small, distinctive southern constellation. Best seen in July."
+    },
+    "brightestStar": { "name": "Atria", "magnitude": 1.91 },
+    "deepSkyObjects": [
+      { "name": "NGC 6025", "type": "amas ouvert" }
+    ]
+  },
+  "Tucana": {
+    "nameFr": "le Toucan",
+    "nameEn": "Toucan",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant le toucan.",
+      "en": "Created by Keyser and de Houtman, representing the toucan."
+    },
+    "description": {
+      "fr": "Constellation australe contenant le Petit Nuage de Magellan. Meilleure observation en octobre-novembre.",
+      "en": "A southern constellation containing the Small Magellanic Cloud. Best seen in October-November."
+    },
+    "brightestStar": { "name": "Alpha Tucanae", "magnitude": 2.87 },
+    "deepSkyObjects": [
+      { "name": "Petit Nuage de Magellan", "type": "galaxie naine satellite" },
+      { "name": "47 Tucanae (NGC 104)", "type": "amas globulaire" }
+    ],
+    "factoid": {
+      "fr": "47 Tucanae est le deuxième amas globulaire le plus brillant du ciel, juste derrière Oméga du Centaure.",
+      "en": "47 Tucanae is the second-brightest globular cluster in the sky, just behind Omega Centauri."
+    }
+  },
+  "UrsaMajor": {
+    "nameFr": "la Grande Ourse",
+    "nameEn": "Great Bear",
+    "meaning": {
+      "fr": "La nymphe Callisto, transformée en ourse par Héra ou Zeus dans la mythologie grecque.",
+      "en": "The nymph Callisto, transformed into a bear by Hera or Zeus in Greek mythology."
+    },
+    "description": {
+      "fr": "Troisième plus grande constellation des 88, circumpolaire depuis la plupart des latitudes nord, contenant le célèbre astérisme de la Grande Casserole. Meilleure observation au printemps.",
+      "en": "The third-largest of the 88 constellations, circumpolar from most northern latitudes, containing the famous Big Dipper asterism. Best seen in spring."
+    },
+    "brightestStar": { "name": "Alioth", "magnitude": 1.76 },
+    "deepSkyObjects": [
+      { "name": "Galaxie de Bode (M81)", "type": "galaxie spirale" },
+      { "name": "Galaxie du Cigare (M82)", "type": "galaxie" }
+    ],
+    "factoid": {
+      "fr": "Mizar et Alcor, dans le manche de la Grande Casserole, forment une célèbre « double étoile » visible à l'œil nu, traditionnellement utilisée comme test d'acuité visuelle.",
+      "en": "Mizar and Alcor, in the handle of the Big Dipper, form a famous naked-eye 'double star,' traditionally used as an eyesight test."
+    }
+  },
+  "UrsaMinor": {
+    "nameFr": "la Petite Ourse",
+    "nameEn": "Little Bear",
+    "meaning": {
+      "fr": "Associée dans certaines versions du mythe grec à Arcas, fils de Callisto ; contient l'étoile Polaire.",
+      "en": "Associated in some versions of the Greek myth with Arcas, son of Callisto; contains the Pole Star."
+    },
+    "description": {
+      "fr": "Petite constellation boréale circumpolaire contenant Polaris, l'actuelle étoile Polaire, au bout de sa queue. Visible toute l'année depuis les latitudes nord.",
+      "en": "A small, circumpolar northern constellation containing Polaris, the current Pole Star, at the end of its tail. Visible year-round from northern latitudes."
+    },
+    "brightestStar": { "name": "Polaris", "magnitude": 1.98 },
+    "deepSkyObjects": [],
+    "factoid": {
+      "fr": "Polaris n'est que la 48e étoile la plus brillante du ciel, mais son intérêt vient de sa proximité avec le pôle céleste nord, ce qui en fait un repère de navigation essentiel ; c'est aussi une étoile variable de type céphéide.",
+      "en": "Polaris is only the 48th-brightest star in the sky, but its significance comes from its proximity to the north celestial pole, making it an essential navigation reference; it is also a Cepheid variable star."
+    }
+  },
+  "Vela": {
+    "nameFr": "les Voiles",
+    "nameEn": "Sails",
+    "meaning": {
+      "fr": "Ancienne partie du navire Argo (Argo Navis), scindée par Lacaille en Carène, Poupe et Voiles.",
+      "en": "A former part of the ship Argo (Argo Navis), split by Lacaille into Carina, Puppis and Vela."
+    },
+    "description": {
+      "fr": "Grande constellation australe dans la Voie lactée. Meilleure observation en hiver (été austral, février-mars).",
+      "en": "A large southern constellation in the Milky Way. Best seen in winter (southern summer, February-March)."
+    },
+    "brightestStar": { "name": "Suhail (Gamma2 Velorum, Regor)", "magnitude": 1.75 },
+    "deepSkyObjects": [
+      { "name": "Rémanent de supernova des Voiles", "type": "rémanent de supernova" },
+      { "name": "Nébuleuse de l'Anneau austral (NGC 3132)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "Gamma Velorum est l'étoile Wolf-Rayet la plus proche et la plus brillante connue, un type d'étoile massive rare et éphémère ; le pulsar des Voiles, vestige d'une supernova vieille d'environ 11 000 ans, est l'un des pulsars les plus brillants connus.",
+      "en": "Gamma Velorum is the closest and brightest known Wolf-Rayet star, a rare and short-lived type of massive star; the Vela Pulsar, remnant of a supernova about 11,000 years old, is one of the brightest known pulsars."
+    }
+  },
+  "Virgo": {
+    "nameFr": "la Vierge",
+    "nameEn": "Virgin",
+    "meaning": {
+      "fr": "Associée à Déméter, déesse des moissons, ou à Astrée, déesse de la justice, dans la mythologie grecque.",
+      "en": "Associated with Demeter, goddess of the harvest, or Astraea, goddess of justice, in Greek mythology."
+    },
+    "description": {
+      "fr": "Deuxième plus grande constellation des 88, constellation zodiacale contenant l'amas de galaxies de la Vierge. Meilleure observation au printemps.",
+      "en": "The second-largest of the 88 constellations, a zodiac constellation containing the Virgo Cluster of galaxies. Best seen in spring."
+    },
+    "brightestStar": { "name": "Spica", "magnitude": 0.97 },
+    "deepSkyObjects": [
+      { "name": "Amas de la Vierge (dont M87)", "type": "amas de galaxies" },
+      { "name": "Galaxie du Sombrero (M104)", "type": "galaxie" }
+    ],
+    "factoid": {
+      "fr": "M87, galaxie géante de l'amas de la Vierge, héberge un trou noir supermassif dont l'image fut la toute première image directe d'un trou noir jamais obtenue, publiée en 2019 par la collaboration Event Horizon Telescope.",
+      "en": "M87, a giant galaxy in the Virgo Cluster, hosts a supermassive black hole whose image was the very first direct image of a black hole ever obtained, released in 2019 by the Event Horizon Telescope collaboration."
+    }
+  },
+  "Volans": {
+    "nameFr": "le Poisson volant",
+    "nameEn": "Flying Fish",
+    "meaning": {
+      "fr": "Créée par Keyser et de Houtman, représentant le poisson volant.",
+      "en": "Created by Keyser and de Houtman, representing the flying fish."
+    },
+    "description": {
+      "fr": "Petite constellation australe circumpolaire faible. Meilleure observation en février-mars.",
+      "en": "A small, faint, circumpolar southern constellation. Best seen in February-March."
+    },
+    "brightestStar": { "name": "Beta Volantis", "magnitude": 3.77 },
+    "deepSkyObjects": []
+  },
+  "Vulpecula": {
+    "nameFr": "le Petit Renard",
+    "nameEn": "Little Fox",
+    "meaning": {
+      "fr": "Créée par Hevelius en 1687, initialement nommée « Vulpecula cum Ansere » (le petit renard tenant une oie).",
+      "en": "Created by Hevelius in 1687, originally named 'Vulpecula cum Ansere' (the little fox with a goose)."
+    },
+    "description": {
+      "fr": "Constellation faible dans la Voie lactée, contenant la nébuleuse de l'Haltère. Meilleure observation en été.",
+      "en": "A faint constellation in the Milky Way, containing the Dumbbell Nebula. Best seen in summer."
+    },
+    "brightestStar": { "name": "Anser", "magnitude": 4.44 },
+    "deepSkyObjects": [
+      { "name": "Nébuleuse de l'Haltère (M27)", "type": "nébuleuse planétaire" }
+    ],
+    "factoid": {
+      "fr": "La nébuleuse de l'Haltère (M27), découverte par Charles Messier en 1764, fut la toute première nébuleuse planétaire jamais découverte ; le tout premier pulsar (PSR B1919+21), détecté en 1967 par Jocelyn Bell Burnell, se trouve également dans cette constellation.",
+      "en": "The Dumbbell Nebula (M27), discovered by Charles Messier in 1764, was the very first planetary nebula ever discovered; the very first pulsar (PSR B1919+21), detected in 1967 by Jocelyn Bell Burnell, is also located in this constellation."
+    }
+  }
+}

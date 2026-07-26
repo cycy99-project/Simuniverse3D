@@ -13,6 +13,10 @@ export interface StarData {
   // uniquement pour l'instant). Même convention que PlanetData.learn_more.
   learn_more?: string;
   learn_more_en?: string;
+  // Constellation IAU officielle (calculée via astropy get_constellation() à
+  // partir de ra/dec, cf. ingest.py) — null pour le Soleil (ra/dec absents,
+  // on est dedans, la notion n'a pas de sens).
+  constellation?: string | null;
 }
 
 export interface MoonData {
@@ -170,3 +174,49 @@ export interface SystemData {
 export interface SeedData {
   systems: SystemData[];
 }
+
+// Ciel complet des 88 constellations IAU (vue sky2d) — deux sources externes
+// combinées à l'ingestion (cf. scripts/ingest_constellations.py) :
+// - stars : position/magnitude des étoiles catalogue référencées par les
+//   figures, indexées par leur numéro Hipparcos (HIP), issues de VizieR
+//   (catalogue Hipparcos I/239/hip_main).
+// - constellations : figures en traits (stick figures) GPLv3, dcf21/
+//   constellation-stick-figures (Dominic Ford) — chaque polyligne est une
+//   suite de HIP à relier dans l'ordre.
+export interface CatalogStar {
+  ra: number; // degrés (ICRS)
+  dec: number; // degrés (ICRS)
+  mag: number | null; // magnitude visuelle apparente (Vmag Hipparcos)
+}
+
+export interface ConstellationFigure {
+  name: string;
+  lines: string[][]; // chaque sous-tableau = une polyligne de numéros HIP
+}
+
+export interface ConstellationSkyData {
+  stars: Record<string, CatalogStar>;
+  constellations: ConstellationFigure[];
+}
+
+// Contenu documentaire par constellation (panneau d'info de la vue sky2d),
+// généré séparément des données géométriques ci-dessus (recherche factuelle,
+// pas de calcul astrométrique) — cf. data/constellation_info.json. Indexé par
+// le même nom brut CamelCase que ConstellationFigure.name (ex "UrsaMajor",
+// "SerpensA"/"SerpensB" pour les deux figures du Serpent).
+export interface LocalizedText {
+  fr: string;
+  en: string;
+}
+
+export interface ConstellationInfo {
+  nameFr: string;
+  nameEn: string;
+  meaning: LocalizedText;
+  description: LocalizedText;
+  brightestStar: { name: string; magnitude: number };
+  deepSkyObjects: { name: string; type: string }[];
+  factoid?: LocalizedText;
+}
+
+export type ConstellationInfoMap = Record<string, ConstellationInfo>;
