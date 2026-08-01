@@ -164,6 +164,17 @@ retravaillé).
    gardant explicitement le cadre "simulation/impression d'artiste" déjà en
    place (jamais présenté comme une photo réelle). Demandé par Cyril le
    2026-07-26.
+7. **Mobile — toucher un astre doit afficher directement ses infos** : sur
+   mobile, sélectionner un astre (ex. le Soleil ou la Terre) n'affiche pas
+   ses explications tant qu'on n'a pas explicitement ouvert l'onglet "Infos"
+   du menu du bas. Comportement actuel bogué en plus : toucher le Soleil en
+   vue système fait *retourner* à la vue système (au lieu de juste le
+   sélectionner) ; toucher la Terre ne fait rien du tout. Objectif : un tap
+   sur un astre doit toujours faire apparaître ses informations directement,
+   sans étape intermédiaire ni comportement de navigation surprise. À
+   investiguer : logique de sélection tactile (`selectPending`/
+   `updateSelectionCard` dans `main.ts`) qui semble traiter le tap différemment
+   du clic desktop. Demandé par Cyril le 2026-08-01.
 
 ## Prochaines étapes
 

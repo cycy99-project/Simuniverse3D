@@ -63,6 +63,31 @@
       }
       #search-input:focus { outline: 2px solid #8fd0ff; }
       #search-input.not-found { border-color: #e05c5c; }
+      /* Liste de résultats groupée par catégorie (Étoiles/Planètes/Lunes),
+         remplace la dépendance à la popup <datalist> native du navigateur
+         (peu lisible/mal stylée, surtout dans le tiroir plein écran mobile).
+         Le <datalist> reste en place pour la navigation clavier desktop
+         (flèches + Entrée gérées nativement par le champ), cette liste custom
+         est l'affichage principal cliquable/tactile. */
+      #search-results {
+        display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+        max-height: 320px; overflow-y: auto; background: var(--color-card-solid);
+        border: 1px solid var(--color-border); border-radius: 8px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        z-index: 15;
+      }
+      #search-results.visible { display: block; }
+      .search-results-section-label {
+        font-family: var(--font-display); font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+        color: var(--color-muted); padding: 8px 12px 4px;
+      }
+      .search-results-empty { font-size: 13px; color: var(--color-muted); padding: 12px; text-align: center; }
+      .search-result-item {
+        display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;
+        min-height: 44px; padding: 6px 12px; background: none; border: none; border-radius: 0;
+        color: var(--color-fg); font-family: inherit; font-size: 13px; text-align: left; cursor: pointer;
+      }
+      .search-result-item:hover, .search-result-item:focus-visible { background: var(--color-accent-bg); }
+      .search-result-icon { font-size: 15px; line-height: 1; opacity: 0.8; }
       #breadcrumb button { background: none; border: none; min-height: 0; color: #8fd0ff; cursor: pointer; font-size: 14px; padding: 4px 0; }
       #breadcrumb button:hover { text-decoration: underline; border-color: transparent; color: #8fd0ff; }
       /* Colonne flex plutôt que des `top` en dur : un bouton dont le texte
@@ -268,6 +293,13 @@
          où qu'ils vivent dans le DOM. */
       html.is-mobile #search-box { position: static; transform: none; width: 100%; }
       html.is-mobile #search-input { width: 100%; box-sizing: border-box; }
+      /* Dans le tiroir plein écran (mobile-search-slot est déjà scrollable,
+         cf. .mobile-sheet-body), la liste doit s'écouler sous le champ au
+         lieu de flotter en overlay par-dessus l'en-tête du tiroir. */
+      html.is-mobile #search-results {
+        position: static; max-height: none; border: none; border-radius: 0;
+        box-shadow: none; background: none; margin-top: var(--space-3);
+      }
       html.is-mobile #info-panel { position: static; width: 100%; height: auto; border-left: none; padding: 0; }
       html.is-mobile #right-toggles { display: none; }
       html.is-mobile #compare-toggle-group,
@@ -353,6 +385,7 @@
         <div id="search-box">
           <input id="search-input" type="text" autocomplete="off" list="search-datalist">
           <datalist id="search-datalist"></datalist>
+          <div id="search-results"></div>
         </div>
         <div id="right-toggles">
           <div id="lang-toggle"></div>

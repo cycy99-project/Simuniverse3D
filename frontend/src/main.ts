@@ -159,6 +159,7 @@ const creditsConstellationsLabelEl = document.getElementById("credits-constellat
 const creditsMusicLabelEl = document.getElementById("credits-music-label")!;
 const searchInputEl = document.getElementById("search-input") as HTMLInputElement;
 const searchDatalistEl = document.getElementById("search-datalist") as HTMLDataListElement;
+const searchResultsEl = document.getElementById("search-results")!;
 const lightboxEl = document.getElementById("lightbox")!;
 const lightboxImgEl = document.getElementById("lightbox-img") as HTMLImageElement;
 const lightboxCaptionEl = document.getElementById("lightbox-caption")!;
@@ -1950,6 +1951,22 @@ function refreshSearchIndex() {
   searchDatalistEl.innerHTML = searchIndex.map((e) => `<option value="${escapeHtml(e.label)}"></option>`).join("");
 }
 
+function goToSearchEntry(entry: SearchEntry) {
+  if (entry.kind === "star") {
+    setState({ view: "star", systemId: entry.systemId });
+  } else if (entry.kind === "planet") {
+    setState({ view: "atmosphere", systemId: entry.systemId, planetName: entry.planetName! });
+  } else {
+    setState({ view: "atmosphere", systemId: entry.systemId, planetName: entry.planetName! });
+    selectedMoon = entry.moonName!;
+    render();
+  }
+  searchInputEl.value = "";
+  searchInputEl.blur();
+  hideSearchResults();
+  if (activeMobileSheet === "search") setMobileSheet("none");
+}
+
 function jumpToSearchResult(query: string) {
   const q = query.trim().toLowerCase();
   if (!q) return;
@@ -1961,17 +1978,58 @@ function jumpToSearchResult(query: string) {
     setTimeout(() => searchInputEl.classList.remove("not-found"), 500);
     return;
   }
-  if (match.kind === "star") {
-    setState({ view: "star", systemId: match.systemId });
-  } else if (match.kind === "planet") {
-    setState({ view: "atmosphere", systemId: match.systemId, planetName: match.planetName! });
-  } else {
-    setState({ view: "atmosphere", systemId: match.systemId, planetName: match.planetName! });
-    selectedMoon = match.moonName!;
-    render();
+  goToSearchEntry(match);
+}
+
+const SEARCH_CATEGORIES: { kind: SearchEntry["kind"]; icon: string; labelKey: "searchCategoryStars" | "searchCategoryPlanets" | "searchCategoryMoons" }[] = [
+  { kind: "star", icon: "☉", labelKey: "searchCategoryStars" },
+  { kind: "planet", icon: "◐", labelKey: "searchCategoryPlanets" },
+  { kind: "moon", icon: "○", labelKey: "searchCategoryMoons" },
+];
+
+// Liste custom groupée par catégorie affichée sous le champ — remplace la
+// dépendance à la popup <datalist> native (mal stylée, peu lisible en plein
+// écran mobile). Le <datalist> reste branché pour la navigation clavier
+// desktop (flèches système + Entrée), cette liste est l'affichage principal
+// cliquable/tactile, filtrée en direct à la frappe (substring, pas seulement
+// prefix, pour rester tolérant : "phon" trouve "TRAPPIST-1").
+function renderSearchResults(query: string) {
+  const q = query.trim().toLowerCase();
+  searchResultsEl.innerHTML = "";
+  if (!q) {
+    hideSearchResults();
+    return;
   }
-  searchInputEl.value = "";
-  searchInputEl.blur();
+  const matches = searchIndex.filter((e) => e.label.toLowerCase().includes(q)).slice(0, 40);
+  if (matches.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "search-results-empty";
+    empty.textContent = t("searchNotFound");
+    searchResultsEl.appendChild(empty);
+    searchResultsEl.classList.add("visible");
+    return;
+  }
+  for (const category of SEARCH_CATEGORIES) {
+    const entries = matches.filter((e) => e.kind === category.kind);
+    if (entries.length === 0) continue;
+    const label = document.createElement("div");
+    label.className = "search-results-section-label";
+    label.textContent = t(category.labelKey);
+    searchResultsEl.appendChild(label);
+    for (const entry of entries) {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "search-result-item";
+      item.innerHTML = `<span class="search-result-icon">${category.icon}</span><span>${escapeHtml(entry.label)}</span>`;
+      item.onclick = () => goToSearchEntry(entry);
+      searchResultsEl.appendChild(item);
+    }
+  }
+  searchResultsEl.classList.add("visible");
+}
+
+function hideSearchResults() {
+  searchResultsEl.classList.remove("visible");
 }
 
 searchInputEl.placeholder = t("searchPlaceholder");
@@ -1979,10 +2037,17 @@ onLangChange(() => {
   searchInputEl.placeholder = t("searchPlaceholder");
   refreshSearchIndex();
 });
+searchInputEl.addEventListener("input", () => renderSearchResults(searchInputEl.value));
+searchInputEl.addEventListener("focus", () => renderSearchResults(searchInputEl.value));
 searchInputEl.addEventListener("keydown", (event) => {
   if (event.key === "Enter") jumpToSearchResult(searchInputEl.value);
+  if (event.key === "Escape") hideSearchResults();
 });
 searchInputEl.addEventListener("change", () => jumpToSearchResult(searchInputEl.value));
+document.addEventListener("click", (event) => {
+  const target = event.target as Node;
+  if (!document.getElementById("search-box")!.contains(target)) hideSearchResults();
+});
 
 loadPhotoManifest();
 // Les libellés 3D (labelSprite.ts, scenes/galaxy.ts) sont rasterisés une
