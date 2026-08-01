@@ -1151,6 +1151,34 @@ function updateSelectionCard() {
   selectionCardEl.classList.add("visible");
 }
 
+// Restaure le contenu par défaut du panneau d'infos pour la vue courante,
+// une fois qu'une prévisualisation d'astre (cf. previewPendingInfo) n'a plus
+// lieu d'être affichée (sélection en attente annulée).
+function restoreDefaultInfoPanel() {
+  if (state.view === "system") {
+    renderInfoPanel(findSystem(state.systemId));
+  } else {
+    infoPanelEl.classList.remove("visible");
+    infoPanelEl.innerHTML = "";
+  }
+}
+
+// Affiche immédiatement les infos de l'astre tapé/cliqué, sans attendre le
+// clic sur "Explorer" : sur mobile, le panneau d'infos vit dans un tiroir
+// fermé par défaut (onglet "Infos" du menu du bas) — sans ceci, taper un
+// astre ne montrait rien tant qu'on n'ouvrait pas ce tiroir à la main (cf.
+// SPECS.md point 7, signalé par Cyril le 2026-08-01).
+function previewPendingInfo(target: PendingTarget) {
+  const system = findSystem(target.systemId);
+  if (target.kind === "planet") {
+    renderInfoPanel(system, findPlanet(system, target.planetName));
+  } else if (target.kind === "star") {
+    renderStarInfoPanel(system, system.id === "sol");
+  } else {
+    renderInfoPanel(system);
+  }
+}
+
 // Désigne `target` comme sélection en attente sans reconstruire la scène
 // (pas de render() ici : ça réinitialiserait la caméra à la position par
 // défaut de la vue, ce qui ferait perdre à l'utilisateur le cadrage qu'il a
@@ -1158,17 +1186,19 @@ function updateSelectionCard() {
 function selectPending(target: PendingTarget, id: string) {
   if (selectedVoyager) {
     selectedVoyager = null;
-    renderInfoPanel(state.view === "system" ? findSystem(state.systemId) : null);
   }
   pendingSelection = { target, id };
   updateSelectionMarker();
   updateSelectionCard();
+  previewPendingInfo(target);
+  if (isMobile()) setMobileSheet("info");
 }
 
 function clearPendingSelection() {
   pendingSelection = null;
   updateSelectionMarker();
   updateSelectionCard();
+  restoreDefaultInfoPanel();
 }
 
 function toggleCompare() {
@@ -1837,6 +1867,7 @@ canvas.addEventListener("click", (event) => {
     if (id === VOYAGER_1.id || id === VOYAGER_2.id) {
       selectedVoyager = id === VOYAGER_1.id ? VOYAGER_1 : VOYAGER_2;
       render();
+      if (isMobile()) setMobileSheet("info");
     } else {
       selectPending({ kind: "system", systemId: id }, id);
     }
@@ -1862,6 +1893,7 @@ canvas.addEventListener("click", (event) => {
           });
         }
         renderConstellationInfoPanel(zone.name);
+        if (isMobile()) setMobileSheet("info");
       }
     } else {
       selectPending({ kind: "system", systemId: id }, id);
@@ -1872,6 +1904,7 @@ canvas.addEventListener("click", (event) => {
     } else if (id === VOYAGER_1.id || id === VOYAGER_2.id) {
       selectedVoyager = id === VOYAGER_1.id ? VOYAGER_1 : VOYAGER_2;
       render();
+      if (isMobile()) setMobileSheet("info");
     } else {
       selectPending({ kind: "planet", systemId: state.systemId, planetName: id }, id);
     }

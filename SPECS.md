@@ -174,7 +174,30 @@ retravaillé).
    sans étape intermédiaire ni comportement de navigation surprise. À
    investiguer : logique de sélection tactile (`selectPending`/
    `updateSelectionCard` dans `main.ts`) qui semble traiter le tap différemment
-   du clic desktop. Demandé par Cyril le 2026-08-01.
+   du clic desktop. Demandé par Cyril le 2026-08-01. **Implémenté le
+   2026-08-01** (tap mobile = sélection + ouverture auto de l'onglet Infos).
+8. **Ciel nocturne exoplanète — fond d'étoiles/constellations non
+   physiquement exact** : remarque d'un physicien consulté par Cyril (le
+   2026-08-01) : les constellations affichées dans la vue "ciel nocturne
+   depuis une exoplanète" sont exactement les mêmes qu'observées depuis la
+   Terre — physiquement faux dès qu'on change de point d'observation de
+   plusieurs années-lumière (parallaxe : les étoiles proches changeraient
+   fortement de position apparente les unes par rapport aux autres, aucune
+   des constellations terrestres ne resterait reconnaissable). Déjà documenté
+   comme limitation connue dans le code (`scenes/sky2d.ts`, commentaire ~L572) :
+   seuls les objets à distance connue (notre Soleil vu depuis l'exoplanète)
+   sont repositionnés correctement ; le fond d'étoiles catalogue
+   (Hipparcos) + les figures de constellations n'ont pas de distance
+   disponible dans le jeu de données ingéré, donc restent tels que vus
+   depuis la Terre, par simplification. Deux pistes, non tranchées : (a)
+   court terme — ajouter un disclaimer explicite dans l'UI précisant que le
+   fond d'étoiles est "vu depuis la Terre, à titre de repère" (cohérent avec
+   la convention centrale du projet de toujours étiqueter les simulations,
+   cf. `deriveAtmosphere()`) ; (b) long terme — le catalogue Hipparcos
+   contient des données de parallaxe (donc de distance) qui permettraient de
+   reprojeter correctement les étoiles proches (quelques centaines
+   d'années-lumière) depuis le point de vue de l'exoplanète ; chantier de
+   données conséquent, non commencé.
 
 ## Prochaines étapes
 
