@@ -265,6 +265,8 @@ const dict = {
   selectionTypeStar: { fr: "Étoile", en: "Star" },
   selectionTypePlanet: { fr: "Planète", en: "Planet" },
   selectionExplore: { fr: "Explorer →", en: "Explore →" },
+  visitorCounterViews: { fr: "vues", en: "views" },
+  visitorCounterOnline: { fr: "en ligne", en: "online" },
 } satisfies Record<string, { fr: string; en: string }>;
 
 export type DictKey = keyof typeof dict;

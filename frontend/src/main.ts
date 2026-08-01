@@ -38,8 +38,20 @@ import { classifyStar } from "./starClassification";
 import { createSelectionMarker, fitSelectionMarker } from "./selectionMarker";
 import { trackPageView } from "./track";
 import { isMobile, onMobileChange } from "./responsive";
+import { startPresenceHeartbeat, fetchVisitorCounter } from "./presence";
 
 trackPageView();
+startPresenceHeartbeat();
+
+// Installabilité PWA (Android "Installer l'app" / iOS "Ajouter à l'écran
+// d'accueil") : le manifest seul ne suffit pas sur Chrome, il faut un SW actif
+// avec un handler fetch — cf. public/service-worker.js (pas de cache/hors-ligne
+// pour ce jalon, uniquement pour satisfaire ce critère).
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+  });
+}
 
 type AppState =
   | { view: "home" }
@@ -120,6 +132,7 @@ const selectionCardExploreEl = document.getElementById("selection-card-explore")
 const distanceHudEl = document.getElementById("distance-hud")!;
 const distanceHudValueEl = document.getElementById("distance-hud-value")!;
 const distanceHudTravelEl = document.getElementById("distance-hud-travel")!;
+const visitorCounterTextEl = document.getElementById("visitor-counter-text")!;
 
 // UI mobile (barre de navigation du bas + 3 tiroirs) — cf. responsive.ts et
 // applyChromeMode()/setMobileSheet() plus bas. N'existe que dans le DOM ;
@@ -323,6 +336,28 @@ function renderCreditsAndA11yTexts() {
 }
 renderCreditsAndA11yTexts();
 
+// Compteur public de visiteurs (cf. presence.ts) : total de vues + visiteurs
+// en ligne (heartbeat), rafraîchi périodiquement — pas de temps réel via
+// websocket pour un simple compteur décoratif, un polling suffit.
+let lastVisitorCounter: { total: number; online: number } | null = null;
+
+function renderVisitorCounter() {
+  if (!lastVisitorCounter) return;
+  const { total, online } = lastVisitorCounter;
+  visitorCounterTextEl.textContent =
+    `${total} ${t("visitorCounterViews")} · ${online} ${t("visitorCounterOnline")}`;
+}
+
+async function refreshVisitorCounter() {
+  const data = await fetchVisitorCounter();
+  if (data) {
+    lastVisitorCounter = data;
+    renderVisitorCounter();
+  }
+}
+refreshVisitorCounter();
+setInterval(refreshVisitorCounter, 20_000);
+
 onLangChange(() => {
   renderLangToggle();
   renderSciInterpToggle();
@@ -330,6 +365,7 @@ onLangChange(() => {
   renderCreditsAndA11yTexts();
   renderMusicToggle();
   renderMobileNavTexts();
+  renderVisitorCounter();
   render();
 });
 

@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UNIVERSE3D — Cartographie de l'univers proche</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0b0b10" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
@@ -156,6 +160,18 @@
       #selection-card #selection-card-explore:hover { background: var(--color-accent); color: #ffffff; }
       #credits { position: absolute; bottom: var(--space-4); right: var(--space-4); font-size: 11px; opacity: 0.45; }
       #credits a { color: inherit; }
+      /* Compteur public (total de vues + visiteurs en ligne) — cf. presence.ts.
+         Juste au-dessus des crédits en desktop ; côté mobile, les crédits sont
+         masqués donc on le place en bas-gauche pour ne pas chevaucher le
+         distance-hud/selection-card (bas-droite/centre) au-dessus de la nav. */
+      #visitor-counter {
+        position: absolute; bottom: calc(var(--space-4) + 16px); right: var(--space-4); z-index: 10;
+        font-size: 11px; opacity: 0.45; text-align: right;
+      }
+      html.is-mobile #visitor-counter {
+        left: var(--space-4); right: auto; text-align: left;
+        bottom: calc(56px + var(--space-4));
+      }
       /* Repère de distance dynamique (vue galaxie uniquement, cf. main.ts::
          updateDistanceHud) : distance caméra↔Soleil (UA/années-lumière,
          bascule auto) + temps de trajet équivalent à la vitesse de Voyager 1 —
@@ -363,6 +379,7 @@
           <div id="distance-hud-value" class="distance-hud-value"></div>
           <div id="distance-hud-travel" class="distance-hud-travel"></div>
         </div>
+        <div id="visitor-counter"><span id="visitor-counter-text"></span></div>
         <div id="credits"><span id="credits-textures-label"></span> : <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0) — <span id="credits-constellations-label"></span> : <a href="https://github.com/dcf21/constellation-stick-figures" target="_blank" rel="noopener">dcf21/constellation-stick-figures</a> (GPLv3, D. Ford) — <span id="credits-music-label"></span> : <span id="credits-music-title">Orbites Dérivantes</span> (<span id="credits-music-author">cycyno</span>)</div>
         <nav id="mobile-bottom-nav">
           <button id="mnav-home" type="button" class="mnav-btn">

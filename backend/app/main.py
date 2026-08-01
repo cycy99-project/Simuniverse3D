@@ -1,6 +1,8 @@
 import csv
 import io
 import logging
+import threading
+import time
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -41,6 +43,42 @@ class TrackPayload(BaseModel):
 def track(payload: TrackPayload, request: Request):
     record_view(payload.path, request)
     return Response(status_code=204)
+
+
+# Compteur public (page d'accueil du site, pas le dashboard admin) : nombre
+# total de vues + nombre de visiteurs "en ligne". Ce dernier repose sur un
+# heartbeat envoyé par onglet ouvert (cf. frontend/src/presence.ts) — stocké
+# en mémoire (pas en DB, purement éphémère, un redémarrage du process suffit
+# à le vider).
+_ONLINE_WINDOW_SECONDS = 45
+_online_lock = threading.Lock()
+_online: dict[str, float] = {}
+
+
+class HeartbeatPayload(BaseModel):
+    session_id: str
+
+
+@app.post("/api/public/heartbeat", status_code=204)
+def public_heartbeat(payload: HeartbeatPayload):
+    with _online_lock:
+        _online[payload.session_id] = time.time()
+    return Response(status_code=204)
+
+
+@app.get("/api/public/counter")
+def public_counter():
+    db = SessionLocal()
+    try:
+        total = db.query(func.count(models.PageView.id)).scalar() or 0
+    finally:
+        db.close()
+    cutoff = time.time() - _ONLINE_WINDOW_SECONDS
+    with _online_lock:
+        for sid in [sid for sid, ts in _online.items() if ts < cutoff]:
+            del _online[sid]
+        online = len(_online)
+    return {"total": total, "online": online}
 
 
 class LoginPayload(BaseModel):
