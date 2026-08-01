@@ -112,13 +112,20 @@ const sciInterpToggleEl = document.getElementById("sci-interp-toggle") as HTMLBu
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
 const installAppToggleEl = document.getElementById("install-app-toggle") as HTMLButtonElement;
 
-// Bouton "Installer l'appli mobile" (menu Réglages) : Chrome/Edge ne
-// proposent jamais l'installation spontanément sur ce site — il faut
-// intercepter beforeinstallprompt, garder l'événement, et le rejouer au clic.
-// Le bouton reste caché tant que l'événement n'a pas été capturé (critères
-// PWA non remplis, déjà installé, ou navigateur sans support — ex. iOS
-// Safari, qui n'a pas d'équivalent programmatique).
+// Bouton "Installer l'Application" (menu Réglages) : beforeinstallprompt
+// n'est déclenché de façon fiable que sur Chrome — Samsung Internet, Firefox
+// et consorts ne l'émettent pas (ou pas systématiquement) même sur un site
+// jamais visité, et iOS Safari n'a pas d'équivalent programmatique du tout.
+// Donc on ne conditionne plus l'affichage du bouton à cet événement : il
+// reste visible partout, et le clic bascule entre le prompt natif (si
+// capturé) et une instruction manuelle générique sinon. Seule exception :
+// on le cache si l'app tourne déjà en mode installé (display-mode: standalone).
 let deferredInstallPrompt: Event & { prompt(): Promise<void> } | null = null;
+
+const isRunningStandalone =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  (navigator as { standalone?: boolean }).standalone === true;
+if (isRunningStandalone) installAppToggleEl.style.display = "none";
 
 installAppToggleEl.textContent = t("installAppToggle");
 onLangChange(() => {
@@ -128,14 +135,15 @@ onLangChange(() => {
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   deferredInstallPrompt = event as typeof deferredInstallPrompt;
-  installAppToggleEl.style.display = "";
 });
 
 installAppToggleEl.onclick = async () => {
-  if (!deferredInstallPrompt) return;
-  await deferredInstallPrompt.prompt();
-  deferredInstallPrompt = null;
-  installAppToggleEl.style.display = "none";
+  if (deferredInstallPrompt) {
+    await deferredInstallPrompt.prompt();
+    deferredInstallPrompt = null;
+  } else {
+    alert(t("installAppManualHint"));
+  }
 };
 
 window.addEventListener("appinstalled", () => {

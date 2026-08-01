@@ -90,6 +90,10 @@ const dict = {
   creditsMusic: { fr: "Musique", en: "Music" },
   musicToggleLabel: { fr: "Musique", en: "Music" },
   installAppToggle: { fr: "📲 Installer l'Application", en: "📲 Install the App" },
+  installAppManualHint: {
+    fr: "Ouvre le menu ⋮ de ton navigateur, puis choisis « Ajouter à l'écran d'accueil » ou « Installer l'application ».",
+    en: "Open your browser menu (⋮), then choose \"Add to Home screen\" or \"Install app\".",
+  },
   lightboxClose: { fr: "Fermer", en: "Close" },
   lightboxPrev: { fr: "Précédent", en: "Previous" },
   lightboxNext: { fr: "Suivant", en: "Next" },
