@@ -110,6 +110,38 @@ const sunLocatorToggleEl = document.getElementById("sun-locator-toggle") as HTML
 const dayNightToggleEl = document.getElementById("day-night-toggle") as HTMLButtonElement;
 const sciInterpToggleEl = document.getElementById("sci-interp-toggle") as HTMLButtonElement;
 const musicToggleEl = document.getElementById("music-toggle") as HTMLButtonElement;
+const installAppToggleEl = document.getElementById("install-app-toggle") as HTMLButtonElement;
+
+// Bouton "Installer l'appli mobile" (menu Réglages) : Chrome/Edge ne
+// proposent jamais l'installation spontanément sur ce site — il faut
+// intercepter beforeinstallprompt, garder l'événement, et le rejouer au clic.
+// Le bouton reste caché tant que l'événement n'a pas été capturé (critères
+// PWA non remplis, déjà installé, ou navigateur sans support — ex. iOS
+// Safari, qui n'a pas d'équivalent programmatique).
+let deferredInstallPrompt: Event & { prompt(): Promise<void> } | null = null;
+
+installAppToggleEl.textContent = t("installAppToggle");
+onLangChange(() => {
+  installAppToggleEl.textContent = t("installAppToggle");
+});
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event as typeof deferredInstallPrompt;
+  installAppToggleEl.style.display = "";
+});
+
+installAppToggleEl.onclick = async () => {
+  if (!deferredInstallPrompt) return;
+  await deferredInstallPrompt.prompt();
+  deferredInstallPrompt = null;
+  installAppToggleEl.style.display = "none";
+};
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installAppToggleEl.style.display = "none";
+});
 const pauseToggleEl = document.getElementById("pause-toggle") as HTMLButtonElement;
 const bgMusicEl = document.getElementById("bg-music") as HTMLAudioElement;
 const creditsMusicTitleEl = document.getElementById("credits-music-title")!;
@@ -140,10 +172,12 @@ const visitorCounterTextEl = document.getElementById("visitor-counter-text")!;
 const mnavHomeEl = document.getElementById("mnav-home") as HTMLButtonElement;
 const mnavSearchEl = document.getElementById("mnav-search") as HTMLButtonElement;
 const mnavInfoEl = document.getElementById("mnav-info") as HTMLButtonElement;
+const mnavDisplayEl = document.getElementById("mnav-display") as HTMLButtonElement;
 const mnavSettingsEl = document.getElementById("mnav-settings") as HTMLButtonElement;
 const mnavHomeLabelEl = document.getElementById("mnav-home-label")!;
 const mnavSearchLabelEl = document.getElementById("mnav-search-label")!;
 const mnavInfoLabelEl = document.getElementById("mnav-info-label")!;
+const mnavDisplayLabelEl = document.getElementById("mnav-display-label")!;
 const mnavSettingsLabelEl = document.getElementById("mnav-settings-label")!;
 const mobileSearchOverlayEl = document.getElementById("mobile-search-overlay")!;
 const mobileSearchTitleEl = document.getElementById("mobile-search-title")!;
@@ -153,6 +187,10 @@ const mobileInfoSheetEl = document.getElementById("mobile-info-sheet")!;
 const mobileInfoTitleEl = document.getElementById("mobile-info-title")!;
 const mobileInfoSlotEl = document.getElementById("mobile-info-slot")!;
 const mobileInfoCloseEl = document.getElementById("mobile-info-close")!;
+const mobileDisplaySheetEl = document.getElementById("mobile-display-sheet")!;
+const mobileDisplayTitleEl = document.getElementById("mobile-display-title")!;
+const mobileDisplaySlotEl = document.getElementById("mobile-display-slot")!;
+const mobileDisplayCloseEl = document.getElementById("mobile-display-close")!;
 const mobileSettingsSheetEl = document.getElementById("mobile-settings-sheet")!;
 const mobileSettingsTitleEl = document.getElementById("mobile-settings-title")!;
 const mobileSettingsSlotEl = document.getElementById("mobile-settings-slot")!;
@@ -246,13 +284,17 @@ homeChoiceSky2dEl.onclick = () => {
 };
 
 // ---------------------------------------------------------------------------
-// UI mobile : barre de navigation du bas + 3 tiroirs (Recherche/Infos/
-// Réglages). Ne duplique aucune logique métier — les tiroirs sont de simples
-// conteneurs vides dans lesquels les éléments desktop existants (#search-box,
-// #info-panel, les toggles de #right-toggles) sont réellement déplacés
-// (appendChild), pas recréés. Toutes les fonctions renderXToggle()/
+// UI mobile : barre de navigation du bas + 4 tiroirs (Recherche/Infos/
+// Affichage/Réglages). Ne duplique aucune logique métier — les tiroirs sont
+// de simples conteneurs vides dans lesquels les éléments desktop existants
+// (#search-box, #info-panel, les toggles de #right-toggles) sont réellement
+// déplacés (appendChild), pas recréés. Toutes les fonctions renderXToggle()/
 // renderXInfoPanel() existantes continuent d'écrire dans les mêmes éléments,
 // où qu'ils vivent dans le DOM à cet instant.
+// Affichage regroupe les toggles de visualisation 3D (vue courante) ;
+// Réglages ne garde que les préférences d'app globales (langue, unité,
+// musique, interprétation scientifique, installation) — distinction demandée
+// après retour utilisateur, cf. mémoire de session.
 // ---------------------------------------------------------------------------
 
 const desktopHomes = new Map<HTMLElement, { parent: Node; before: Node | null }>();
@@ -271,9 +313,6 @@ function applyChromeMode(mobile: boolean) {
   moveTo(document.getElementById("search-box")!, mobileSearchSlotEl, mobile);
   moveTo(infoPanelEl as HTMLElement, mobileInfoSlotEl, mobile);
   [
-    langToggleEl,
-    unitToggleEl,
-    sciInterpToggleEl,
     orbitPlaneToggleEl,
     habitableZoneToggleEl,
     moonScaleToggleEl,
@@ -284,22 +323,30 @@ function applyChromeMode(mobile: boolean) {
     dayNightToggleEl,
     compareToggleGroupEl,
     pauseToggleEl,
+  ].forEach((el) => moveTo(el as HTMLElement, mobileDisplaySlotEl, mobile));
+  [
+    langToggleEl,
+    unitToggleEl,
+    sciInterpToggleEl,
     musicToggleEl,
+    installAppToggleEl,
   ].forEach((el) => moveTo(el as HTMLElement, mobileSettingsSlotEl, mobile));
 }
 applyChromeMode(isMobile());
 onMobileChange(applyChromeMode);
 
-type MobileSheet = "none" | "search" | "info" | "settings";
+type MobileSheet = "none" | "search" | "info" | "display" | "settings";
 let activeMobileSheet: MobileSheet = "none";
 
 function setMobileSheet(next: MobileSheet) {
   activeMobileSheet = next;
   mobileSearchOverlayEl.classList.toggle("open", next === "search");
   mobileInfoSheetEl.classList.toggle("open", next === "info");
+  mobileDisplaySheetEl.classList.toggle("open", next === "display");
   mobileSettingsSheetEl.classList.toggle("open", next === "settings");
   mnavSearchEl.classList.toggle("active", next === "search");
   mnavInfoEl.classList.toggle("active", next === "info");
+  mnavDisplayEl.classList.toggle("active", next === "display");
   mnavSettingsEl.classList.toggle("active", next === "settings");
   if (next === "search") searchInputEl.focus();
 }
@@ -310,18 +357,22 @@ mnavHomeEl.onclick = () => {
 };
 mnavSearchEl.onclick = () => setMobileSheet(activeMobileSheet === "search" ? "none" : "search");
 mnavInfoEl.onclick = () => setMobileSheet(activeMobileSheet === "info" ? "none" : "info");
+mnavDisplayEl.onclick = () => setMobileSheet(activeMobileSheet === "display" ? "none" : "display");
 mnavSettingsEl.onclick = () => setMobileSheet(activeMobileSheet === "settings" ? "none" : "settings");
 mobileSearchCloseEl.onclick = () => setMobileSheet("none");
 mobileInfoCloseEl.onclick = () => setMobileSheet("none");
+mobileDisplayCloseEl.onclick = () => setMobileSheet("none");
 mobileSettingsCloseEl.onclick = () => setMobileSheet("none");
 
 function renderMobileNavTexts() {
   mnavHomeLabelEl.textContent = t("mobileNavHome");
   mnavSearchLabelEl.textContent = t("mobileNavSearch");
   mnavInfoLabelEl.textContent = t("mobileNavInfo");
+  mnavDisplayLabelEl.textContent = t("mobileNavDisplay");
   mnavSettingsLabelEl.textContent = t("mobileNavSettings");
   mobileSearchTitleEl.textContent = t("mobileSearchTitle");
   mobileInfoTitleEl.textContent = t("mobileInfoTitle");
+  mobileDisplayTitleEl.textContent = t("mobileDisplayTitle");
   mobileSettingsTitleEl.textContent = t("mobileSettingsTitle");
 }
 renderMobileNavTexts();

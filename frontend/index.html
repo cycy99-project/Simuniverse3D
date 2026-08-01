@@ -249,8 +249,8 @@
       html.is-mobile #breadcrumb { max-width: calc(100vw - 24px); overflow-x: auto; white-space: nowrap; }
       html.is-mobile #credits { display: none; }
       html.is-mobile #bottom-left { display: none; }
-      html.is-mobile #distance-hud { bottom: calc(56px + var(--space-4)); }
-      html.is-mobile #selection-card { bottom: calc(56px + var(--space-4) + var(--space-3)); }
+      html.is-mobile #distance-hud { bottom: calc(56px + env(safe-area-inset-bottom, 0px) + var(--space-4)); }
+      html.is-mobile #selection-card { bottom: calc(56px + env(safe-area-inset-bottom, 0px) + var(--space-4) + var(--space-3)); }
       html.is-mobile .lightbox-nav, html.is-mobile #lightbox-close { min-height: 44px; min-width: 44px; }
 
       /* Panneaux/toggles déplacés en JS (applyChromeMode/moveTo, main.ts) dans
@@ -292,11 +292,11 @@
       /* Tiroir plein écran (Recherche) et tiroirs remontant du bas (Infos, Réglages) */
       #mobile-search-overlay { display: none; }
       html.is-mobile #mobile-search-overlay.open {
-        display: flex; flex-direction: column; position: fixed; inset: 0; z-index: 50;
-        background: var(--color-bg);
+        display: flex; flex-direction: column; position: fixed; top: 0; left: 0; right: 0;
+        bottom: 56px; z-index: 50; background: var(--color-bg);
       }
-      #mobile-info-sheet, #mobile-settings-sheet { display: none; }
-      html.is-mobile #mobile-info-sheet, html.is-mobile #mobile-settings-sheet {
+      #mobile-info-sheet, #mobile-display-sheet, #mobile-settings-sheet { display: none; }
+      html.is-mobile #mobile-info-sheet, html.is-mobile #mobile-display-sheet, html.is-mobile #mobile-settings-sheet {
         display: flex; flex-direction: column; position: fixed; left: 0; right: 0; bottom: 56px; z-index: 45;
         max-height: 70vh; background: var(--color-card-solid);
         border: 1px solid var(--color-border); border-bottom: none;
@@ -304,7 +304,7 @@
         transform: translateY(calc(100% + 56px)); transition: transform 200ms ease-out;
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
       }
-      html.is-mobile #mobile-info-sheet.open, html.is-mobile #mobile-settings-sheet.open {
+      html.is-mobile #mobile-info-sheet.open, html.is-mobile #mobile-display-sheet.open, html.is-mobile #mobile-settings-sheet.open {
         transform: translateY(0);
       }
       .mobile-sheet-header {
@@ -359,6 +359,7 @@
           <button id="exo-sky-toggle"></button>
           <button id="sun-locator-toggle"></button>
           <button id="day-night-toggle"></button>
+          <button id="install-app-toggle" style="display: none;"></button>
         </div>
         <div id="compare-toggle-group">
           <button id="compare-earth-toggle"></button>
@@ -394,6 +395,10 @@
             <span class="mnav-icon" aria-hidden="true">ℹ️</span>
             <span class="mnav-label" id="mnav-info-label"></span>
           </button>
+          <button id="mnav-display" type="button" class="mnav-btn">
+            <span class="mnav-icon" aria-hidden="true">🎛️</span>
+            <span class="mnav-label" id="mnav-display-label"></span>
+          </button>
           <button id="mnav-settings" type="button" class="mnav-btn">
             <span class="mnav-icon" aria-hidden="true">⚙️</span>
             <span class="mnav-label" id="mnav-settings-label"></span>
@@ -412,6 +417,13 @@
             <button type="button" class="mobile-sheet-close" id="mobile-info-close">✕</button>
           </div>
           <div class="mobile-sheet-body" id="mobile-info-slot"></div>
+        </div>
+        <div id="mobile-display-sheet">
+          <div class="mobile-sheet-header">
+            <span id="mobile-display-title"></span>
+            <button type="button" class="mobile-sheet-close" id="mobile-display-close">✕</button>
+          </div>
+          <div class="mobile-sheet-body" id="mobile-display-slot"></div>
         </div>
         <div id="mobile-settings-sheet">
           <div class="mobile-sheet-header">
