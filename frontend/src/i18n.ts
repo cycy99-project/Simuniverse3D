@@ -274,6 +274,7 @@ const dict = {
   selectionTypeSystem: { fr: "Système", en: "System" },
   selectionTypeStar: { fr: "Étoile", en: "Star" },
   selectionTypePlanet: { fr: "Planète", en: "Planet" },
+  selectionTypeMoon: { fr: "Satellite", en: "Moon" },
   selectionExplore: { fr: "Explorer →", en: "Explore →" },
   visitorCounterViews: { fr: "vues", en: "views" },
   visitorCounterOnline: { fr: "en ligne", en: "online" },

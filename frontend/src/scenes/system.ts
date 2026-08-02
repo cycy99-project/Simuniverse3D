@@ -226,6 +226,12 @@ export function buildSystemScene(
     });
     pivot.add(...moons.objects);
     spinnables.push(...moons.spinnables);
+    // Rend les lunes cliquables (losange + carte "Explorer", cf. main.ts) :
+    // les noms de lunes sont uniques sur tout le jeu de données (vérifié dans
+    // seed_systems.json), donc aucun risque de collision avec un autre
+    // système ou une autre planète de CE système en réutilisant moon.name
+    // tel quel comme id, comme le fait déjà atmosphere.ts.
+    for (const [mesh, name] of moons.clickable) clickable.set(mesh, name);
     // En mode distance réelle, une lune irrégulière lointaine (Néréide,
     // Phoebé...) peut s'étendre bien au-delà de l'orbite de sa propre
     // planète autour de l'étoile — il faut alors l'inclure dans le cadrage
