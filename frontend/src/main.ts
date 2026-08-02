@@ -1476,7 +1476,7 @@ function renderExoSkyInfoPanel(planet: PlanetData, sunDistanceLy?: number) {
     <h2>${t("exoSkyTitle")}</h2>
     <p>${t("exoSkyViewedFrom")} ${escapeHtml(localizeName(planet.name))}</p>
     ${sunDistanceLy !== undefined ? `<p>${t("exoSkySunDistance")} ${sunDistanceLy.toFixed(1)} ${t("exoSkyLightYears")}</p>` : ""}
-    <p><em style="font-size: 11px; opacity: 0.7;">${t("exoSkyApproxHint")}</em></p>
+    <p class="sky-approx-note">⚠️ ${t("exoSkyApproxHint")}</p>
   `;
 }
 
