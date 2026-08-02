@@ -5,6 +5,11 @@
 // 2026-07-21, cf. SPECS.md backlog). Volontairement une courte liste
 // éditorialisée (pas une base de données exhaustive) : on cherche l'événement
 // le plus proche de l'année cible, pas une couverture historique complète.
+// Densité volontairement resserrée sur 476-1096 et 1969-1986 (cf. commit
+// "densifier HISTORICAL_EVENTS") : ce sont les seules plages où le jeu de
+// données seed_systems.json actuel place plusieurs systèmes à des distances
+// (donc des années cibles) suffisamment différentes pour risquer de retomber
+// sur le même événement le plus proche par manque d'alternative.
 export interface HistoricalEvent {
   year: number; // négatif = avant J.-C.
   fr: string;
@@ -16,8 +21,12 @@ export const HISTORICAL_EVENTS: HistoricalEvent[] = [
   { year: -44, fr: "Assassinat de Jules César", en: "Assassination of Julius Caesar" },
   { year: 79, fr: "Éruption du Vésuve, destruction de Pompéi", en: "Eruption of Vesuvius destroys Pompeii" },
   { year: 476, fr: "Chute de l'Empire romain d'Occident", en: "Fall of the Western Roman Empire" },
+  { year: 610, fr: "Premières révélations coraniques à Mahomet", en: "Muhammad receives his first revelations" },
+  { year: 793, fr: "Premier raid viking, sur Lindisfarne", en: "First Viking raid, on Lindisfarne" },
   { year: 800, fr: "Charlemagne couronné empereur", en: "Charlemagne crowned emperor" },
+  { year: 1054, fr: "Grand Schisme entre Rome et Constantinople", en: "Great Schism between Rome and Constantinople" },
   { year: 1066, fr: "Bataille de Hastings", en: "Battle of Hastings" },
+  { year: 1096, fr: "Départ de la première croisade", en: "The First Crusade sets out" },
   { year: 1215, fr: "Signature de la Magna Carta", en: "Magna Carta is signed" },
   { year: 1347, fr: "Début de la peste noire en Europe", en: "The Black Death begins spreading in Europe" },
   { year: 1453, fr: "Chute de Constantinople", en: "Fall of Constantinople" },
@@ -39,6 +48,11 @@ export const HISTORICAL_EVENTS: HistoricalEvent[] = [
   { year: 1957, fr: "Lancement de Spoutnik 1", en: "Launch of Sputnik 1" },
   { year: 1961, fr: "Gagarine, premier humain dans l'espace", en: "Gagarin, first human in space" },
   { year: 1969, fr: "Premiers pas sur la Lune (Apollo 11)", en: "First steps on the Moon (Apollo 11)" },
+  { year: 1972, fr: "Apollo 17, dernière mission lunaire habitée", en: "Apollo 17, the last crewed Moon mission" },
+  { year: 1975, fr: "Fin de la guerre du Vietnam", en: "End of the Vietnam War" },
+  { year: 1977, fr: "Lancement des sondes Voyager", en: "Launch of the Voyager probes" },
+  { year: 1979, fr: "Accident nucléaire de Three Mile Island", en: "Three Mile Island nuclear accident" },
+  { year: 1981, fr: "Premier vol de la navette spatiale", en: "First Space Shuttle flight" },
   { year: 1986, fr: "Catastrophe de Tchernobyl", en: "Chernobyl nuclear disaster" },
   { year: 1989, fr: "Chute du mur de Berlin", en: "Fall of the Berlin Wall" },
   { year: 1991, fr: "Invention du World Wide Web", en: "Invention of the World Wide Web" },
@@ -49,14 +63,20 @@ export const HISTORICAL_EVENTS: HistoricalEvent[] = [
 
 // Retourne l'événement le plus proche de l'année cible (distance absolue,
 // l'antériorité la plus faible départageant les ex æquo) — pas forcément
-// l'événement juste avant, car pour ces 4 systèmes du jeu de données l'écart
-// reste de toute façon assez faible (quelques années à quelques décennies).
+// l'événement juste avant, l'écart restant de toute façon assez faible
+// (quelques années à quelques décennies) pour le jeu de données actuel.
+// "Antériorité la plus faible" = en cas d'égalité parfaite de distance entre
+// un événement antérieur et un événement postérieur à l'année cible, on
+// préfère celui qui est le MOINS ancien (le plus proche du présent) : d'où le
+// `<=` ci-dessous plutôt qu'un `<` strict — HISTORICAL_EVENTS étant trié par
+// année croissante, à distance égale le dernier trouvé est toujours le plus
+// récent des deux.
 export function nearestHistoricalEvent(targetYear: number): HistoricalEvent {
   let best = HISTORICAL_EVENTS[0];
   let bestDiff = Math.abs(targetYear - best.year);
   for (const event of HISTORICAL_EVENTS) {
     const diff = Math.abs(targetYear - event.year);
-    if (diff < bestDiff) {
+    if (diff <= bestDiff) {
       best = event;
       bestDiff = diff;
     }
