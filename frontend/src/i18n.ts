@@ -102,6 +102,7 @@ const dict = {
   searchCategoryStars: { fr: "Étoiles", en: "Stars" },
   searchCategoryPlanets: { fr: "Planètes", en: "Planets" },
   searchCategoryMoons: { fr: "Lunes", en: "Moons" },
+  searchCategoryConstellations: { fr: "Constellations", en: "Constellations" },
   spectralType: { fr: "Type spectral", en: "Spectral type" },
   unknown: { fr: "inconnu", en: "unknown" },
   temperature: { fr: "Température (Teff)", en: "Temperature (Teff)" },

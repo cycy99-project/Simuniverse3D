@@ -2054,9 +2054,10 @@ function animate() {
 interface SearchEntry {
   label: string;
   systemId: string;
-  kind: "star" | "planet" | "moon";
+  kind: "star" | "planet" | "moon" | "constellation";
   planetName?: string;
   moonName?: string;
+  constellationName?: string;
 }
 
 let searchIndex: SearchEntry[] = [];
@@ -2088,6 +2089,18 @@ function refreshSearchIndex() {
       }
     }
   }
+  // Groupe additionnel "Constellations" — indépendant des systèmes/astres
+  // ci-dessus (une constellation n'appartient à aucun système précis), donc
+  // pas de déduplication vis-à-vis des étoiles/planètes déjà indexées même
+  // si un même nom apparaît par ailleurs (demandé par Cyril le 2026-08-02).
+  for (const constellation of constellationSky.constellations) {
+    searchIndex.push({
+      label: constellationDisplayName(constellation.name),
+      systemId: "",
+      kind: "constellation",
+      constellationName: constellation.name,
+    });
+  }
   searchDatalistEl.innerHTML = searchIndex.map((e) => `<option value="${escapeHtml(e.label)}"></option>`).join("");
 }
 
@@ -2096,10 +2109,28 @@ function goToSearchEntry(entry: SearchEntry) {
     setState({ view: "star", systemId: entry.systemId });
   } else if (entry.kind === "planet") {
     setState({ view: "atmosphere", systemId: entry.systemId, planetName: entry.planetName! });
-  } else {
+  } else if (entry.kind === "moon") {
     setState({ view: "atmosphere", systemId: entry.systemId, planetName: entry.planetName! });
     selectedMoon = entry.moonName!;
     render();
+  } else {
+    // Constellation : pas de "système" propre, on bascule sur la vue ciel 2D
+    // (render() synchrone dans setState reconstruit sky2dZones) puis on
+    // applique la même sélection/surbrillance que pour un clic direct sur
+    // la zone (cf. handler de clic canvas, state.view === "sky2d").
+    setState({ view: "sky2d" });
+    const zone = sky2dZones.find((z) => z.name === entry.constellationName);
+    if (zone) {
+      selectedConstellationName = zone.name;
+      if (sky2dHighlightSprite && sky2dNameSprite) {
+        applyZoneSelection(sky2dZones, sky2dHighlightSprite, sky2dNameSprite, {
+          rawName: zone.name,
+          displayName: constellationDisplayName(zone.name),
+        });
+      }
+      renderConstellationInfoPanel(zone.name);
+      if (isMobile()) setMobileSheet("info");
+    }
   }
   searchInputEl.value = "";
   searchInputEl.blur();
@@ -2121,10 +2152,15 @@ function jumpToSearchResult(query: string) {
   goToSearchEntry(match);
 }
 
-const SEARCH_CATEGORIES: { kind: SearchEntry["kind"]; icon: string; labelKey: "searchCategoryStars" | "searchCategoryPlanets" | "searchCategoryMoons" }[] = [
+const SEARCH_CATEGORIES: {
+  kind: SearchEntry["kind"];
+  icon: string;
+  labelKey: "searchCategoryStars" | "searchCategoryPlanets" | "searchCategoryMoons" | "searchCategoryConstellations";
+}[] = [
   { kind: "star", icon: "☉", labelKey: "searchCategoryStars" },
   { kind: "planet", icon: "◐", labelKey: "searchCategoryPlanets" },
   { kind: "moon", icon: "○", labelKey: "searchCategoryMoons" },
+  { kind: "constellation", icon: "✦", labelKey: "searchCategoryConstellations" },
 ];
 
 // Liste custom groupée par catégorie affichée sous le champ — remplace la
