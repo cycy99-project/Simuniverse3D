@@ -20,9 +20,12 @@ fi
 log "git pull…"
 cd "$INSTALL_DIR" && $SUDO git pull --ff-only
 
+export GIT_HASH="$(git rev-parse --short HEAD)"
+log "Version : $GIT_HASH"
+
 cd "$INSTALL_DIR/deploy/hetzner"
 log "Rebuild de l'image…"
-$SUDO docker compose build
+$SUDO env GIT_HASH="$GIT_HASH" docker compose build
 
 log "Redémarrage du container…"
 $SUDO docker compose up -d

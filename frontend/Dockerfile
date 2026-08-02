@@ -6,6 +6,8 @@ COPY package*.json ./
 RUN npm ci --no-audit --no-fund
 
 COPY . .
+ARG GIT_HASH=dev
+ENV VITE_GIT_HASH=$GIT_HASH
 RUN npm run build
 
 # --- Stage 2: serve ---
