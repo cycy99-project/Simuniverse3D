@@ -56,19 +56,20 @@
       #home-btn { display: none; padding: 4px 10px; font-size: 13px; }
       #home-btn.visible { display: inline-block; }
       #breadcrumb { font-family: var(--font-display); font-size: 14px; letter-spacing: 0.03em; opacity: 0.8; }
-      #search-box { position: absolute; top: var(--space-4); left: 50%; transform: translateX(-50%); z-index: 10; }
+      /* z-index 35 (pas 10) : le champ reste utilisable depuis l'écran
+         d'accueil (#home-screen, z-index 30) et sa liste de résultats doit
+         alors se peindre par-dessus le titre "UNIVERS3D", pas dessous. */
+      #search-box { position: absolute; top: var(--space-4); left: 50%; transform: translateX(-50%); z-index: 35; }
       #search-input {
         font-family: inherit; font-size: 13px; background: var(--color-card); border: 1px solid var(--color-border);
         color: var(--color-fg); border-radius: 6px; padding: 6px 10px; width: 200px;
       }
       #search-input:focus { outline: 2px solid #8fd0ff; }
       #search-input.not-found { border-color: #e05c5c; }
-      /* Liste de résultats groupée par catégorie (Étoiles/Planètes/Lunes),
-         remplace la dépendance à la popup <datalist> native du navigateur
-         (peu lisible/mal stylée, surtout dans le tiroir plein écran mobile).
-         Le <datalist> reste en place pour la navigation clavier desktop
-         (flèches + Entrée gérées nativement par le champ), cette liste custom
-         est l'affichage principal cliquable/tactile. */
+      /* Liste de résultats groupée par catégorie (Étoiles/Planètes/Lunes/
+         Constellations). Le <datalist> natif du navigateur a été retiré
+         (2026-08-02, cf. main.ts) : sa popup non stylable masquait ce
+         regroupement. */
       #search-results {
         display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
         max-height: 320px; overflow-y: auto; background: var(--color-card-solid);
