@@ -106,7 +106,7 @@ mais pas un vide de marché aussi béant que suggéré initialement.
 - Échelle : gérer la disproportion des distances (années-lumière) vs tailles
   des orbites → échelles non linéaires / mode "carte" vs mode "système".
 
-## Backlog & priorités (ordre de réalisation souhaité par Cyril, réordonné le 2026-07-21 ; items traités retirés le 2026-07-26)
+## Backlog & priorités (ordre de réalisation souhaité par Cyril, réordonné le 2026-08-02 ; items traités retirés au fur et à mesure)
 
 ✅ **Ciel nocturne vu depuis une exoplanète** (validé par Cyril le 2026-07-26) :
 option, pour chaque exoplanète, permettant d'afficher son ciel de nuit et d'y
@@ -116,27 +116,73 @@ halo solaire scintillant + flèche + label — itéré suite retours visuels de
 Cyril (bug de recentrage caméra corrigé, rendu de la bande galactique
 retravaillé).
 
-1. **Date de découverte + méthode de détection + anecdote "événement
-   historique observable"** : ajouter comme paramètres affichés pour chaque
-   exoplanète sa date de découverte et sa méthode de détection ; anecdote
-   ludique complémentaire — si on observait la Terre depuis cette
-   exoplanète (délai lumière = distance en années-lumière), quel événement
-   historique de l'humanité serait théoriquement visible cette année-là.
-   Demandé par Cyril le 2026-07-21. **En cours (2026-07-26).**
-2. **Comparaison exoplanète vs Terre** : pour chaque exoplanète, une fiche
+✅ **Date de découverte + méthode de détection + anecdote "événement
+historique observable"** : ajouté comme paramètres affichés pour chaque
+exoplanète (date de découverte, méthode de détection) ; anecdote ludique
+complémentaire — si on observait la Terre depuis cette exoplanète (délai
+lumière = distance en années-lumière), quel événement historique de
+l'humanité serait théoriquement visible cette année-là. Demandé par Cyril le
+2026-07-21, livré (commit `57c0bde`).
+
+0. ✅ **Bip de confirmation trop artificiel** : remplacé le bip synthétisé
+   Web Audio (sweep+shimmer) par un sample importé (Floraphonic,
+   `public/bips/`). Retour de Cyril le 2026-08-02, livré le 2026-08-02.
+1. **Comparaison exoplanète vs Terre** : pour chaque exoplanète, une fiche
    de comparaison directe avec la Terre (taille, masse, température, type
-   de planète...). Demandé par Cyril le 2026-07-21.
-3. **Losange de sélection + bouton "Explorer"** pour les satellites, comme
+   de planète...). Demandé par Cyril le 2026-07-21. **En cours (2026-08-02).**
+2. **Losange de sélection + bouton "Explorer"** pour les satellites, comme
    c'est déjà le cas pour les étoiles/systèmes et les planètes (indicateur
    visuel en losange autour de l'objet sélectionné + carte du bas avec nom,
    type et bouton "Explorer →") : actuellement absent pour les lunes
    sélectionnées en vue système/planète. Demandé par Cyril le 2026-07-26.
-4. **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
-   clavier — uniquement à l'intérieur d'un système solaire donné (pas en vue
-   galaxie) : remplacerait ponctuellement OrbitControls par un déplacement
-   libre caméra (avance/recul/rotation) dans la scène `system.ts` déjà
-   chargée. Demandé par Cyril le 2026-07-21 (non inclus dans le
-   réordonnancement explicite du même jour, conservé en fin de liste).
+   **En cours (2026-08-02).**
+3. **Textures imaginées pour les exoplanètes — aller plus loin que
+   l'existant** : `planetTexture.ts` a déjà un rendu procédural (styles
+   rocky/cloudy/icyCracks/gasBands/lava, déduit de `cloudDensity` ou calibré
+   via `interpretation_override.textureStyle` pour certaines exoplanètes
+   précises) — donc la brique de base existe déjà. Le point ici est
+   d'enrichir/diversifier ce rendu pour qu'il soit visuellement plus
+   distinctif et "habité" par corps (ex. reliefs, variations de teinte plus
+   organiques, motifs moins répétitifs d'une exoplanète à l'autre), tout en
+   gardant explicitement le cadre "simulation/impression d'artiste" déjà en
+   place (jamais présenté comme une photo réelle). Demandé par Cyril le
+   2026-07-26, **remonté en priorité haute le 2026-08-02** ("très
+   important" — rendu actuel jugé décevant sur les exoplanètes, contrairement
+   au Système Solaire qui bénéficie de vraies photos NASA). Étude comparative
+   des solutions gratuites lancée le 2026-08-02 (en cours).
+4. **Ciel nocturne exoplanète — fond d'étoiles/constellations non
+   physiquement exact** : remarque d'un physicien consulté par Cyril (le
+   2026-08-01) : les constellations affichées dans la vue "ciel nocturne
+   depuis une exoplanète" sont exactement les mêmes qu'observées depuis la
+   Terre — physiquement faux dès qu'on change de point d'observation de
+   plusieurs années-lumière (parallaxe : les étoiles proches changeraient
+   fortement de position apparente les unes par rapport aux autres, aucune
+   des constellations terrestres ne resterait reconnaissable). **Vérifié et
+   confirmé le 2026-08-02** (investigation détaillée, sans nuance) :
+   - Le fond catalogue Hipparcos (`makeCatalogStars`/`makeConstellationLines`
+     dans `scenes/sky2d.ts:588-589`) ne consomme que `ra`/`dec` géocentriques,
+     sans tenir compte du point d'observation — confirmé par le commentaire du
+     code lui-même (`sky2d.ts:570-579`). Seuls les systèmes du jeu de données
+     NASA (dont le Soleil) sont correctement reprojetés par parallaxe, via
+     `realStarPosition()` (`scenes/galaxy.ts:45-57`) — ~15 systèmes sur les
+     ~1500 étoiles du catalogue.
+   - Le commentaire existant dans le code ("~65 pc") est **obsolète** : les
+     systèmes du jeu de données actuel vont jusqu'à 406 pc (~1324 al), et de
+     nombreuses étoiles brillantes des constellations (Sirius, Vega,
+     Arcturus...) sont à une distance du même ordre que le déplacement de
+     l'observateur — donc l'effet de déformation concerne la quasi-totalité
+     des exoplanètes proposées, pas seulement des cas extrêmes.
+   - Un disclaimer existe déjà (`renderExoSkyInfoPanel`, clé i18n
+     `exoSkyApproxHint`, `main.ts:1434-1441`) mais reste discret (italique,
+     11px, opacité 0.7) — quick-win identifié : le rendre plus visible + corriger
+     le commentaire "~65 pc" obsolète dans `sky2d.ts`.
+   - Le champ parallaxe (`Plx`) existe dans la table Hipparcos interrogée par
+     `scripts/ingest_constellations.py:65-68` mais n'est pas demandé — ajouter
+     la distance des étoiles du catalogue est donc trivial côté ingestion ;
+     en revanche reprojeter le fond + refaire les figures de constellations
+     reste un vrai chantier de rendu, pas juste un fetch de données. Urgence
+     jugée faible à moyenne (pas de désinformation active grâce au
+     disclaimer existant, mais à muscler).
 5. **Dézoomer et voir notre galaxie de l'extérieur, avec ses voisines**
    (Groupe Local). Concrètement : aujourd'hui la vue "galaxie" du site ne
    montre qu'un petit voisinage stellaire proche (le Soleil + une poignée de
@@ -148,56 +194,25 @@ retravaillé).
    leurs vraies distances (échelle en mégaparsecs, donc une toute nouvelle
    échelle en plus de celle déjà utilisée). Nécessite une nouvelle scène 3D
    et un nouvel état dans la navigation — un chantier non négligeable.
-   Priorité basse (repoussé en fin de liste le 2026-07-26) : jugé purement
-   cosmétique — aucune exoplanète ni spectre JWST à afficher à cette échelle,
-   ça ne sert pas l'axe différenciant du projet (atmosphères simulées à
-   partir de spectres réels), contrairement aux autres points ci-dessus.
-   Demandé par Cyril le 2026-07-12.
-6. **Textures imaginées pour les exoplanètes — aller plus loin que
-   l'existant** : `planetTexture.ts` a déjà un rendu procédural (styles
-   rocky/cloudy/icyCracks/gasBands/lava, déduit de `cloudDensity` ou calibré
-   via `interpretation_override.textureStyle` pour certaines exoplanètes
-   précises) — donc la brique de base existe déjà. Le point ici est
-   d'enrichir/diversifier ce rendu pour qu'il soit visuellement plus
-   distinctif et "habité" par corps (ex. reliefs, variations de teinte plus
-   organiques, motifs moins répétitifs d'une exoplanète à l'autre), tout en
-   gardant explicitement le cadre "simulation/impression d'artiste" déjà en
-   place (jamais présenté comme une photo réelle). Demandé par Cyril le
-   2026-07-26.
-7. **Mobile — toucher un astre doit afficher directement ses infos** : sur
-   mobile, sélectionner un astre (ex. le Soleil ou la Terre) n'affiche pas
-   ses explications tant qu'on n'a pas explicitement ouvert l'onglet "Infos"
-   du menu du bas. Comportement actuel bogué en plus : toucher le Soleil en
-   vue système fait *retourner* à la vue système (au lieu de juste le
-   sélectionner) ; toucher la Terre ne fait rien du tout. Objectif : un tap
-   sur un astre doit toujours faire apparaître ses informations directement,
-   sans étape intermédiaire ni comportement de navigation surprise. À
-   investiguer : logique de sélection tactile (`selectPending`/
-   `updateSelectionCard` dans `main.ts`) qui semble traiter le tap différemment
-   du clic desktop. Demandé par Cyril le 2026-08-01. **Implémenté le
-   2026-08-01** (tap mobile = sélection + ouverture auto de l'onglet Infos).
-8. **Ciel nocturne exoplanète — fond d'étoiles/constellations non
-   physiquement exact** : remarque d'un physicien consulté par Cyril (le
-   2026-08-01) : les constellations affichées dans la vue "ciel nocturne
-   depuis une exoplanète" sont exactement les mêmes qu'observées depuis la
-   Terre — physiquement faux dès qu'on change de point d'observation de
-   plusieurs années-lumière (parallaxe : les étoiles proches changeraient
-   fortement de position apparente les unes par rapport aux autres, aucune
-   des constellations terrestres ne resterait reconnaissable). Déjà documenté
-   comme limitation connue dans le code (`scenes/sky2d.ts`, commentaire ~L572) :
-   seuls les objets à distance connue (notre Soleil vu depuis l'exoplanète)
-   sont repositionnés correctement ; le fond d'étoiles catalogue
-   (Hipparcos) + les figures de constellations n'ont pas de distance
-   disponible dans le jeu de données ingéré, donc restent tels que vus
-   depuis la Terre, par simplification. Deux pistes, non tranchées : (a)
-   court terme — ajouter un disclaimer explicite dans l'UI précisant que le
-   fond d'étoiles est "vu depuis la Terre, à titre de repère" (cohérent avec
-   la convention centrale du projet de toujours étiqueter les simulations,
-   cf. `deriveAtmosphere()`) ; (b) long terme — le catalogue Hipparcos
-   contient des données de parallaxe (donc de distance) qui permettraient de
-   reprojeter correctement les étoiles proches (quelques centaines
-   d'années-lumière) depuis le point de vue de l'exoplanète ; chantier de
-   données conséquent, non commencé.
+   Priorité basse : jugé purement cosmétique — aucune exoplanète ni spectre
+   JWST à afficher à cette échelle, ça ne sert pas l'axe différenciant du
+   projet (atmosphères simulées à partir de spectres réels), contrairement
+   aux autres points ci-dessus. Demandé par Cyril le 2026-07-12.
+6. **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
+   clavier — uniquement à l'intérieur d'un système solaire donné (pas en vue
+   galaxie) : remplacerait ponctuellement OrbitControls par un déplacement
+   libre caméra (avance/recul/rotation) dans la scène `system.ts` déjà
+   chargée. Demandé par Cyril le 2026-07-21, **repoussé en dernière priorité
+   le 2026-08-02** (fonctionnalité cosmétique de confort de navigation, sans
+   lien avec l'axe différenciant atmosphères/spectres du projet).
+
+✅ **Mobile — toucher un astre doit afficher directement ses infos** : sur
+mobile, sélectionner un astre (ex. le Soleil ou la Terre) n'affichait pas ses
+explications tant qu'on n'avait pas explicitement ouvert l'onglet "Infos" du
+menu du bas ; toucher le Soleil en vue système faisait en plus *retourner* à
+la vue système au lieu de juste le sélectionner, et toucher la Terre ne
+faisait rien du tout. Demandé par Cyril le 2026-08-01, **implémenté le
+2026-08-01** (tap mobile = sélection + ouverture auto de l'onglet Infos).
 
 ## Prochaines étapes
 
