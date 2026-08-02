@@ -159,7 +159,6 @@ const creditsTexturesLabelEl = document.getElementById("credits-textures-label")
 const creditsConstellationsLabelEl = document.getElementById("credits-constellations-label")!;
 const creditsMusicLabelEl = document.getElementById("credits-music-label")!;
 const searchInputEl = document.getElementById("search-input") as HTMLInputElement;
-const searchDatalistEl = document.getElementById("search-datalist") as HTMLDataListElement;
 const searchResultsEl = document.getElementById("search-results")!;
 const lightboxEl = document.getElementById("lightbox")!;
 const lightboxImgEl = document.getElementById("lightbox-img") as HTMLImageElement;
@@ -2101,7 +2100,6 @@ function refreshSearchIndex() {
       constellationName: constellation.name,
     });
   }
-  searchDatalistEl.innerHTML = searchIndex.map((e) => `<option value="${escapeHtml(e.label)}"></option>`).join("");
 }
 
 function goToSearchEntry(entry: SearchEntry) {
@@ -2163,12 +2161,13 @@ const SEARCH_CATEGORIES: {
   { kind: "constellation", icon: "✦", labelKey: "searchCategoryConstellations" },
 ];
 
-// Liste custom groupée par catégorie affichée sous le champ — remplace la
-// dépendance à la popup <datalist> native (mal stylée, peu lisible en plein
-// écran mobile). Le <datalist> reste branché pour la navigation clavier
-// desktop (flèches système + Entrée), cette liste est l'affichage principal
-// cliquable/tactile, filtrée en direct à la frappe (substring, pas seulement
-// prefix, pour rester tolérant : "phon" trouve "TRAPPIST-1").
+// Liste custom groupée par catégorie affichée sous le champ. Le <datalist>
+// natif a été retiré (2026-08-02) : sa popup navigateur (non stylable, non
+// groupée) s'affichait par-dessus cette liste et la masquait de fait, rendant
+// le regroupement invisible en pratique. Entrée reste géré manuellement via
+// jumpToSearchResult(), indépendamment de tout <datalist>. Filtrage en direct
+// à la frappe (substring, pas seulement prefix, pour rester tolérant : "phon"
+// trouve "TRAPPIST-1").
 function renderSearchResults(query: string) {
   const q = query.trim().toLowerCase();
   searchResultsEl.innerHTML = "";
