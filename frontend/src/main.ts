@@ -2167,16 +2167,21 @@ const SEARCH_CATEGORIES: {
 // le regroupement invisible en pratique. Entrée reste géré manuellement via
 // jumpToSearchResult(), indépendamment de tout <datalist>. Filtrage en direct
 // à la frappe (substring, pas seulement prefix, pour rester tolérant : "phon"
-// trouve "TRAPPIST-1").
+// trouve "TRAPPIST-1"). Le plafond s'applique par catégorie (pas globalement
+// sur l'ensemble des correspondances) : avec un seul plafond global, les
+// premières entrées de l'index (étoiles/planètes des premiers systèmes)
+// pouvaient à elles seules épuiser le quota et faire disparaître des
+// catégories entières (notamment Constellations, en fin d'index) — corrigé
+// le 2026-08-02. Requête vide = toutes les entrées (includes("") est
+// toujours vrai) : un simple clic dans le champ affiche donc désormais un
+// aperçu de chaque catégorie au lieu de rien.
+const SEARCH_RESULTS_PER_CATEGORY_LIMIT = 30;
+
 function renderSearchResults(query: string) {
   const q = query.trim().toLowerCase();
   searchResultsEl.innerHTML = "";
-  if (!q) {
-    hideSearchResults();
-    return;
-  }
-  const matches = searchIndex.filter((e) => e.label.toLowerCase().includes(q)).slice(0, 40);
-  if (matches.length === 0) {
+  const hasAnyMatch = searchIndex.some((e) => e.label.toLowerCase().includes(q));
+  if (!hasAnyMatch) {
     const empty = document.createElement("div");
     empty.className = "search-results-empty";
     empty.textContent = t("searchNotFound");
@@ -2185,7 +2190,9 @@ function renderSearchResults(query: string) {
     return;
   }
   for (const category of SEARCH_CATEGORIES) {
-    const entries = matches.filter((e) => e.kind === category.kind);
+    const entries = searchIndex
+      .filter((e) => e.kind === category.kind && e.label.toLowerCase().includes(q))
+      .slice(0, SEARCH_RESULTS_PER_CATEGORY_LIMIT);
     if (entries.length === 0) continue;
     const label = document.createElement("div");
     label.className = "search-results-section-label";
