@@ -1642,6 +1642,48 @@ function historicalAnecdoteHtml(system: SystemData, lang: Lang): string {
   return `<details class="learn-more"><summary>${t("historicalAnecdoteQuestion")}</summary><p>${answer}</p></details>`;
 }
 
+function formatEarthRatio(ratio: number): string {
+  if (ratio >= 100) return Math.round(ratio).toString();
+  if (ratio >= 10) return ratio.toFixed(0);
+  return ratio.toFixed(1);
+}
+
+// Fiche de comparaison directe à la Terre (backlog 21/07) : un ratio par axe
+// plutôt que les valeurs brutes déjà affichées plus haut dans le panneau.
+// pl_rade/pl_bmasse sont déjà exprimés en unités terrestres (cf. types.ts) ;
+// seuls pl_eqt (Kelvin, échelle absolue donc un ratio y a un sens physique)
+// et la gravité de surface (calculée via planetGravityMs2) nécessitent une
+// division par la référence Terre. Terre-vs-Terre est exclu par l'appelant.
+function earthComparisonHtml(planet: PlanetData, lang: Lang): string {
+  const earth = findEarthPlanet(seed);
+  const lines: string[] = [];
+
+  if (planet.pl_rade != null && earth.pl_rade != null && earth.pl_rade !== 0) {
+    const ratio = planet.pl_rade / earth.pl_rade;
+    lines.push(`<li>${t("radius")} : ${formatEarthRatio(ratio)}× ${t("earthCompareRadiusSuffix")}</li>`);
+  }
+  if (planet.pl_bmasse != null && earth.pl_bmasse != null && earth.pl_bmasse !== 0) {
+    const ratio = planet.pl_bmasse / earth.pl_bmasse;
+    lines.push(`<li>${t("mass")} : ${formatEarthRatio(ratio)}× ${t("earthCompareMassSuffix")}</li>`);
+  }
+  if (planet.pl_eqt != null && earth.pl_eqt != null && earth.pl_eqt !== 0) {
+    const ratio = planet.pl_eqt / earth.pl_eqt;
+    lines.push(`<li>${t("equilibriumTemp")} : ${formatEarthRatio(ratio)}× ${t("earthCompareTempSuffix")}</li>`);
+  }
+  const planetGravity = planetGravityMs2(planet);
+  if (planetGravity != null) {
+    const ratio = planetGravity / EARTH_SURFACE_GRAVITY;
+    lines.push(`<li>${t("gravity")} : ${formatEarthRatio(ratio)}× ${t("earthCompareGravitySuffix")}</li>`);
+  }
+  if (planet.planet_type) {
+    const typeLabel = lang === "fr" ? planet.planet_type.fr : planet.planet_type.en;
+    lines.push(`<li>${t("planetType")} : ${typeLabel} — <em>${t("earthCompareTypeNote")}</em></li>`);
+  }
+
+  if (!lines.length) return "";
+  return `<div class="earth-compare"><p><strong>${t("earthCompareTitle")}</strong></p><ul>${lines.join("")}</ul></div>`;
+}
+
 function renderInfoPanel(system: SystemData | null, planet?: PlanetData) {
   if (!system) {
     infoPanelEl.classList.remove("visible");
@@ -1678,6 +1720,7 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData) {
     : t("noSatellite");
 
   const gravityMs2 = planetGravityMs2(planet);
+  const isEarth = system.id === "sol" && planet.name === "Terre";
 
   infoPanelEl.innerHTML = `
     <h2>${localizeName(planet.name)}</h2>
@@ -1687,6 +1730,7 @@ function renderInfoPanel(system: SystemData | null, planet?: PlanetData) {
     ${planet.planet_type ? `<p><strong>${t("planetType")} :</strong> ${lang === "fr" ? planet.planet_type.fr : planet.planet_type.en}</p>` : ""}
     ${gravityLineHtml(gravityMs2)}
     ${gravityAnecdoteHtml(planet.name, gravityMs2)}
+    ${isEarth ? "" : earthComparisonHtml(planet, lang)}
     ${discoveryHtml(planet, lang)}
     <p><strong>${t("molecules")} :</strong> ${molecules}</p>
     <p>${note}</p>
