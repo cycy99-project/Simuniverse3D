@@ -572,11 +572,18 @@ export interface Sky2dSceneResult {
 // jeu de données sont replacés sur le dôme selon leur vraie direction 3D
 // relative (cf. realStarPosition), avec leur vraie distance. Le fond
 // (étoiles catalogue Hipparcos + figures de constellations) reste identique
-// à la vue depuis la Terre : ces étoiles n'ont pas de distance connue dans ce
-// jeu de données, donc pas moyen de recalculer leur vraie direction — une
-// approximation assumée et documentée dans l'UI (cf. i18n exoSkyApproxHint),
-// raisonnable vu que ces étoiles catalogue sont pour la plupart bien plus
-// loin que l'écart entre les systèmes de ce jeu de données (jusqu'à ~65 pc).
+// à la vue depuis la Terre : la distance (parallaxe Hipparcos, champ Plx)
+// existe bien dans les données sources mais n'est pas demandée/ingérée par
+// scripts/ingest_constellations.py, donc pas moyen de recalculer leur vraie
+// direction 3D pour l'instant. Ce n'est PAS une approximation négligeable :
+// les systèmes de ce jeu de données vont jusqu'à ~406 pc (~1324 al, cf.
+// seed_systems.json), un ordre de grandeur comparable à celui de nombreuses
+// étoiles brillantes des constellations (Sirius, Vega, Arcturus...) — donc
+// l'approximation touche la quasi-totalité des exoplanètes proposées, pas
+// seulement des cas extrêmes. Limitation assumée et documentée dans l'UI
+// (cf. i18n exoSkyApproxHint) ; le vrai fix (reprojeter tout le fond du
+// catalogue + refaire les figures de constellations) est un chantier lourd,
+// hors scope ici.
 export function buildSky2dScene(seed: SeedData, sky: ConstellationSkyData, observerSystemId?: string): Sky2dSceneResult {
   const group = new THREE.Group();
   const clickable = new Map<THREE.Object3D, string>();

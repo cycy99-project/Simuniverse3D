@@ -55,8 +55,8 @@ const dict = {
   exoSkySunDistance: { fr: "Le Soleil ☉ se trouve à environ", en: "The Sun ☉ is about" },
   exoSkyLightYears: { fr: "années-lumière d'ici", en: "light-years from here" },
   exoSkyApproxHint: {
-    fr: "Le Soleil et les autres systèmes sont repositionnés selon leur vraie direction depuis ici, mais le fond d'étoiles et les constellations restent ceux vus depuis la Terre (données de distance non disponibles pour ce fond de ciel) — simulation, pas une observation réelle.",
-    en: "The Sun and other systems are repositioned according to their true direction from here, but the background stars and constellations remain as seen from Earth (no distance data available for this sky background) — a simulation, not a real observation.",
+    fr: "Le Soleil et les autres systèmes sont repositionnés selon leur vraie direction depuis ici, mais le fond d'étoiles et les constellations restent ceux vus depuis la Terre (les distances mesurées pour ces étoiles ne sont pas exploitées dans ce fond de ciel) — simulation, pas une observation réelle.",
+    en: "The Sun and other systems are repositioned according to their true direction from here, but the background stars and constellations remain as seen from Earth (the measured distances for these stars are not used for this sky background) — a simulation, not a real observation.",
   },
   sunLocatorLabel: { fr: "🧭 Repérer le Soleil", en: "🧭 Locate the Sun" },
   milkyWayLabel: { fr: "Voie lactée", en: "Milky Way" },
