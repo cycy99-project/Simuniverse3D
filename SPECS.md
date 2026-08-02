@@ -127,16 +127,28 @@ l'humanité serait théoriquement visible cette année-là. Demandé par Cyril l
 0. ✅ **Bip de confirmation trop artificiel** : remplacé le bip synthétisé
    Web Audio (sweep+shimmer) par un sample importé (Floraphonic,
    `public/bips/`). Retour de Cyril le 2026-08-02, livré le 2026-08-02.
-1. **Comparaison exoplanète vs Terre** : pour chaque exoplanète, une fiche
-   de comparaison directe avec la Terre (taille, masse, température, type
-   de planète...). Demandé par Cyril le 2026-07-21. **En cours (2026-08-02).**
-2. **Losange de sélection + bouton "Explorer"** pour les satellites, comme
-   c'est déjà le cas pour les étoiles/systèmes et les planètes (indicateur
-   visuel en losange autour de l'objet sélectionné + carte du bas avec nom,
-   type et bouton "Explorer →") : actuellement absent pour les lunes
-   sélectionnées en vue système/planète. Demandé par Cyril le 2026-07-26.
-   **En cours (2026-08-02).**
-3. **Textures imaginées pour les exoplanètes — aller plus loin que
+
+✅ **Comparaison exoplanète vs Terre** : fiche de comparaison directe avec la
+Terre (rayon, masse, température, gravité, type de planète) ajoutée dans le
+panneau infos, juste après la ligne de gravité. Demandé par Cyril le
+2026-07-21, livré le 2026-08-02 (à valider en PC/mobile, pas encore
+déployé).
+
+✅ **Losange de sélection + bouton "Explorer" pour les satellites** :
+étendu aux lunes le pattern déjà en place pour étoiles/systèmes/planètes, en
+vue système et en vue atmosphère. Demandé par Cyril le 2026-07-26, livré le
+2026-08-02 (à valider en PC/mobile, pas encore déployé).
+
+1. **Version du site affichée en bas de page** : afficher un numéro de
+   version (ou un hash de commit court) discret en bas de la page,
+   probablement à côté des crédits existants (`#credits` dans
+   `frontend/index.html`) — utile pour vérifier rapidement, notamment sur
+   mobile après déploiement, que la version attendue est bien celle servie
+   (cache navigateur/service worker). Reste à définir : source de la
+   version (champ `package.json` versionné manuellement, ou hash de commit
+   injecté au build via Vite `define`/`import.meta.env`). Demandé par Cyril
+   le 2026-08-02.
+2. **Textures imaginées pour les exoplanètes — aller plus loin que
    l'existant** : `planetTexture.ts` a déjà un rendu procédural (styles
    rocky/cloudy/icyCracks/gasBands/lava, déduit de `cloudDensity` ou calibré
    via `interpretation_override.textureStyle` pour certaines exoplanètes
@@ -150,7 +162,7 @@ l'humanité serait théoriquement visible cette année-là. Demandé par Cyril l
    important" — rendu actuel jugé décevant sur les exoplanètes, contrairement
    au Système Solaire qui bénéficie de vraies photos NASA). Étude comparative
    des solutions gratuites lancée le 2026-08-02 (en cours).
-4. **Ciel nocturne exoplanète — fond d'étoiles/constellations non
+3. **Ciel nocturne exoplanète — fond d'étoiles/constellations non
    physiquement exact** : remarque d'un physicien consulté par Cyril (le
    2026-08-01) : les constellations affichées dans la vue "ciel nocturne
    depuis une exoplanète" sont exactement les mêmes qu'observées depuis la
@@ -183,7 +195,7 @@ l'humanité serait théoriquement visible cette année-là. Demandé par Cyril l
      reste un vrai chantier de rendu, pas juste un fetch de données. Urgence
      jugée faible à moyenne (pas de désinformation active grâce au
      disclaimer existant, mais à muscler).
-5. **Dézoomer et voir notre galaxie de l'extérieur, avec ses voisines**
+4. **Dézoomer et voir notre galaxie de l'extérieur, avec ses voisines**
    (Groupe Local). Concrètement : aujourd'hui la vue "galaxie" du site ne
    montre qu'un petit voisinage stellaire proche (le Soleil + une poignée de
    systèmes exoplanétaires réels) — pas du tout la Voie Lactée entière, et
@@ -198,7 +210,7 @@ l'humanité serait théoriquement visible cette année-là. Demandé par Cyril l
    JWST à afficher à cette échelle, ça ne sert pas l'axe différenciant du
    projet (atmosphères simulées à partir de spectres réels), contrairement
    aux autres points ci-dessus. Demandé par Cyril le 2026-07-12.
-6. **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
+5. **Mode de navigation "vaisseau spatial"** avec vue cockpit, pilotable au
    clavier — uniquement à l'intérieur d'un système solaire donné (pas en vue
    galaxie) : remplacerait ponctuellement OrbitControls par un déplacement
    libre caméra (avance/recul/rotation) dans la scène `system.ts` déjà
