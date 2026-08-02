@@ -127,6 +127,15 @@ const dict = {
   planetType: { fr: "Type de planète", en: "Planet type" },
   noMoleculeDetected: { fr: "Aucune molécule détectée", en: "No molecule detected" },
   discoveryLabel: { fr: "Découverte", en: "Discovery" },
+  earthCompareTitle: { fr: "🌍 Comparé à la Terre", en: "🌍 Compared to Earth" },
+  earthCompareRadiusSuffix: { fr: "la taille de la Terre", en: "the size of Earth" },
+  earthCompareMassSuffix: { fr: "la masse de la Terre", en: "the mass of Earth" },
+  earthCompareTempSuffix: { fr: "la température d'équilibre terrestre", en: "Earth's equilibrium temperature" },
+  earthCompareGravitySuffix: { fr: "la gravité terrestre", en: "Earth's gravity" },
+  earthCompareTypeNote: {
+    fr: "la Terre, elle, est classée comme une planète tellurique (rocheuse)",
+    en: "Earth, for reference, is classified as a terrestrial (rocky) planet",
+  },
   historicalAnecdoteQuestion: {
     fr: "🔭 Si on observait la Terre depuis ici aujourd'hui ?",
     en: "🔭 What if we observed Earth from here today?",
