@@ -1637,8 +1637,8 @@ function historicalAnecdoteHtml(system: SystemData, lang: Lang): string {
   const yearLabel = yearSeen < 0 ? `${Math.abs(yearSeen)} ${t("historicalAnecdoteBce")}` : `${yearSeen}`;
   const answer =
     lang === "fr"
-      ? `On y verrait la Terre telle qu'elle était en ${yearLabel} : ${event.fr}.`
-      : `We would see Earth as it was in ${yearLabel}: ${event.en}.`;
+      ? `Actuellement depuis le sol de cette planète, tu y verrais la Terre telle qu'elle était en ${yearLabel} : ${event.fr}.`
+      : `Right now, from the surface of this planet, you would see Earth as it was in ${yearLabel}: ${event.en}.`;
   return `<details class="learn-more"><summary>${t("historicalAnecdoteQuestion")}</summary><p>${answer}</p></details>`;
 }
 
