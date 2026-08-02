@@ -70,7 +70,8 @@ type AppState =
 type PendingTarget =
   | { kind: "system"; systemId: string }
   | { kind: "star"; systemId: string }
-  | { kind: "planet"; systemId: string; planetName: string };
+  | { kind: "planet"; systemId: string; planetName: string }
+  | { kind: "moon"; systemId: string; planetName: string; moonName: string };
 
 interface PendingSelection {
   target: PendingTarget;
@@ -760,6 +761,23 @@ function findPlanet(system: SystemData, planetName: string): PlanetData {
   return planet;
 }
 
+function findMoon(system: SystemData, planetName: string, moonName: string): MoonData {
+  const moon = findPlanet(system, planetName).moons.find((m) => m.name === moonName);
+  if (!moon) throw new Error(`Lune inconnue : ${moonName}`);
+  return moon;
+}
+
+// Retrouve la planète propriétaire d'une lune à partir de son seul nom (id
+// `clickable` en vue système, cf. system.ts) : contrairement à la vue
+// atmosphère (une seule planète affichée), la vue système affiche toutes les
+// planètes du système à la fois, donc l'id cliqué ne dit pas de lui-même à
+// quelle planète la lune appartient.
+function findMoonOwnerPlanet(system: SystemData, moonName: string): PlanetData {
+  const planet = system.planets.find((p) => p.moons.some((m) => m.name === moonName));
+  if (!planet) throw new Error(`Lune inconnue : ${moonName}`);
+  return planet;
+}
+
 function setState(next: AppState) {
   setMobileSheet("none");
   state = next;
@@ -1134,9 +1152,12 @@ function updateSelectionCard() {
   } else if (target.kind === "star") {
     label = `☉ ${localizeName(findSystem(target.systemId).star.name)}`;
     typeLabel = t("selectionTypeStar");
-  } else {
+  } else if (target.kind === "planet") {
     label = localizeName(findPlanet(findSystem(target.systemId), target.planetName).name);
     typeLabel = t("selectionTypePlanet");
+  } else {
+    label = localizeName(findMoon(findSystem(target.systemId), target.planetName, target.moonName).name);
+    typeLabel = t("selectionTypeMoon");
   }
   selectionCardLabelEl.textContent = label;
   selectionCardTypeEl.textContent = typeLabel;
@@ -1146,7 +1167,17 @@ function updateSelectionCard() {
     pendingSelection = null;
     if (target.kind === "system") setState({ view: "system", systemId: target.systemId });
     else if (target.kind === "star") setState({ view: "star", systemId: target.systemId });
-    else setState({ view: "atmosphere", systemId: target.systemId, planetName: target.planetName });
+    else if (target.kind === "planet") setState({ view: "atmosphere", systemId: target.systemId, planetName: target.planetName });
+    else {
+      // Reproduit l'ancien raccourci direct (clic sur une lune en vue
+      // atmosphère) : setState() réinitialise selectedMoon à null (cf. sa
+      // définition), donc on le repositionne juste après, puis un second
+      // render() affiche la vue satellite dédiée — même séquence que
+      // goToSearchEntry() pour une recherche aboutissant sur une lune.
+      setState({ view: "atmosphere", systemId: target.systemId, planetName: target.planetName });
+      selectedMoon = target.moonName;
+      render();
+    }
   };
   selectionCardEl.classList.add("visible");
 }
@@ -1157,6 +1188,12 @@ function updateSelectionCard() {
 function restoreDefaultInfoPanel() {
   if (state.view === "system") {
     renderInfoPanel(findSystem(state.systemId));
+  } else if (state.view === "atmosphere") {
+    // Une lune en attente (cf. selectPending "moon") écrase temporairement le
+    // panneau par défaut de la planète (previewPendingInfo) — annuler la
+    // sélection doit le restaurer, pas juste vider le panneau (sinon la
+    // planète perd ses infos tant qu'on ne re-clique pas dessus).
+    renderInfoPanel(findSystem(state.systemId), findPlanet(findSystem(state.systemId), state.planetName));
   } else {
     infoPanelEl.classList.remove("visible");
     infoPanelEl.innerHTML = "";
@@ -1174,6 +1211,8 @@ function previewPendingInfo(target: PendingTarget) {
     renderInfoPanel(system, findPlanet(system, target.planetName));
   } else if (target.kind === "star") {
     renderStarInfoPanel(system, system.id === "sol");
+  } else if (target.kind === "moon") {
+    renderMoonInfoPanel(findMoon(system, target.planetName, target.moonName));
   } else {
     renderInfoPanel(system);
   }
@@ -1813,16 +1852,22 @@ canvas.addEventListener("click", (event) => {
     if (intersects.length > 0) {
       const id = clickable.get(intersects[0].object);
       if (id) {
-        selectedMoon = id;
-        render();
+        // Comme pour système/étoile/planète (Nouvelle Navigation) : un tap
+        // sur une lune ne bascule plus directement la vue satellite, il ne
+        // fait que la désigner (losange + encart "Explorer") — c'est
+        // l'Explorer de la carte qui reproduit l'ancien raccourci direct.
+        selectPending({ kind: "moon", systemId: state.systemId, planetName: state.planetName, moonName: id }, id);
         return;
       }
     }
-    // Clic dans le vide : désélectionner la lune affichée s'il y en a une.
-    // Un clic dans le vide ne fait plus jamais sortir de la vue (Nouvelle
-    // Navigation) — seul le bouton "Explorer" (pour système/étoile/planète)
-    // ou le fil d'Ariane font revenir en arrière depuis ici.
-    if (selectedMoon) {
+    // Clic dans le vide : referme d'abord une sélection de lune en attente
+    // (losange + encart), sinon désélectionne la lune déjà "explorée" s'il y
+    // en a une. Un clic dans le vide ne fait plus jamais sortir de la vue
+    // (Nouvelle Navigation) — seul le bouton "Explorer" ou le fil d'Ariane
+    // font revenir en arrière depuis ici.
+    if (pendingSelection) {
+      clearPendingSelection();
+    } else if (selectedMoon) {
       selectedMoon = null;
       moonSurfaceView = false;
       dayMode = true;
@@ -1906,7 +1951,15 @@ canvas.addEventListener("click", (event) => {
       render();
       if (isMobile()) setMobileSheet("info");
     } else {
-      selectPending({ kind: "planet", systemId: state.systemId, planetName: id }, id);
+      const system = findSystem(state.systemId);
+      if (system.planets.some((p) => p.name === id)) {
+        selectPending({ kind: "planet", systemId: state.systemId, planetName: id }, id);
+      } else {
+        // Ni une planète ni STAR_CLICK_ID/Voyager : ne peut être qu'une lune
+        // (cf. system.ts, clickable fusionne désormais moons.clickable).
+        const owner = findMoonOwnerPlanet(system, id);
+        selectPending({ kind: "moon", systemId: state.systemId, planetName: owner.name, moonName: id }, id);
+      }
     }
   }
 });
