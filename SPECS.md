@@ -131,13 +131,27 @@ l'humanité serait théoriquement visible cette année-là. Demandé par Cyril l
 ✅ **Comparaison exoplanète vs Terre** : fiche de comparaison directe avec la
 Terre (rayon, masse, température, gravité, type de planète) ajoutée dans le
 panneau infos, juste après la ligne de gravité. Demandé par Cyril le
-2026-07-21, livré le 2026-08-02 (à valider en PC/mobile, pas encore
-déployé).
+2026-07-21, livré et poussé sur GitHub le 2026-08-02 — **reste à déployer
+sur le VPS** (`update.sh`, pas d'accès SSH depuis le PC Windows) avant
+validation réelle par Cyril.
 
 ✅ **Losange de sélection + bouton "Explorer" pour les satellites** :
 étendu aux lunes le pattern déjà en place pour étoiles/systèmes/planètes, en
-vue système et en vue atmosphère. Demandé par Cyril le 2026-07-26, livré le
-2026-08-02 (à valider en PC/mobile, pas encore déployé).
+vue système et en vue atmosphère. Demandé par Cyril le 2026-07-26, livré et
+poussé sur GitHub le 2026-08-02 — **reste à déployer sur le VPS** (idem
+ci-dessus).
+
+✅ **Bug — anecdote historique toujours "Tchernobyl"** : signalé par Cyril
+le 2026-08-02 (toutes les exoplanètes renvoyaient le même événement, avec
+juste l'année affichée qui changeait) : la frise `HISTORICAL_EVENTS`
+(`frontend/src/history/timeline.ts`) avait deux trous (476-1066 et
+1969-1986) qui absorbaient toutes les années cibles proches. Densifiée avec
+9 événements vérifiés ; texte reformulé ("Actuellement depuis le sol de
+cette planète, tu y verrais la Terre telle qu'elle était en {année} :
+{événement}.", suggéré par Cyril). Vérifié sur les 13 systèmes actuels :
+plus aucune collision entre systèmes dont l'année cible diffère de plus de
+15 ans. Livré et poussé sur GitHub le 2026-08-02 — **reste à déployer sur
+le VPS**.
 
 1. **Version du site affichée en bas de page** : afficher un numéro de
    version (ou un hash de commit court) discret en bas de la page,
