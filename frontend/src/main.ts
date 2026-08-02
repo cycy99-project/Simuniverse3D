@@ -176,6 +176,16 @@ const distanceHudValueEl = document.getElementById("distance-hud-value")!;
 const distanceHudTravelEl = document.getElementById("distance-hud-travel")!;
 const visitorCounterTextEl = document.getElementById("visitor-counter-text")!;
 
+// Hash de commit affiché près des crédits (desktop) et du compteur de
+// visiteurs (mobile, seul point d'ancrage non masqué par is-mobile) : permet
+// de vérifier après un déploiement que la version servie est la bonne
+// (injecté au build Docker via VITE_GIT_HASH, cf. deploy/hetzner/update.sh).
+const appVersionEl = document.getElementById("app-version")!;
+const appVersionMobileEl = document.getElementById("app-version-mobile")!;
+const appVersion = `v.${import.meta.env.VITE_GIT_HASH ?? "dev"}`;
+appVersionEl.textContent = appVersion;
+appVersionMobileEl.textContent = appVersion;
+
 // UI mobile (barre de navigation du bas + 3 tiroirs) — cf. responsive.ts et
 // applyChromeMode()/setMobileSheet() plus bas. N'existe que dans le DOM ;
 // visible uniquement sous <html class="is-mobile">.
