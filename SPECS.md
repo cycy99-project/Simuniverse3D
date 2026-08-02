@@ -152,62 +152,66 @@ cette planète, tu y verrais la Terre telle qu'elle était en {année} :
 plus aucune collision entre systèmes dont l'année cible diffère de plus de
 15 ans. Livré, poussé sur GitHub et **déployé sur le VPS le 2026-08-02**.
 
-1. **Version du site affichée en bas de page** : afficher un numéro de
-   version (ou un hash de commit court) discret en bas de la page,
-   probablement à côté des crédits existants (`#credits` dans
-   `frontend/index.html`) — utile pour vérifier rapidement, notamment sur
-   mobile après déploiement, que la version attendue est bien celle servie
-   (cache navigateur/service worker). Reste à définir : source de la
-   version (champ `package.json` versionné manuellement, ou hash de commit
-   injecté au build via Vite `define`/`import.meta.env`). Demandé par Cyril
-   le 2026-08-02.
-2. **Textures imaginées pour les exoplanètes — aller plus loin que
-   l'existant** : `planetTexture.ts` a déjà un rendu procédural (styles
-   rocky/cloudy/icyCracks/gasBands/lava, déduit de `cloudDensity` ou calibré
-   via `interpretation_override.textureStyle` pour certaines exoplanètes
-   précises) — donc la brique de base existe déjà. Le point ici est
-   d'enrichir/diversifier ce rendu pour qu'il soit visuellement plus
-   distinctif et "habité" par corps (ex. reliefs, variations de teinte plus
-   organiques, motifs moins répétitifs d'une exoplanète à l'autre), tout en
-   gardant explicitement le cadre "simulation/impression d'artiste" déjà en
-   place (jamais présenté comme une photo réelle). Demandé par Cyril le
-   2026-07-26, **remonté en priorité haute le 2026-08-02** ("très
-   important" — rendu actuel jugé décevant sur les exoplanètes, contrairement
-   au Système Solaire qui bénéficie de vraies photos NASA). Étude comparative
-   des solutions gratuites lancée le 2026-08-02 (en cours).
-3. **Ciel nocturne exoplanète — fond d'étoiles/constellations non
-   physiquement exact** : remarque d'un physicien consulté par Cyril (le
-   2026-08-01) : les constellations affichées dans la vue "ciel nocturne
-   depuis une exoplanète" sont exactement les mêmes qu'observées depuis la
-   Terre — physiquement faux dès qu'on change de point d'observation de
-   plusieurs années-lumière (parallaxe : les étoiles proches changeraient
-   fortement de position apparente les unes par rapport aux autres, aucune
-   des constellations terrestres ne resterait reconnaissable). **Vérifié et
-   confirmé le 2026-08-02** (investigation détaillée, sans nuance) :
-   - Le fond catalogue Hipparcos (`makeCatalogStars`/`makeConstellationLines`
-     dans `scenes/sky2d.ts:588-589`) ne consomme que `ra`/`dec` géocentriques,
-     sans tenir compte du point d'observation — confirmé par le commentaire du
-     code lui-même (`sky2d.ts:570-579`). Seuls les systèmes du jeu de données
-     NASA (dont le Soleil) sont correctement reprojetés par parallaxe, via
-     `realStarPosition()` (`scenes/galaxy.ts:45-57`) — ~15 systèmes sur les
-     ~1500 étoiles du catalogue.
-   - Le commentaire existant dans le code ("~65 pc") est **obsolète** : les
-     systèmes du jeu de données actuel vont jusqu'à 406 pc (~1324 al), et de
-     nombreuses étoiles brillantes des constellations (Sirius, Vega,
-     Arcturus...) sont à une distance du même ordre que le déplacement de
-     l'observateur — donc l'effet de déformation concerne la quasi-totalité
-     des exoplanètes proposées, pas seulement des cas extrêmes.
-   - Un disclaimer existe déjà (`renderExoSkyInfoPanel`, clé i18n
-     `exoSkyApproxHint`, `main.ts:1434-1441`) mais reste discret (italique,
-     11px, opacité 0.7) — quick-win identifié : le rendre plus visible + corriger
-     le commentaire "~65 pc" obsolète dans `sky2d.ts`.
-   - Le champ parallaxe (`Plx`) existe dans la table Hipparcos interrogée par
-     `scripts/ingest_constellations.py:65-68` mais n'est pas demandé — ajouter
-     la distance des étoiles du catalogue est donc trivial côté ingestion ;
-     en revanche reprojeter le fond + refaire les figures de constellations
-     reste un vrai chantier de rendu, pas juste un fetch de données. Urgence
-     jugée faible à moyenne (pas de désinformation active grâce au
-     disclaimer existant, mais à muscler).
+✅ **Version du site affichée en bas de page** : hash de commit court (ex.
+`v.2315ec7`) affiché près des crédits (desktop) et du compteur de visiteurs
+(mobile, seul point d'ancrage non masqué par `is-mobile`). Calculé côté hôte
+dans `deploy/hetzner/update.sh` juste après le `git pull` (`.git` n'est pas
+dans le contexte du build Docker frontend), passé en build-arg
+(`GIT_HASH`) → `ARG`/`ENV VITE_GIT_HASH` dans `frontend/Dockerfile` →
+`import.meta.env.VITE_GIT_HASH` dans `main.ts` (fallback `"dev"` en local
+sans variable d'env). Demandé par Cyril le 2026-08-02, livré, poussé et
+**déployé sur le VPS le 2026-08-02** — vérifié en prod : le bundle
+`main-*.js` servi contient bien le hash exact du commit déployé
+(`2315ec7`).
+
+✅ **Textures imaginées pour les exoplanètes — aller plus loin que
+l'existant** : `planetTexture.ts` réécrit pour remplacer les primitives 2D
+posées aléatoirement (cercles/ellipses/lignes brisées `Math.random()`,
+bruit blanc) par un champ de bruit cohérent calculé pixel par pixel
+(512×256), via `simplex-noise` — deux briques réutilisables : `fbm()`
+(somme de 3-5 octaves, continu) et `ridgedFbm()` (octaves repliées en
+`1 - |bruit|`, crêtes fines). Par style : **rocky** = élévation fbm basse
+fréquence + overlay haute fréquence pour le grain ; **cloudy** = fbm
+terrain + fbm nuage échantillonné à des coordonnées distordues par du
+*domain warping* (deux fbm de warp), seuillé selon `cloudDensity` ;
+**icyCracks** = ridgedFbm seuillé haut pour un réseau de fissures fines
+continues ; **gasBands** = bandes sinusoïdales dont la phase est décalée
+par du warping horizontal + turbulence ; **lava** = ridgedFbm turbulent
+mappé vers 3 couleurs (croûte sombre → `hazeColor` → cœur incandescent).
+Déterministe par exoplanète (seed FNV-1a dérivée de la clé de cache,
+PRNG mulberry32 passé à `simplex-noise`) : une exoplanète garde le même
+aspect visuel d'une session à l'autre, contrairement à l'ancien rendu qui
+retirait un tirage aléatoire différent à chaque F5. Signature
+`makePlanetSurfaceTexture()` et cadre "simulation/impression d'artiste"
+inchangés, `atmosphere.ts` non touché. Demandé par Cyril le 2026-07-26,
+remonté en priorité haute le 2026-08-02, livré, poussé et **déployé sur le
+VPS le 2026-08-02** — **vérification visuelle en navigateur pas encore
+faite** (pas d'outil de capture d'écran/navigateur disponible côté agent) :
+tsc + build passent, mais le rendu réel reste à confirmer par Cyril.
+
+✅ **Ciel nocturne exoplanète — fond d'étoiles/constellations non
+physiquement exact — quick-win** : remarque d'un physicien consulté par
+Cyril (le 2026-08-01), vérifiée et confirmée le 2026-08-02 (le fond
+catalogue Hipparcos ne consomme que `ra`/`dec` géocentriques, sans
+reprojection par parallaxe — seuls ~15 systèmes du jeu de données NASA sur
+~1500 étoiles du catalogue sont correctement replacés ; le vrai fix
+(reprojeter tout le fond + refaire les figures de constellations) reste un
+chantier de rendu à part entière, pas traité ici). Quick-win livré le
+2026-08-02 : le disclaimer existant (`renderExoSkyInfoPanel`, clé i18n
+`exoSkyApproxHint`) passe d'un texte discret (italique 11px, opacité 0.7) à
+un badge ambré visible (⚠️, cohérent avec le style `.badge.no_data`/
+`.no_detection` déjà utilisé ailleurs pour signaler une donnée manquante),
+et le texte fr/en est reformulé ("données non exploitées" plutôt que "non
+disponibles" — la parallaxe Hipparcos existe bien dans les données sources
+via `scripts/ingest_constellations.py`, elle n'est simplement pas
+ingérée). Le commentaire obsolète "~65 pc" dans `scenes/sky2d.ts` (au-dessus
+de `buildSky2dScene`) est corrigé : les systèmes du jeu de données actuel
+vont en réalité jusqu'à 406 pc (~1324 al), un ordre de grandeur comparable à
+celui de nombreuses étoiles brillantes des constellations (Sirius, Vega,
+Arcturus...) — donc l'approximation touche la quasi-totalité des
+exoplanètes proposées, pas seulement des cas extrêmes. Livré, poussé et
+**déployé sur le VPS le 2026-08-02**. Le chantier de fond (reprojection
+complète) reste dans le backlog si besoin, priorité faible à moyenne.
 4. **Dézoomer et voir notre galaxie de l'extérieur, avec ses voisines**
    (Groupe Local). Concrètement : aujourd'hui la vue "galaxie" du site ne
    montre qu'un petit voisinage stellaire proche (le Soleil + une poignée de
