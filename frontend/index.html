@@ -93,11 +93,18 @@
         display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
         min-height: 36px; font-family: var(--font-display); font-size: 10px; letter-spacing: 0.05em;
         text-transform: uppercase; color: var(--color-muted); padding: 8px 12px; text-align: left;
-        background: none; border: none; border-radius: 0; cursor: pointer;
+        background: none; border: none; border-left: 3px solid transparent; border-radius: 0; cursor: pointer;
       }
       .search-results-section-label:hover, .search-results-section-label:focus-visible {
-        color: var(--color-fg);
+        filter: brightness(1.3);
       }
+      /* Une couleur "maîtresse" distincte par catégorie (repère visuel rapide
+         dans la liste dépliée/repliée), cf. data-kind posé par renderSearchResults
+         dans main.ts — pas de lien avec une quelconque couleur physique réelle. */
+      .search-results-section-label[data-kind="star"] { color: #f5c451; border-left-color: #f5c451; }
+      .search-results-section-label[data-kind="planet"] { color: #7dc4ff; border-left-color: #7dc4ff; }
+      .search-results-section-label[data-kind="moon"] { color: #b8c2cc; border-left-color: #b8c2cc; }
+      .search-results-section-label[data-kind="constellation"] { color: #c9a0f5; border-left-color: #c9a0f5; }
       .search-results-section-chevron { font-size: 9px; width: 10px; text-align: center; opacity: 0.8; }
       .search-results-empty { font-size: 13px; color: var(--color-muted); padding: 12px; text-align: center; }
       .search-result-item {

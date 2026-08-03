@@ -2203,6 +2203,7 @@ function renderSearchResults(query: string) {
     const label = document.createElement("button");
     label.type = "button";
     label.className = "search-results-section-label";
+    label.dataset.kind = category.kind;
     label.innerHTML = `<span class="search-results-section-chevron">${isExpanded ? "▾" : "▸"}</span>${escapeHtml(t(category.labelKey))} (${entries.length})`;
     label.onclick = (event) => {
       // Sans ceci, le rebuild synchrone du DOM (innerHTML = "") détache le
