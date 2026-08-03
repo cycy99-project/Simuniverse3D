@@ -75,6 +75,14 @@
         max-height: 320px; overflow-y: auto; background: var(--color-card-solid);
         border: 1px solid var(--color-border); border-radius: 8px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
         z-index: 15;
+        /* Layer de composition dédié : sans ça, Chrome peut laisser le
+           <canvas> WebGL (rendu continu, autre pipeline de composition)
+           "percer" ponctuellement un overlay DOM par-dessus lui pendant un
+           scroll, ligne par ligne, malgré un z-index/background corrects
+           (observé le 2026-08-03 : une seule ligne de résultat laissait
+           passer le titre #home-title alors que les lignes voisines
+           masquaient bien le canvas). transform force son propre calque. */
+        transform: translateZ(0);
       }
       #search-results.visible { display: block; }
       .search-results-section-label {
