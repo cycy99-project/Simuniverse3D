@@ -2204,7 +2204,14 @@ function renderSearchResults(query: string) {
     label.type = "button";
     label.className = "search-results-section-label";
     label.innerHTML = `<span class="search-results-section-chevron">${isExpanded ? "▾" : "▸"}</span>${escapeHtml(t(category.labelKey))} (${entries.length})`;
-    label.onclick = () => {
+    label.onclick = (event) => {
+      // Sans ceci, le rebuild synchrone du DOM (innerHTML = "") détache le
+      // bouton cliqué avant que l'event ne remonte au listener "click" sur
+      // document (fermeture au clic extérieur) : celui-ci voit alors un
+      // target qui n'est plus contenu dans #search-box et referme le menu à
+      // tort (bug rapporté le 2026-08-03 : déplier une catégorie fermait
+      // tout le menu de recherche).
+      event.stopPropagation();
       if (isExpanded) expandedSearchCategories.delete(category.kind);
       else expandedSearchCategories.add(category.kind);
       renderSearchResults(searchInputEl.value);
