@@ -2199,7 +2199,12 @@ function renderSearchResults(query: string) {
       .filter((e) => e.kind === category.kind && e.label.toLowerCase().includes(q))
       .slice(0, SEARCH_RESULTS_PER_CATEGORY_LIMIT);
     if (entries.length === 0) continue;
-    const isExpanded = expandedSearchCategories.has(category.kind);
+    // Repliement manuel uniquement en mode "parcours libre" (champ vide,
+    // clic simple dans le champ) : dès qu'une recherche est en cours (q non
+    // vide), toutes les catégories correspondantes se déplient automatiquement
+    // — l'utilisateur ne devrait pas avoir à cliquer un chevron par catégorie
+    // pour voir les résultats de sa frappe (demandé le 2026-08-03).
+    const isExpanded = q !== "" || expandedSearchCategories.has(category.kind);
     const label = document.createElement("button");
     label.type = "button";
     label.className = "search-results-section-label";
@@ -2240,13 +2245,30 @@ onLangChange(() => {
   searchInputEl.placeholder = t("searchPlaceholder");
   refreshSearchIndex();
 });
+let searchValueAtFocus = "";
 searchInputEl.addEventListener("input", () => renderSearchResults(searchInputEl.value));
-searchInputEl.addEventListener("focus", () => renderSearchResults(searchInputEl.value));
+searchInputEl.addEventListener("focus", () => {
+  searchValueAtFocus = searchInputEl.value;
+  renderSearchResults(searchInputEl.value);
+});
 searchInputEl.addEventListener("keydown", (event) => {
   if (event.key === "Enter") jumpToSearchResult(searchInputEl.value);
   if (event.key === "Escape") hideSearchResults();
 });
-searchInputEl.addEventListener("change", () => jumpToSearchResult(searchInputEl.value));
+// Remplace l'ancien listener "change" : celui-ci se déclenchait aussi en
+// cliquant sur un bouton du menu déroulant (en-tête de catégorie, item), qui
+// fait perdre le focus au champ juste avant son propre clic — provoquant une
+// navigation intempestive vers la première correspondance par préfixe (ex.
+// déplier "Lunes" sur la requête "io" sautait directement vers la lune Io au
+// lieu de simplement dérouler la liste — bug constaté le 2026-08-03). On ne
+// saute vers une correspondance que si le focus part réellement en dehors du
+// menu de résultats (clic sur un item gère sa propre navigation via
+// goToSearchEntry, qui n'a pas besoin de ce fallback par préfixe).
+searchInputEl.addEventListener("blur", (event) => {
+  const next = (event as FocusEvent).relatedTarget as Node | null;
+  if (next && searchResultsEl.contains(next)) return;
+  if (searchInputEl.value !== searchValueAtFocus) jumpToSearchResult(searchInputEl.value);
+});
 document.addEventListener("click", (event) => {
   const target = event.target as Node;
   if (!document.getElementById("search-box")!.contains(target)) hideSearchResults();
