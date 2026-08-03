@@ -85,10 +85,20 @@
         transform: translateZ(0);
       }
       #search-results.visible { display: block; }
+      /* Bouton de catégorie repliable (accordéon, repliée par défaut, cf.
+         expandedSearchCategories dans main.ts) — surcharge le style bouton
+         générique de #ui-overlay button (fond/bordure/radius) pour rester
+         une simple ligne d'en-tête pleine largeur. */
       .search-results-section-label {
-        font-family: var(--font-display); font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
-        color: var(--color-muted); padding: 8px 12px 4px;
+        display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
+        min-height: 36px; font-family: var(--font-display); font-size: 10px; letter-spacing: 0.05em;
+        text-transform: uppercase; color: var(--color-muted); padding: 8px 12px; text-align: left;
+        background: none; border: none; border-radius: 0; cursor: pointer;
       }
+      .search-results-section-label:hover, .search-results-section-label:focus-visible {
+        color: var(--color-fg);
+      }
+      .search-results-section-chevron { font-size: 9px; width: 10px; text-align: center; opacity: 0.8; }
       .search-results-empty { font-size: 13px; color: var(--color-muted); padding: 12px; text-align: center; }
       .search-result-item {
         display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;

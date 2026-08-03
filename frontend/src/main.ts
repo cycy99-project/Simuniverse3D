@@ -2177,6 +2177,11 @@ const SEARCH_CATEGORIES: {
 // aperçu de chaque catégorie au lieu de rien.
 const SEARCH_RESULTS_PER_CATEGORY_LIMIT = 30;
 
+// Catégories repliées par défaut (demandé par Cyril le 2026-08-03), état
+// conservé au niveau module (pas locale à renderSearchResults) pour survivre
+// aux ré-appels de la fonction à chaque frappe/toggle sans se réinitialiser.
+const expandedSearchCategories = new Set<SearchEntry["kind"]>();
+
 function renderSearchResults(query: string) {
   const q = query.trim().toLowerCase();
   searchResultsEl.innerHTML = "";
@@ -2194,10 +2199,18 @@ function renderSearchResults(query: string) {
       .filter((e) => e.kind === category.kind && e.label.toLowerCase().includes(q))
       .slice(0, SEARCH_RESULTS_PER_CATEGORY_LIMIT);
     if (entries.length === 0) continue;
-    const label = document.createElement("div");
+    const isExpanded = expandedSearchCategories.has(category.kind);
+    const label = document.createElement("button");
+    label.type = "button";
     label.className = "search-results-section-label";
-    label.textContent = t(category.labelKey);
+    label.innerHTML = `<span class="search-results-section-chevron">${isExpanded ? "▾" : "▸"}</span>${escapeHtml(t(category.labelKey))} (${entries.length})`;
+    label.onclick = () => {
+      if (isExpanded) expandedSearchCategories.delete(category.kind);
+      else expandedSearchCategories.add(category.kind);
+      renderSearchResults(searchInputEl.value);
+    };
     searchResultsEl.appendChild(label);
+    if (!isExpanded) continue;
     for (const entry of entries) {
       const item = document.createElement("button");
       item.type = "button";
