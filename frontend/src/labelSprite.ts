@@ -1,24 +1,20 @@
 import * as THREE from "three";
 
-// Supersampling x4 : le canvas est rendu à une résolution bien plus grande
-// que sa taille d'affichage réelle, pour un texte net une fois le sprite
-// agrandi en unités scène (sans ça, la police apparaît pixelisée/floue).
-const SUPERSAMPLE = 4;
+// Supersampling : le canvas est rendu à une résolution plus grande que sa
+// taille d'affichage réelle, pour un texte net une fois le sprite agrandi en
+// unités scène (sans ça, la police apparaît pixelisée/floue).
+// DIAGNOSTIC TEMPORAIRE : supersampling ramené à x1 (police/canvas nettement
+// plus petits) pour isoler si le bug d'affichage mobile (glyphes cassés) est
+// lié à une grande taille de police en pixels dans le canvas — à restaurer à
+// x4 une fois le test concluant (cf. conversation). Police/famille déjà
+// disculpées par un test précédent (bug identique en police système).
+const SUPERSAMPLE = 1;
 const BASE_CANVAS_WIDTH = 256 * SUPERSAMPLE;
 const CANVAS_HEIGHT = 64 * SUPERSAMPLE;
 const BASE_SCALE_X = 8;
 const SCALE_Y = 2;
 const PADDING = 24 * SUPERSAMPLE; // marge pour ne jamais couper un glyphe en bord de canvas
-// "Orbitron" (police HUD géométrique, cf. capture de référence Solar System
-// Scope) : préchargée explicitement dans main.ts (document.fonts.load) avant
-// le premier rendu, car ces libellés sont rasterisés une fois pour toutes
-// dans une texture canvas — contrairement à du texte DOM, ils ne se
-// redessinent jamais tout seuls si la police finit de charger après coup.
-// DIAGNOSTIC TEMPORAIRE : Orbitron retirée pour isoler si le bug d'affichage
-// mobile (glyphes cassés) vient du fichier de police custom ou d'un souci
-// plus général du rendu canvas sur ce Chrome — à réintégrer une fois le test
-// concluant (cf. conversation).
-const FONT = `700 ${24 * SUPERSAMPLE}px "Segoe UI", system-ui, sans-serif`;
+const FONT = `700 ${24 * SUPERSAMPLE}px "Orbitron", "Segoe UI", system-ui, sans-serif`;
 
 // Sprite texte (canvas 2D rasterisé en texture) : toujours face caméra, peu
 // coûteux, suffisant pour de simples étiquettes de noms — partagé entre les
