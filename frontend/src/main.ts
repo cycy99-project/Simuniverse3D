@@ -2280,8 +2280,19 @@ loadPhotoManifest();
 // chargée au moment du premier dessin, le fallback système reste figé dans
 // la texture pour de bon (pas de redessin automatique comme du texte DOM).
 // On attend donc explicitement son chargement avant le premier render().
+// Important : document.fonts.load(font, text) ne télécharge que le
+// sous-ensemble Unicode ("unicode-range") couvrant `text` — Google Fonts
+// sert Orbitron en plusieurs fichiers découpés par plage de caractères.
+// Sans texte explicite, le navigateur utilise une chaîne de test par
+// défaut en ASCII pur, qui ne couvre pas les lettres accentuées (é, è, à,
+// ô, ç...) omniprésentes dans les noms français ("Système Solaire", "Voie
+// Lactée"...). Sur un réseau mobile plus lent, ce sous-ensemble
+// "latin-ext" n'a alors jamais été demandé avant le premier rendu, et le
+// canvas rasterise ces libellés avec des glyphes de remplacement (tofu) —
+// figés pour de bon. On force donc le téléchargement du sous-ensemble
+// accentué en le passant explicitement en texte de test.
 Promise.all([
-  document.fonts.load('700 32px "Orbitron"'),
+  document.fonts.load('700 32px "Orbitron"', "AÀÂÄÉÈÊËÎÏÔÖÙÛÜÇaàâäéèêëîïôöùûüç"),
   loadSeedData(),
   loadConstellationData(),
   loadConstellationInfo(),
