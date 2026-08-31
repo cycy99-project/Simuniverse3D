@@ -92,7 +92,9 @@ export function makeLabelSprite(
   const canvas = document.createElement("canvas");
   canvas.width = 256 * LABEL_SUPERSAMPLE;
   canvas.height = 64 * LABEL_SUPERSAMPLE;
-  const ctx = canvas.getContext("2d")!;
+  // willReadFrequently : évite un bug de rasterisation de police custom sur
+  // Chrome Android (cf. labelSprite.ts pour le détail).
+  const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
   ctx.font = `700 ${fontSize * LABEL_SUPERSAMPLE}px "Orbitron", "Segoe UI", system-ui, sans-serif`;
   ctx.textAlign = "center";
   if (opts?.glow) {

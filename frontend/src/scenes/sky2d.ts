@@ -408,7 +408,9 @@ const NAME_FONT_PX = 160; // résolution canvas ; la taille à l'écran vient de
 
 function makeHollowTextTexture(text: string): { texture: THREE.CanvasTexture; aspect: number } {
   const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d")!;
+  // willReadFrequently : évite un bug de rasterisation de police custom sur
+  // Chrome Android (cf. labelSprite.ts pour le détail).
+  const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
   const font = `700 ${NAME_FONT_PX}px "Orbitron", "Segoe UI", system-ui, sans-serif`;
   ctx.font = font;
   const paddingX = NAME_FONT_PX * 0.35;
