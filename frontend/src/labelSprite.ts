@@ -1,14 +1,13 @@
 import * as THREE from "three";
 
-// Supersampling : le canvas est rendu à une résolution plus grande que sa
-// taille d'affichage réelle, pour un texte net une fois le sprite agrandi en
-// unités scène (sans ça, la police apparaît pixelisée/floue).
-// DIAGNOSTIC TEMPORAIRE : supersampling ramené à x1 (police/canvas nettement
-// plus petits) pour isoler si le bug d'affichage mobile (glyphes cassés) est
-// lié à une grande taille de police en pixels dans le canvas — à restaurer à
-// x4 une fois le test concluant (cf. conversation). Police/famille déjà
-// disculpées par un test précédent (bug identique en police système).
-const SUPERSAMPLE = 1;
+// Supersampling x4 : le canvas est rendu à une résolution bien plus grande
+// que sa taille d'affichage réelle, pour un texte net une fois le sprite
+// agrandi en unités scène (sans ça, la police apparaît pixelisée/floue).
+// Le bug de glyphes cassés observé sur un appareil (Galaxy S24, Chrome)
+// s'est révélé spécifique à cette installation Chrome (non reproduit sur un
+// autre téléphone Android avec exactement ce code) — police, taille et
+// rendu GPU/logiciel du canvas ont tous été disculpés par des tests dédiés.
+const SUPERSAMPLE = 4;
 const BASE_CANVAS_WIDTH = 256 * SUPERSAMPLE;
 const CANVAS_HEIGHT = 64 * SUPERSAMPLE;
 const BASE_SCALE_X = 8;
