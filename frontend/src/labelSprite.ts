@@ -14,7 +14,11 @@ const PADDING = 24 * SUPERSAMPLE; // marge pour ne jamais couper un glyphe en bo
 // le premier rendu, car ces libellés sont rasterisés une fois pour toutes
 // dans une texture canvas — contrairement à du texte DOM, ils ne se
 // redessinent jamais tout seuls si la police finit de charger après coup.
-const FONT = `700 ${24 * SUPERSAMPLE}px "Orbitron", "Segoe UI", system-ui, sans-serif`;
+// DIAGNOSTIC TEMPORAIRE : Orbitron retirée pour isoler si le bug d'affichage
+// mobile (glyphes cassés) vient du fichier de police custom ou d'un souci
+// plus général du rendu canvas sur ce Chrome — à réintégrer une fois le test
+// concluant (cf. conversation).
+const FONT = `700 ${24 * SUPERSAMPLE}px "Segoe UI", system-ui, sans-serif`;
 
 // Sprite texte (canvas 2D rasterisé en texture) : toujours face caméra, peu
 // coûteux, suffisant pour de simples étiquettes de noms — partagé entre les
